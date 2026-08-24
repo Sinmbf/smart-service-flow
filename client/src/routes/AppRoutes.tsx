@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { checkHealth } from "../services/health";
+import Test from "../components/Test";
 
 function AppRoutes() {
   return (
@@ -15,6 +16,7 @@ function HomePlaceholder() {
   return (
     <>
       <button onClick={() => checkHealth()}>Check Health</button>
+      <Test />
     </>
   );
 }

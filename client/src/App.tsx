@@ -1,9 +1,13 @@
+import LanguageSwitcher from "./components/LanguageSwitcher";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
-  return <>
-    <AppRoutes/>
-  </>
+  return (
+    <>
+      <LanguageSwitcher />
+      <AppRoutes />
+    </>
+  );
 }
 
 export default App;

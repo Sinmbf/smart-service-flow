@@ -1,0 +1,13 @@
+{
+  "common": {
+    "appName": "Smart Service Flow",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading",
+    "welcome": "Welcome",
+    "hello": "Hello"
+  }
+}
