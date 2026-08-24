@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <section id="center">
+      <section id="center bg-gray-100">
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
           <img src={reactLogo} className="framework" alt="React logo" />
