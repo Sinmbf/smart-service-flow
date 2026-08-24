@@ -9,8 +9,6 @@ node_modules/
 # Build output
 dist/
 build/
-
-# Vite
 .vite/
 
 # Logs
@@ -22,10 +20,10 @@ pnpm-debug.log*
 # Coverage
 coverage/
 
-# OS files
-.DS_Store
-Thumbs.db
-
 # IDE
 .vscode/
 .idea/
+
+# OS
+.DS_Store
+Thumbs.db
