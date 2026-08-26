@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "Smart Service Flow",
+    "appSubtitle": "Government Services, Simplified",
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
@@ -8,6 +9,96 @@
     "cancel": "Cancel",
     "loading": "Loading",
     "welcome": "Welcome",
-    "hello": "Hello"
+    "hello": "Hello",
+    "back": "Back",
+    "submit": "Submit",
+    "verify": "Verify",
+    "resend": "Resend",
+    "change": "Change",
+    "or": "or"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Access government service information and track your service journey",
+      "citizen": "Citizen",
+      "staff": "Staff",
+      "emailOrMobile": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot Password?",
+      "loginButton": "Login",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register here",
+      "signingIn": "Signing in...",
+      "successMessage": "Login successful"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Register your account to access government services",
+      "step1": "Personal Info",
+      "step2": "Account Details",
+      "step3": "Done",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "firstNamePlaceholder": "Ram",
+      "lastNamePlaceholder": "Tamang",
+      "fullName": "Full Name",
+      "email": "Email",
+      "mobileNumber": "Mobile Number",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "termsAgree": "I agree to the Terms & Conditions",
+      "registerButton": "Create Account",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Login here",
+      "registering": "Creating account...",
+      "successMessage": "Registration successful. Please verify your phone number."
+    },
+    "verifyPhone": {
+      "title": "Verify Your Mobile Number",
+      "subtitle": "We sent a verification code to your mobile number",
+      "enterCode": "Enter verification code",
+      "verifyButton": "Verify",
+      "resendCode": "Resend Code",
+      "changeNumber": "Change Number",
+      "resendIn": "Resend in",
+      "seconds": "seconds",
+      "verifying": "Verifying...",
+      "successMessage": "Phone number verified successfully",
+      "codeResent": "Verification code has been resent"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password?",
+      "subtitle": "Enter your registered email or mobile number",
+      "emailOrMobile": "Email or Mobile Number",
+      "sendButton": "Send Verification Code",
+      "backToLogin": "Back to Login",
+      "sending": "Sending...",
+      "successMessage": "Verification code sent successfully"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter the verification code and your new password",
+      "verificationCode": "Verification Code",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "resetButton": "Reset Password",
+      "backToLogin": "Back to Login",
+      "resetting": "Resetting password...",
+      "successMessage": "Password reset successfully"
+    },
+    "validation": {
+      "required": "This field is required",
+      "emailInvalid": "Please enter a valid email address",
+      "mobileInvalid": "Please enter a valid mobile number",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "otpInvalid": "Please enter a valid 6-digit code",
+      "termsRequired": "You must agree to the terms and conditions"
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again."
+    }
   }
 }

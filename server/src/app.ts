@@ -4,7 +4,7 @@ import cors from "cors";
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet()); // For security headers
 
 app.use(cors({
     origin: process.env.CLIENT_URL,
