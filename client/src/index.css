@@ -1,10 +1,15 @@
 @import "tailwindcss";
 
+html, body, #root {
+  background-color: #0f172a;
+  min-height: 100vh;
+  color: #f8fafc;
+}
+
 /* Custom gradient for primary buttons */
 .btn-gradient-primary {
   background: linear-gradient(to right, #2563eb, #1d4ed8);
 }
-
 .btn-gradient-primary:hover {
   background: linear-gradient(to right, #1d4ed8, #1e40af);
 }

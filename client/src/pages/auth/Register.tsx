@@ -90,7 +90,7 @@ const Register = () => {
 
   return (
     <AuthLayout>
-      <Card className="p-8 shadow-xl">
+      <Card className="p-8 shadow-xl min-h-[520px]">
         {/* Title */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-[#1E293B] mb-2">
@@ -105,7 +105,7 @@ const Register = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-3">
             <div className="flex flex-col items-center flex-1">
-              <div className="w-10 h-10 rounded-full bg-[#2563EB] text-white flex items-center justify-center font-semibold text-sm shadow-md">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1E40AF] to-[#3B82F6] text-white flex items-center justify-center font-semibold text-sm shadow-md">
                 1
               </div>
               <span className="text-xs text-[#2563EB] font-medium mt-2">

@@ -21,13 +21,13 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const baseStyles =
-    "inline-flex items-center justify-center font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm";
+    "inline-flex items-center justify-center font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg cursor-pointer";
 
   const variants = {
-    primary: "btn-gradient-primary text-white focus:ring-blue-600 shadow-md hover:shadow-lg active:scale-[0.98]",
-    secondary: "bg-[#64748B] text-white hover:bg-[#475569] focus:ring-[#64748B]",
-    danger: "bg-[#DC2626] text-white hover:bg-[#B91C1C] focus:ring-[#DC2626]",
-    ghost: "bg-transparent text-[#2563EB] hover:bg-[#F1F5F9] focus:ring-[#2563EB] shadow-none",
+    primary: "bg-gradient-to-r from-[#1E40AF] via-[#2563EB] to-[#3B82F6] text-white hover:from-[#1E3A8A] hover:via-[#1d4ed8] hover:to-[#2563EB] focus:ring-blue-500 shadow-xl hover:shadow-2xl active:scale-[0.98]",
+    secondary: "bg-white text-gray-900 hover:bg-gray-50 focus:ring-gray-400 border-2 border-gray-300",
+    danger: "bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 focus:ring-red-500 shadow-xl hover:shadow-2xl active:scale-[0.98]",
+    ghost: "bg-transparent text-indigo-600 hover:bg-white/10 focus:ring-indigo-500 shadow-none",
   };
 
   const sizes = {
