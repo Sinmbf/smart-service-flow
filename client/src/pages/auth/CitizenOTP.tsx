@@ -1,7 +1,7 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../../services/api";
 import AuthLayout from "../../layouts/AuthLayout";
 import { Button, Card, Input } from "../../components/ui";
@@ -9,6 +9,7 @@ import { Button, Card, Input } from "../../components/ui";
 const CitizenOTP = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [step, setStep] = useState<"phone" | "otp">("phone");
 
   const [phone, setPhone] = useState("");
@@ -65,8 +66,15 @@ const CitizenOTP = () => {
 
       console.log("✅ Citizen authenticated:", response.data.user);
 
-      // Redirect to service selection
-      navigate("/token/services");
+      // Check if a service was selected before verification
+      const pendingService = location.state?.service;
+      if (pendingService) {
+        // Go directly to token generation with selected service
+        navigate("/token/generate", { state: { service: pendingService } });
+      } else {
+        // No service selected yet, go to service selection
+        navigate("/token/services");
+      }
     } catch (error: any) {
       setErrors({ otp: error.response?.data?.message || t("auth.validation.otpInvalid") });
     } finally {
@@ -168,9 +176,9 @@ const CitizenOTP = () => {
           <button
             type="button"
             className="text-sm text-[#64748B] hover:text-[#1E293B] font-medium"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/")}
           >
-            ← {t("auth.citizen.backToLogin")}
+            ← {t("auth.citizen.backToHome")}
           </button>
         </div>
       </Card>

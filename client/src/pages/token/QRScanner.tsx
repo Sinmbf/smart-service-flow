@@ -78,7 +78,7 @@ const QRScanner = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [qrSvg, setQrSvg] = useState("");
   const siteUrl =
-    typeof window !== "undefined" ? `${window.location.origin}/login` : "http://localhost:3000/login";
+    typeof window !== "undefined" ? `${window.location.origin}/token/services` : "http://localhost:3000/token/services";
 
   // Generate QR matrix and draw to canvas + SVG fallback
   useEffect(() => {
@@ -129,7 +129,7 @@ const QRScanner = () => {
               <div className="w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-white rounded-2xl shadow-inner border-2 border-gray-300 p-4 flex items-center justify-center">
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(siteUrl)}&format=png`}
-                  alt={`QR code for ${siteUrl}`}
+                  alt="QR code to scan for queue services"
                   className="w-full h-full object-contain"
                   loading="eager"
                 />

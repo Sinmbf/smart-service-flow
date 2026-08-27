@@ -86,8 +86,8 @@ const ServiceSelection = () => {
 
   const handleContinue = () => {
     if (selectedService) {
-      // Navigate to token generation with selected service
-      navigate("/token/generate", { state: { service: selectedService } });
+      // Redirect to verification before generating token
+      navigate("/citizen-login", { state: { service: selectedService } });
     }
   };
 

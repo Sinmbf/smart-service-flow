@@ -49,7 +49,8 @@
       "submitting": "Verifying...",
       "confirmOtp": "Verify and Continue",
       "backToPhone": "← Change phone number",
-      "backToLogin": "Back to Login"
+      "backToLogin": "Back to Login",
+      "backToHome": "Back to Home"
     },
     "staff": {
       "email": "Work Email",
@@ -147,6 +148,20 @@
       "generic": "Something went wrong. Please try again."
     }
   },
+  "home": {
+    "getQueueToken": "Get Queue Token",
+    "getQueueTokenDesc": "Request a token for government services",
+    "startQueue": "Start Queue",
+    "viewLiveQueue": "View Live Queue",
+    "viewLiveQueueDesc": "Monitor queue status in real-time",
+    "viewQueue": "View Queue",
+    "staffLogin": "Staff Login",
+    "staffLoginDesc": "Access staff dashboard and queue management",
+    "loginAsStaff": "Login as Staff",
+    "displayQrCode": "Display QR Code",
+    "displayQrCodeDesc": "Show QR code at your counter for citizens to scan",
+    "qrInstructions": "Citizens scan this code to join the queue"
+  },
   "token": {
     "scanner": {
       "title": "Get Your Token",
@@ -172,7 +187,7 @@
       "inQueue": "In Queue",
       "people": "people",
       "estimatedWait": "Est. Wait",
-      "getToken": "Get Your Token →",
+      "getToken": "Get Your Token",
       "noQueueData": "No queue data available"
     },
     "services": {

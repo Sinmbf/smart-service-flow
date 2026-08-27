@@ -8,6 +8,7 @@ import {
   CitizenOTP,
   StaffRegister,
 } from "../pages/auth";
+import Home from "../pages/Home";
 import {
   QRScanner,
   ServiceSelection,
@@ -20,8 +21,8 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Redirect root to QR scanner (public entry) */}
-        <Route path="/" element={<Navigate to="/token/scanner" replace />} />
+        {/* Landing page - public entry point for all users */}
+        <Route path="/" element={<Home />} />
 
         {/* Authentication routes */}
         <Route path="/login" element={<Login />} />
@@ -32,15 +33,15 @@ function AppRoutes() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-        {/* Token Flow routes (protected) */}
+        {/* Token Flow routes (public, no auth needed) */}
         <Route path="/token/scanner" element={<QRScanner />} />
         <Route path="/token/services" element={<ServiceSelection />} />
         <Route path="/token/generate" element={<TokenGeneration />} />
         <Route path="/token/display" element={<TokenDisplay />} />
         <Route path="/token/monitor" element={<Monitor />} />
 
-        {/* Catch-all - redirect to login */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Catch-all - redirect to landing page */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

@@ -2,17 +2,14 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Mail, User, Users, ArrowRight, Smartphone } from "lucide-react";
+import { Mail, ArrowRight } from "lucide-react";
 import axios from "../../services/api";
 import AuthLayout from "../../layouts/AuthLayout";
 import { Button, Input, PasswordInput, Card } from "../../components/ui";
 
-type UserType = "citizen" | "staff";
-
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [userType, setUserType] = useState<UserType>("citizen");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -97,10 +94,6 @@ const Login = () => {
     }
   };
 
-  const handleCitizenLogin = () => {
-    navigate("/citizen-login");
-  };
-
   return (
     <AuthLayout>
       <Card className="p-8 shadow-xl w-full max-w-md mx-auto">
@@ -110,44 +103,6 @@ const Login = () => {
             {t("auth.login.title")}
           </h2>
           <p className="text-sm text-[#64748B]">{t("auth.login.subtitle")}</p>
-        </div>
-
-        {/* User Type Tabs */}
-        <div className="flex gap-3 mb-6">
-          <button
-            type="button"
-            onClick={() => {
-              setUserType("citizen");
-              setOtpStep(false);
-              setErrors({});
-              setServerMessage("");
-            }}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-medium transition-all ${
-              userType === "citizen"
-                ? "bg-white text-[#2563EB] border-2 border-[#2563EB] shadow-sm"
-                : "bg-[#F8FAFC] text-[#64748B] border-2 border-transparent hover:bg-[#F1F5F9]"
-            }`}
-          >
-            <User className="h-5 w-5" />
-            <span>{t("auth.login.citizen")}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setUserType("staff");
-              setOtpStep(false);
-              setErrors({});
-              setServerMessage("");
-            }}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-medium transition-all ${
-              userType === "staff"
-                ? "bg-white text-[#2563EB] border-2 border-[#2563EB] shadow-sm"
-                : "bg-[#F8FAFC] text-[#64748B] border-2 border-transparent hover:bg-[#F1F5F9]"
-            }`}
-          >
-            <Users className="h-5 w-5" />
-            <span>{t("auth.login.staff")}</span>
-          </button>
         </div>
 
         {/* Messages */}
@@ -162,46 +117,8 @@ const Login = () => {
           </div>
         )}
 
-        {/* Citizen Login */}
-        {userType === "citizen" && (
-          <div className="space-y-5">
-            <p className="text-sm text-[#64748B] text-center">
-              {t("auth.citizen.quickAccess")}
-            </p>
-            <Button
-              type="button"
-              fullWidth
-              onClick={handleCitizenLogin}
-              icon={<Smartphone className="h-5 w-5" />}
-            >
-              {t("auth.citizen.loginWithPhone")}
-            </Button>
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[#E2E8F0]"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-[#64748B]">{t("common.or")}</span>
-              </div>
-            </div>
-            <div className="text-center">
-              <p className="text-sm text-[#64748B]">
-                {t("auth.login.noAccount")}{" "}
-                <button
-                  type="button"
-                  onClick={() => navigate("/staff-register")}
-                  className="text-[#2563EB] hover:text-[#1D4ED8] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
-                >
-                  {t("auth.login.staffRegister")}
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </p>
-            </div>
-          </div>
-        )}
-
         {/* Staff Login */}
-        {userType === "staff" && !otpStep && (
+        {!otpStep && (
           <form onSubmit={handleStaffLogin} className="space-y-5">
             <Input
               label={t("auth.staff.email")}
@@ -260,7 +177,7 @@ const Login = () => {
         )}
 
         {/* Staff OTP Verification */}
-        {userType === "staff" && otpStep && (
+        {otpStep && (
           <form onSubmit={handleStaffOTPVerify} className="space-y-6">
             <div className="text-center mb-4">
               <p className="text-sm text-[#64748B]">
@@ -304,8 +221,8 @@ const Login = () => {
           </form>
         )}
 
-        {/* No OTP step for citizen, so add divider at bottom of staff only */}
-        {userType === "staff" && !otpStep && (
+        {/* Divider */}
+        {!otpStep && (
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#E2E8F0]"></div>
@@ -316,7 +233,7 @@ const Login = () => {
           </div>
         )}
 
-        {userType === "staff" && !otpStep && (
+        {!otpStep && (
           <div className="text-center">
             <p className="text-sm text-[#64748B]">
               {t("auth.staff.noAccount")}{" "}

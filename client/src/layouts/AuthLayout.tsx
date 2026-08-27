@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 
 interface AuthLayoutProps {
@@ -27,7 +28,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
       <header className="relative z-10 px-4 pt-4 pb-6 sm:px-8 lg:px-12 lg:pt-8 lg:pb-10">
         <div className="max-w-md mx-auto lg:max-w-5xl lg:flex lg:items-center lg:justify-between">
           {/* Logo + Title */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          <Link to="/" className="flex items-center gap-3 sm:gap-4 hover:opacity-90 transition-opacity">
             <div className="bg-white p-2.5 sm:p-3 md:p-4 rounded-2xl shadow-lg flex-shrink-0">
               <svg
                 className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12 text-[#2563EB]"
@@ -51,7 +52,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
                 Government Service Management System
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* Language Switcher */}
           <div className="mt-3 lg:mt-0">
