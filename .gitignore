@@ -27,3 +27,5 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+# Claude Code local data (skills, MCP config - not part of project)
+.claude/

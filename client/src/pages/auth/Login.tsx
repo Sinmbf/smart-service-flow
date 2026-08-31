@@ -96,30 +96,30 @@ const Login = () => {
 
   return (
     <AuthLayout>
-      <Card className="p-8 shadow-xl w-full max-w-md mx-auto">
+      <Card className="p-6 sm:p-8 w-full max-w-md mx-auto">
         {/* Title */}
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-[#1E293B] mb-2">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-heading font-bold text-neutral-900 mb-2">
             {t("auth.login.title")}
           </h2>
-          <p className="text-sm text-[#64748B]">{t("auth.login.subtitle")}</p>
+          <p className="text-base text-neutral-700">{t("auth.login.subtitle")}</p>
         </div>
 
         {/* Messages */}
         {serverMessage && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
+          <div className="mb-6 p-4 bg-blue-50 border-2 border-blue-200 rounded-lg text-base text-blue-700" role="status">
             {serverMessage}
           </div>
         )}
         {errors.api && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+          <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-lg text-base text-red-700" role="alert">
             {errors.api}
           </div>
         )}
 
         {/* Staff Login */}
         {!otpStep && (
-          <form onSubmit={handleStaffLogin} className="space-y-5">
+          <form onSubmit={handleStaffLogin} className="space-y-6" noValidate>
             <Input
               label={t("auth.staff.email")}
               type="email"
@@ -140,17 +140,17 @@ const Login = () => {
               placeholder="••••••••"
             />
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer group">
+            <div className="flex items-center justify-between pt-1">
+              <label className="flex items-center gap-3 cursor-pointer group min-h-[44px]">
                 <input
                   type="checkbox"
                   checked={formData.rememberMe}
                   onChange={(e) =>
                     setFormData({ ...formData, rememberMe: e.target.checked })
                   }
-                  className="w-4 h-4 text-[#2563EB] bg-white border-[#CBD5E1] rounded focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-0 cursor-pointer"
+                  className="w-5 h-5 text-blue-600 bg-white border-2 border-neutral-300 rounded focus:ring-4 focus:ring-blue-200 cursor-pointer"
                 />
-                <span className="text-sm text-[#64748B] group-hover:text-[#334155]">
+                <span className="text-base text-neutral-700 group-hover:text-neutral-900">
                   {t("auth.login.rememberMe")}
                 </span>
               </label>
@@ -158,7 +158,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => navigate("/forgot-password")}
-                className="text-sm text-[#2563EB] hover:text-[#1D4ED8] font-medium hover:underline"
+                className="text-base text-blue-700 hover:text-blue-800 font-medium hover:underline min-h-[44px] flex items-center"
               >
                 {t("auth.login.forgotPassword")}
               </button>
@@ -178,12 +178,12 @@ const Login = () => {
 
         {/* Staff OTP Verification */}
         {otpStep && (
-          <form onSubmit={handleStaffOTPVerify} className="space-y-6">
+          <form onSubmit={handleStaffOTPVerify} className="space-y-6" noValidate>
             <div className="text-center mb-4">
-              <p className="text-sm text-[#64748B]">
+              <p className="text-base text-neutral-700">
                 {t("auth.staff.enterOtp")}
               </p>
-              <p className="text-xs text-[#64748B] mt-1">
+              <p className="text-sm text-neutral-600 mt-2">
                 {t("auth.staff.otpConsoleNote")}
               </p>
             </div>
@@ -196,6 +196,7 @@ const Login = () => {
               error={errors.otp}
               placeholder="123456"
               maxLength={6}
+              inputMode="numeric"
             />
 
             <Button
@@ -209,7 +210,7 @@ const Login = () => {
 
             <button
               type="button"
-              className="w-full text-sm text-[#64748B] hover:text-[#1E293B] font-medium"
+              className="w-full text-base text-neutral-700 hover:text-neutral-900 font-medium min-h-[44px]"
               onClick={() => {
                 setOtpStep(false);
                 setOtp("");
@@ -223,27 +224,27 @@ const Login = () => {
 
         {/* Divider */}
         {!otpStep && (
-          <div className="relative my-6">
+          <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#E2E8F0]"></div>
+              <div className="w-full border-t border-neutral-200"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-[#64748B]">{t("common.or")}</span>
+            <div className="relative flex justify-center text-base">
+              <span className="px-4 bg-white text-neutral-600">{t("common.or")}</span>
             </div>
           </div>
         )}
 
         {!otpStep && (
           <div className="text-center">
-            <p className="text-sm text-[#64748B]">
+            <p className="text-base text-neutral-700">
               {t("auth.staff.noAccount")}{" "}
               <button
                 type="button"
                 onClick={() => navigate("/staff-register")}
-                className="text-[#2563EB] hover:text-[#1D4ED8] font-semibold hover:underline inline-flex items-center gap-1"
+                className="text-blue-700 hover:text-blue-800 font-semibold hover:underline inline-flex items-center gap-1 min-h-[44px]"
               >
                 {t("auth.staff.registerLink")}
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </button>
             </p>
           </div>

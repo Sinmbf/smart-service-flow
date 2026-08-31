@@ -11,27 +11,27 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-[#0f172a] relative overflow-hidden">
-      {/* Subtle dot texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.07]">
+    <div className="min-h-screen bg-neutral-100">
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="dot-auth" width="28" height="28" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1" fill="white" />
+            <pattern id="grid-auth" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E3A8A" strokeWidth="1"/>
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#dot-auth)" />
+          <rect width="100%" height="100%" fill="url(#grid-auth)" />
         </svg>
       </div>
 
       {/* Header */}
-      <header className="relative z-10 px-4 pt-4 pb-6 sm:px-8 lg:px-12 lg:pt-8 lg:pb-10">
-        <div className="max-w-md mx-auto lg:max-w-5xl lg:flex lg:items-center lg:justify-between">
+      <header className="relative z-10 px-4 pt-6 pb-8 sm:px-8 lg:px-12 lg:pt-10">
+        <div className="max-w-5xl mx-auto lg:flex lg:items-center lg:justify-between">
           {/* Logo + Title */}
-          <Link to="/" className="flex items-center gap-3 sm:gap-4 hover:opacity-90 transition-opacity">
-            <div className="bg-white p-2.5 sm:p-3 md:p-4 rounded-2xl shadow-lg flex-shrink-0">
+          <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+            <div className="bg-blue-700 p-3 rounded-xl shadow-md flex-shrink-0">
               <svg
-                className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12 text-[#2563EB]"
+                className="h-10 w-10 text-white"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -45,25 +45,25 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
               </svg>
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight">
+              <h1 className="text-xl font-heading font-bold text-neutral-900 leading-tight">
                 {t("common.appName")}
               </h1>
-              <p className="text-xs sm:text-sm text-white/60 mt-0.5 hidden sm:block">
+              <p className="text-sm text-neutral-600 mt-0.5 hidden sm:block">
                 Government Service Management System
               </p>
             </div>
           </Link>
 
           {/* Language Switcher */}
-          <div className="mt-3 lg:mt-0">
+          <div className="mt-4 lg:mt-0">
             <LanguageSwitcher />
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="relative z-10 px-4 pb-8 sm:px-6 lg:px-12">
-        <div className="max-w-md mx-auto lg:flex lg:items-center lg:justify-center lg:min-h-[calc(100vh-200px)]">
+      <main className="relative z-10 px-4 pb-12 sm:px-6 lg:px-12">
+        <div className="max-w-md mx-auto lg:max-w-5xl lg:flex lg:items-center lg:justify-center lg:min-h-[calc(100vh-200px)]">
           {children}
         </div>
       </main>

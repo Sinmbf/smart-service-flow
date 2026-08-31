@@ -17,28 +17,28 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
   const isScanner = location.pathname === "/token/scanner";
 
   return (
-    <div className="min-h-screen bg-[#0f172a] relative overflow-hidden">
-      {/* Subtle dot texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.07]">
+    <div className="min-h-screen bg-neutral-100">
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="dot" width="28" height="28" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1" fill="white" />
+            <pattern id="grid-main" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E3A8A" strokeWidth="1"/>
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#dot)" />
+          <rect width="100%" height="100%" fill="url(#grid-main)" />
         </svg>
       </div>
 
       {/* Header */}
       {showHeader && (
-        <header className="relative z-10 px-3 pt-3 pb-3 sm:px-6 md:px-8 lg:pt-6 lg:pb-6">
+        <header className="relative z-10 bg-white border-b border-neutral-200 px-3 py-3 sm:px-6 md:px-8 lg:py-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
             {/* Logo + Title */}
             <Link to="/" className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0 hover:opacity-90 transition-opacity">
-              <div className="bg-white p-1.5 sm:p-3 md:p-4 rounded-2xl shadow-lg flex-shrink-0">
+              <div className="bg-blue-700 p-2.5 sm:p-3 md:p-3.5 rounded-xl shadow-md flex-shrink-0">
                 <svg
-                  className="h-7 w-7 sm:h-10 sm:w-10 md:h-12 md:w-12 text-[#2563EB]"
+                  className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 text-white"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -51,33 +51,34 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
                   <circle cx="12" cy="6" r="1" fill="#DC2626" />
                 </svg>
               </div>
-              <div className="min-w-0">
-                <h1 className="text-sm sm:text-xl md:text-2xl font-bold text-white leading-tight truncate">
+              <div className="min-w-0 hidden sm:flex flex-col justify-center">
+                <h1 className="text-base sm:text-xl md:text-xl font-heading font-bold text-neutral-900 leading-none truncate">
                   {t("common.appName")}
                 </h1>
-                <p className="text-[10px] sm:text-xs md:text-sm text-white/60 mt-0.5 truncate hidden xs:block">
+                <p className="text-xs md:text-sm text-neutral-600 leading-tight mt-1 truncate">
                   Government Service Management System
                 </p>
               </div>
             </Link>
 
             {/* Right controls */}
-            <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               {/* Token route nav pill */}
               {isTokenRoute && (
-                <nav className="flex items-center gap-0.5 sm:gap-1 bg-white/95 backdrop-blur-md rounded-xl p-0.5 sm:p-1 shadow-lg">
+                <nav aria-label="Token navigation" className="flex items-center gap-1 bg-neutral-100 rounded-lg p-1 shadow-sm">
                   <Link
                     to="/"
                     aria-label={t("common.home")}
-                    className={`px-2 sm:px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap cursor-pointer ${
-                      isScanner
-                        ? "bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] text-white"
-                        : "text-slate-700 hover:bg-slate-100"
+                    aria-current={location.pathname === "/" ? "page" : undefined}
+                    className={`px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] flex items-center ${
+                      location.pathname === "/"
+                        ? "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md"
+                        : "text-neutral-700 hover:bg-white"
                     }`}
                   >
                     <span className="hidden sm:inline text-sm">{t("common.home")}</span>
                     <span className="sm:hidden">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                       </svg>
                     </span>
@@ -85,31 +86,33 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
                   <Link
                     to="/token/monitor"
                     aria-label={t("token.monitor.title")}
-                    className={`px-2 sm:px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                    aria-current={isMonitor ? "page" : undefined}
+                    className={`px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] flex items-center ${
                       isMonitor
-                        ? "bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] text-white"
-                        : "text-slate-700 hover:bg-slate-100"
+                        ? "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md"
+                        : "text-neutral-700 hover:bg-white"
                     }`}
                   >
                     <span className="hidden md:inline text-sm">{t("token.monitor.title")}</span>
                     <span className="md:hidden">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
                     </span>
                   </Link>
                   <Link
                     to="/token/services"
                     aria-label={t("token.services.continueButton")}
-                    className={`px-2 sm:px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                    aria-current={isServices ? "page" : undefined}
+                    className={`px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] flex items-center ${
                       isServices
-                        ? "bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] text-white"
-                        : "text-slate-700 hover:bg-slate-100"
+                        ? "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md"
+                        : "text-neutral-700 hover:bg-white"
                     }`}
                   >
                     <span className="hidden sm:inline text-sm">{t("token.services.continueButton")}</span>
                     <span className="sm:hidden">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                       </svg>
                     </span>
@@ -123,7 +126,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
       )}
 
       {/* Main content */}
-      <main className="relative z-10 px-4 pb-8 sm:px-6 md:px-8 lg:pb-12">
+      <main className="relative z-10 px-4 py-6 sm:px-6 md:px-8 lg:py-10">
         <div className="max-w-7xl mx-auto">{children}</div>
       </main>
     </div>
