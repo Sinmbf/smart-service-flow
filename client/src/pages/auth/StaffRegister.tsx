@@ -83,13 +83,13 @@ const StaffRegister = () => {
       <Card className="p-8 shadow-xl">
         {/* Title */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 mb-3">
-            <Users className="h-8 w-8 text-[#2563EB]" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-50 mb-3">
+            <Users className="h-8 w-8 text-primary-700" />
           </div>
-          <h2 className="text-2xl font-bold text-[#1E293B] mb-2">
+          <h2 className="text-2xl font-bold text-neutral-900 mb-2">
             {t("auth.staffRegister.title")}
           </h2>
-          <p className="text-sm text-[#64748B]">
+          <p className="text-sm text-neutral-600">
             {t("auth.staffRegister.subtitle")}
           </p>
         </div>
@@ -168,12 +168,12 @@ const StaffRegister = () => {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-[#64748B]">
+          <p className="text-sm text-neutral-600">
             {t("auth.staffRegister.haveAccount")}{" "}
             <button
               type="button"
               onClick={() => navigate("/login")}
-              className="text-[#2563EB] hover:text-[#1D4ED8] font-semibold hover:underline"
+              className="text-primary-700 hover:text-primary-800 font-semibold hover:underline"
             >
               {t("auth.staffRegister.loginLink")}
             </button>

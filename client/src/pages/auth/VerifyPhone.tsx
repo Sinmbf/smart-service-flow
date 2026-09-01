@@ -122,14 +122,14 @@ const VerifyPhone = () => {
     <AuthLayout>
       <Card className="p-6 sm:p-8">
         <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold text-[#1E293B] mb-2">
+          <h2 className="text-2xl font-bold text-neutral-900 mb-2">
             {t("auth.verifyPhone.title")}
           </h2>
-          <p className="text-sm text-[#64748B]">
+          <p className="text-sm text-neutral-600">
             {t("auth.verifyPhone.subtitle")}
           </p>
           {/* Mock phone number display */}
-          <p className="mt-2 text-sm font-medium text-[#1E293B]">
+          <p className="mt-2 text-sm font-medium text-neutral-900">
             +977 98XXXXXXXX
           </p>
         </div>
@@ -137,7 +137,7 @@ const VerifyPhone = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* OTP Input */}
           <div>
-            <label className="block text-sm font-medium text-[#1E293B] mb-3 text-center">
+            <label className="block text-sm font-medium text-neutral-900 mb-3 text-center">
               {t("auth.verifyPhone.enterCode")}
             </label>
             <div className="flex justify-center gap-2 sm:gap-3">
@@ -156,14 +156,14 @@ const VerifyPhone = () => {
                   onPaste={index === 0 ? handlePaste : undefined}
                   className={`w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-semibold border rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-0 ${
                     error
-                      ? "border-[#DC2626] focus:ring-[#DC2626]"
-                      : "border-[#E2E8F0] focus:ring-[#2563EB] focus:border-[#2563EB]"
+                      ? "border-red-600 focus:ring-red-500"
+                      : "border-neutral-300 focus:ring-primary-500 focus:border-primary-500"
                   }`}
                 />
               ))}
             </div>
             {error && (
-              <p className="mt-2 text-sm text-[#DC2626] text-center">{error}</p>
+              <p className="mt-2 text-sm text-red-600 text-center">{error}</p>
             )}
           </div>
 
@@ -185,12 +185,12 @@ const VerifyPhone = () => {
             {canResend ? (
               <button
                 onClick={handleResend}
-                className="text-sm text-[#2563EB] hover:text-[#1D4ED8] font-medium"
+                className="text-sm text-primary-700 hover:text-primary-800 font-medium"
               >
                 {t("auth.verifyPhone.resendCode")}
               </button>
             ) : (
-              <p className="text-sm text-[#64748B]">
+              <p className="text-sm text-neutral-600">
                 {t("auth.verifyPhone.resendIn")} {resendCountdown}{" "}
                 {t("auth.verifyPhone.seconds")}
               </p>
@@ -200,7 +200,7 @@ const VerifyPhone = () => {
             <button
               type="button"
               onClick={handleChangeNumber}
-              className="text-sm text-[#64748B] hover:text-[#1E293B]"
+              className="text-sm text-neutral-600 hover:text-neutral-900"
             >
               {t("auth.verifyPhone.changeNumber")}
             </button>

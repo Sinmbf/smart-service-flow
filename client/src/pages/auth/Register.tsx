@@ -93,10 +93,10 @@ const Register = () => {
       <Card className="p-8 shadow-xl min-h-[520px]">
         {/* Title */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-[#1E293B] mb-2">
+          <h2 className="text-2xl font-bold text-neutral-900 mb-2">
             {t("auth.register.title")}
           </h2>
-          <p className="text-sm text-[#64748B]">
+          <p className="text-sm text-neutral-600">
             {t("auth.register.subtitle")}
           </p>
         </div>
@@ -105,28 +105,28 @@ const Register = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-3">
             <div className="flex flex-col items-center flex-1">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1E40AF] to-[#3B82F6] text-white flex items-center justify-center font-semibold text-sm shadow-md">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-700 to-primary-500 text-white flex items-center justify-center font-semibold text-sm shadow-md">
                 1
               </div>
-              <span className="text-xs text-[#2563EB] font-medium mt-2">
+              <span className="text-xs text-primary-700 font-medium mt-2">
                 {t("auth.register.step1")}
               </span>
             </div>
-            <div className="flex-1 h-0.5 bg-[#E2E8F0] mx-2 -mt-6"></div>
+            <div className="flex-1 h-0.5 bg-neutral-200 mx-2 -mt-6"></div>
             <div className="flex flex-col items-center flex-1">
-              <div className="w-10 h-10 rounded-full bg-[#E2E8F0] text-[#94A3B8] flex items-center justify-center font-semibold text-sm">
+              <div className="w-10 h-10 rounded-full bg-neutral-200 text-neutral-500 flex items-center justify-center font-semibold text-sm">
                 2
               </div>
-              <span className="text-xs text-[#94A3B8] mt-2">
+              <span className="text-xs text-neutral-500 mt-2">
                 {t("auth.register.step2")}
               </span>
             </div>
-            <div className="flex-1 h-0.5 bg-[#E2E8F0] mx-2 -mt-6"></div>
+            <div className="flex-1 h-0.5 bg-neutral-200 mx-2 -mt-6"></div>
             <div className="flex flex-col items-center flex-1">
-              <div className="w-10 h-10 rounded-full bg-[#E2E8F0] text-[#94A3B8] flex items-center justify-center font-semibold text-sm">
+              <div className="w-10 h-10 rounded-full bg-neutral-200 text-neutral-500 flex items-center justify-center font-semibold text-sm">
                 3
               </div>
-              <span className="text-xs text-[#94A3B8] mt-2">
+              <span className="text-xs text-neutral-500 mt-2">
                 {t("auth.register.step3")}
               </span>
             </div>
@@ -220,14 +220,14 @@ const Register = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, agreeToTerms: e.target.checked })
                 }
-                className="w-4 h-4 mt-0.5 text-[#2563EB] bg-white border-[#CBD5E1] rounded focus:ring-2 focus:ring-[#2563EB] focus:ring-offset-0 cursor-pointer"
+                className="w-4 h-4 mt-0.5 text-primary-700 bg-white border-neutral-300 rounded focus:ring-2 focus:ring-primary-500 focus:ring-offset-0 cursor-pointer"
               />
-              <span className="text-sm text-[#64748B] group-hover:text-[#334155]">
+              <span className="text-sm text-neutral-600 group-hover:text-neutral-900">
                 {t("auth.register.termsAgree")}
               </span>
             </label>
             {errors.agreeToTerms && (
-              <p className="mt-1.5 text-sm text-[#DC2626]">
+              <p className="mt-1.5 text-sm text-red-600">
                 {errors.agreeToTerms}
               </p>
             )}
@@ -248,19 +248,19 @@ const Register = () => {
 
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[#E2E8F0]"></div>
+            <div className="w-full border-t border-neutral-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-[#64748B]">{t("common.or")}</span>
+            <span className="px-4 bg-white text-neutral-600">{t("common.or")}</span>
           </div>
         </div>
 
         <div className="text-center">
-          <p className="text-sm text-[#64748B]">
+          <p className="text-sm text-neutral-600">
             {t("auth.register.haveAccount")}{" "}
             <Link
               to="/login"
-              className="text-[#2563EB] hover:text-[#1D4ED8] font-semibold hover:underline inline-flex items-center gap-1"
+              className="text-primary-700 hover:text-primary-800 font-semibold hover:underline inline-flex items-center gap-1"
             >
               {t("auth.register.loginLink")}
               <ArrowRight className="h-4 w-4" />

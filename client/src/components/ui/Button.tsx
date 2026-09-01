@@ -21,17 +21,17 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const baseStyles =
-    "inline-flex items-center justify-center font-heading font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-200 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md cursor-pointer min-h-[48px] min-w-[44px]";
+    "inline-flex items-center justify-center font-heading font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-200 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md cursor-pointer min-h-[48px] min-w-[44px]";
 
   const variants = {
     primary:
-      "bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 text-white hover:from-blue-800 hover:via-blue-700 hover:to-blue-600 focus:ring-blue-300 shadow-lg hover:shadow-xl active:scale-[0.98]",
+      "bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 text-white hover:from-primary-800 hover:via-primary-700 hover:to-primary-600 focus:ring-primary-300 shadow-lg hover:shadow-xl active:scale-[0.98]",
     secondary:
-      "bg-white text-neutral-900 hover:bg-neutral-50 border-2 border-blue-500 focus:ring-blue-200",
+      "bg-white text-neutral-900 hover:bg-neutral-50 border-2 border-primary-500 focus:ring-primary-200",
     danger:
       "bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 focus:ring-red-200 shadow-lg hover:shadow-xl active:scale-[0.98]",
     ghost:
-      "bg-transparent text-blue-700 hover:bg-blue-50 focus:ring-blue-200 shadow-none",
+      "bg-transparent text-primary-700 hover:bg-primary-50 focus:ring-primary-200 shadow-none",
   };
 
   const sizes = {

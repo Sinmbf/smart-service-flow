@@ -59,7 +59,7 @@ const TokenDisplay = () => {
       case "waiting":
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "called":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-primary-100 text-primary-800 border-primary-200";
       case "serving":
         return "bg-green-100 text-green-800 border-green-200";
       case "completed":
@@ -87,7 +87,7 @@ const TokenDisplay = () => {
               </div>
 
               {/* Token Number - Large Display */}
-              <div className="bg-gradient-to-br from-[#1E40AF] to-[#3B82F6] rounded-2xl p-8 md:p-10 mx-2 text-center shadow-lg animate-pulse-slow">
+              <div className="bg-gradient-to-br from-primary-700 to-primary-500 rounded-2xl p-8 md:p-10 mx-2 text-center shadow-lg animate-pulse-slow">
                 <p className="text-white/90 text-xs sm:text-sm font-medium mb-3">
                   {t("token.display.tokenNumber")}
                 </p>
@@ -146,10 +146,10 @@ const TokenDisplay = () => {
           </Card>
 
           {/* Notification Notice - Mobile */}
-          <div className="lg:hidden bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mx-2">
+          <div className="lg:hidden bg-primary-50 border-2 border-primary-200 rounded-xl p-4 mx-2">
             <div className="flex items-start gap-3">
               <svg
-                className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0 mt-0.5"
+                className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700 flex-shrink-0 mt-0.5"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -159,7 +159,7 @@ const TokenDisplay = () => {
                   clipRule="evenodd"
                 />
               </svg>
-              <p className="text-xs sm:text-sm text-blue-900 leading-relaxed">
+              <p className="text-xs sm:text-sm text-primary-900 leading-relaxed">
                 {t("token.display.keepThisPage")}
               </p>
             </div>
@@ -218,10 +218,10 @@ const TokenDisplay = () => {
 
           {/* Notification Notice - Desktop */}
           <div className="hidden lg:block">
-            <Card className="backdrop-blur-md bg-blue-50 border-2 border-blue-200">
+            <Card className="backdrop-blur-md bg-primary-50 border-2 border-primary-200">
               <div className="flex items-start gap-3">
                 <svg
-                  className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5"
+                  className="w-6 h-6 text-primary-700 flex-shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -232,10 +232,10 @@ const TokenDisplay = () => {
                   />
                 </svg>
                 <div>
-                  <h4 className="font-semibold text-blue-900 mb-1 text-sm">
+                  <h4 className="font-semibold text-primary-900 mb-1 text-sm">
                     Important
                   </h4>
-                  <p className="text-xs text-blue-900 leading-relaxed">
+                  <p className="text-xs text-primary-900 leading-relaxed">
                     {t("token.display.keepThisPage")}
                   </p>
                 </div>

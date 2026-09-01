@@ -87,10 +87,10 @@ const CitizenOTP = () => {
       <Card className="p-8 md:p-10 shadow-xl w-full max-w-md mx-auto">
         {/* Title */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-[#1E293B] mb-2">
+          <h2 className="text-2xl font-bold text-neutral-900 mb-2">
             {t("auth.citizen.title")}
           </h2>
-          <p className="text-sm text-[#64748B]">
+          <p className="text-sm text-neutral-600">
             {t("auth.citizen.subtitle")}
           </p>
         </div>
@@ -127,10 +127,10 @@ const CitizenOTP = () => {
         {step === "otp" && (
           <form onSubmit={handleVerifyOTP} className="space-y-5">
             <div className="text-center">
-              <p className="text-sm text-[#64748B] mb-2">
+              <p className="text-sm text-neutral-600 mb-2">
                 {t("auth.citizen.otpInstruction")}
               </p>
-              <p className="text-xs text-[#64748B]">
+              <p className="text-xs text-neutral-600">
                 {t("auth.citizen.otpConsoleNote")}
               </p>
             </div>
@@ -146,7 +146,7 @@ const CitizenOTP = () => {
             />
 
             {errors.otp && (
-              <p className="text-sm text-[#DC2626] text-center">{errors.otp}</p>
+              <p className="text-sm text-red-600 text-center">{errors.otp}</p>
             )}
 
             <Button
@@ -160,7 +160,7 @@ const CitizenOTP = () => {
 
             <button
               type="button"
-              className="w-full text-sm text-[#2563EB] hover:text-[#1D4ED8] font-medium"
+              className="w-full text-sm text-primary-700 hover:text-primary-800 font-medium"
               onClick={() => {
                 setStep("phone");
                 setOtp("");
@@ -175,7 +175,7 @@ const CitizenOTP = () => {
         <div className="mt-6 text-center">
           <button
             type="button"
-            className="text-sm text-[#64748B] hover:text-[#1E293B] font-medium"
+            className="text-sm text-neutral-600 hover:text-neutral-900 font-medium"
             onClick={() => navigate("/")}
           >
             ← {t("auth.citizen.backToHome")}

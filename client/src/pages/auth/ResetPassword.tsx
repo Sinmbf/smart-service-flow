@@ -72,16 +72,16 @@ const ResetPassword = () => {
     <AuthLayout>
       <Card className="p-6 sm:p-8">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-[#1E293B] mb-2">
+          <h2 className="text-2xl font-bold text-neutral-900 mb-2">
             {t("auth.resetPassword.title")}
           </h2>
-          <p className="text-sm text-[#64748B]">
+          <p className="text-sm text-neutral-600">
             {t("auth.resetPassword.subtitle")}
           </p>
         </div>
 
         {successMessage && (
-          <div className="mb-4 p-3 bg-[#16A34A]/10 border border-[#16A34A] rounded-lg text-sm text-[#16A34A]">
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
             {successMessage}
           </div>
         )}
@@ -136,7 +136,7 @@ const ResetPassword = () => {
         <div className="mt-6">
           <Link
             to="/login"
-            className="flex items-center justify-center gap-2 text-sm text-[#64748B] hover:text-[#1E293B] transition-colors"
+            className="flex items-center justify-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             {t("auth.resetPassword.backToLogin")}

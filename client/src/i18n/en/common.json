@@ -149,6 +149,39 @@
     }
   },
   "home": {
+    "hero": {
+      "headline1": "Skip the line.",
+      "headline2": "Get serviced faster.",
+      "subheadline": "Generate queue tokens, monitor wait times in real-time, and access government services from anywhere — all in one place.",
+      "emailPlaceholder": "your@email.com",
+      "getStarted": "Get Started",
+      "cardIssuer": "Citizen Services",
+      "cardLabel": "Active Token",
+      "cardService1": "Citizenship Application",
+      "cardService2": "Passport Renewal",
+      "cardCta": "View My Token"
+    },
+    "trust": {
+      "gov": "Government",
+      "public": "Public Services",
+      "digital": "Digital Nepal",
+      "national": "National ID"
+    },
+    "features": {
+      "kicker": "Why Smart Service Flow",
+      "title": "Service that grows with your needs.",
+      "description": "A modern queue management system built for citizens, staff, and government — simple to use, secure by design, and always available.",
+      "f1Title": "Free tokens",
+      "f1Desc": "Generate digital queue tokens instantly — no paperwork, no waiting in line just to get a number.",
+      "f2Title": "Multiple services",
+      "f2Desc": "Access all government services in one place: citizenship, passport, land registry, and more.",
+      "f3Title": "Unmatched security",
+      "f3Desc": "Your data is protected with end-to-end encryption, MFA, and audit-level access controls."
+    },
+    "actions": {
+      "title": "Get Started in Seconds",
+      "subtitle": "Three ways to begin your service journey. Choose what works for you."
+    },
     "getQueueToken": "Get Queue Token",
     "getQueueTokenDesc": "Request a token for government services",
     "startQueue": "Start Queue",

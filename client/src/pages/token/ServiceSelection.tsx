@@ -116,7 +116,7 @@ const ServiceSelection = () => {
                     p-4 md:p-5 rounded-xl border-2 transition-all duration-200 text-left
                     ${
                       selectedService === service.id
-                        ? "border-[#2563EB] bg-blue-50 shadow-md scale-[1.02]"
+                        ? "border-primary-500 bg-primary-50 shadow-md scale-[1.02]"
                         : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm hover:scale-[1.01]"
                     }
                   `}
@@ -128,7 +128,7 @@ const ServiceSelection = () => {
                       p-3 md:p-4 rounded-lg flex-shrink-0 transition-all duration-200
                       ${
                         selectedService === service.id
-                          ? "bg-gradient-to-br from-[#1E40AF] to-[#3B82F6] text-white"
+                          ? "bg-gradient-to-br from-primary-700 to-primary-500 text-white"
                           : "bg-gray-100 text-gray-600"
                       }
                     `}
@@ -150,7 +150,7 @@ const ServiceSelection = () => {
                     {selectedService === service.id && (
                       <div className="flex-shrink-0 animate-scale-in">
                         <svg
-                          className="w-6 h-6 md:w-7 md:h-7 text-[#2563EB]"
+                          className="w-6 h-6 md:w-7 md:h-7 text-primary-700"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >

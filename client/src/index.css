@@ -1,14 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 /* Design System: Accessible & Ethical + Minimalism & Swiss Style */
 /* Based on UI/UX Pro Max Skill - Government/Public Service */
 
 /* ============================================
-   FONT IMPORT - Corporate Trust (Lexend + Source Sans 3)
-   ============================================ */
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
-
-/* ============================================
    DESIGN TOKENS - CSS Custom Properties
+   Theme: Finpay (Deep Teal + Mint)
    ============================================ */
 :root {
   /* Typography */
@@ -24,42 +21,42 @@
   --text-3xl: 2.25rem;     /* 36px */
   --text-4xl: 3rem;        /* 48px */
 
-  /* Color System - Professional Blue + Neutral */
-  --color-primary-50: #EFF6FF;
-  --color-primary-100: #DBEAFE;
-  --color-primary-200: #BFDBFE;
-  --color-primary-300: #93C5FD;
-  --color-primary-400: #60A5FA;
-  --color-primary-500: #3B82F6;
-  --color-primary-600: #2563EB;
-  --color-primary-700: #1D4ED8;
-  --color-primary-800: #1E40AF;
-  --color-primary-900: #1E3A8A;
+  /* Color System - Finpay Teal */
+  --color-primary-50:  #EAF4F5;   /* mint tint for backgrounds */
+  --color-primary-100: #CFE3E6;   /* hover surfaces, dividers */
+  --color-primary-200: #A4CDD2;   /* checkmark bg, soft borders */
+  --color-primary-300: #6FB1B8;   /* secondary CTA outline */
+  --color-primary-400: #3F95A0;   /* focus ring (medium) */
+  --color-primary-500: #1F6F7A;   /* mid teal - secondary buttons */
+  --color-primary-600: #155461;   /* hover of primary */
+  --color-primary-700: #0F4C5C;   /* PRIMARY - buttons, gradients */
+  --color-primary-800: #0A3A48;   /* dark gradient end, hero overlay */
+  --color-primary-900: #06262F;   /* darkest teal - heading text on light */
 
-  --color-neutral-50: #FAFAFA;
-  --color-neutral-100: #F5F5F5;
-  --color-neutral-200: #E5E5E5;
-  --color-neutral-300: #D4D4D4;
-  --color-neutral-400: #A3A3A3;
-  --color-neutral-500: #737373;
-  --color-neutral-600: #525252;
-  --color-neutral-700: #404040;
-  --color-neutral-800: #262626;
-  --color-neutral-900: #171717;
+  --color-neutral-50:  #FAFBFC;
+  --color-neutral-100: #F4F6F7;
+  --color-neutral-200: #E5E9EC;
+  --color-neutral-300: #D2D8DC;
+  --color-neutral-400: #A1A9B0;
+  --color-neutral-500: #6B7378;
+  --color-neutral-600: #4A5258;
+  --color-neutral-700: #2F373C;
+  --color-neutral-800: #1A2125;
+  --color-neutral-900: #0B1F2A;   /* heading text */
 
-  --color-success: #059669;
+  --color-success: #0E9F6E;
   --color-warning: #D97706;
   --color-error: #DC2626;
-  --color-info: #0284C7;
+  --color-info: var(--color-primary-500);
 
-  --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: #F5F5F5;
-  --color-bg-tertiary: #EFF6FF;
+  --color-bg-primary:   #FFFFFF;
+  --color-bg-secondary: #F4F6F7;
+  --color-bg-tertiary:  #EAF4F5;   /* soft teal background */
 
-  --color-text-primary: #171717;
-  --color-text-secondary: #404040;
-  --color-text-muted: #737373;
-  --color-text-inverse: #FFFFFF;
+  --color-text-primary:   #0B1F2A;
+  --color-text-secondary: #2F373C;
+  --color-text-muted:     #6B7378;
+  --color-text-inverse:   #FFFFFF;
 
   /* Spacing - 8px Base (Swiss Style) */
   --space-1: 0.5rem;     /* 8px */
@@ -75,17 +72,38 @@
   --focus-ring: 3px solid var(--color-primary-500);
   --focus-offset: 2px;
 
-  /* Border Radius - Subtle, Professional */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Border Radius - Match Finpay's generous rounding */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
 
-  /* Shadows - Soft Modern */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.04);
+  /* Hero gradient - soft mint bleed (matches Finpay screenshot) */
+  --gradient-hero: linear-gradient(135deg, #EAF4F5 0%, #CFE3E6 50%, #A4CDD2 100%);
+
+  /* Shadows - Soft Modern (teal-tinted) */
+  --shadow-sm: 0 1px 2px rgba(10, 58, 72, 0.05);
+  --shadow-md: 0 6px 16px -4px rgba(10, 58, 72, 0.10), 0 2px 4px -1px rgba(10, 58, 72, 0.05);
+  --shadow-lg: 0 16px 32px -8px rgba(10, 58, 72, 0.14), 0 4px 8px -2px rgba(10, 58, 72, 0.06);
+  --shadow-xl: 0 24px 48px -12px rgba(10, 58, 72, 0.18);
+}
+
+/* ============================================
+   TAILWIND v4 THEME - exposes CSS variables as
+   utility classes (bg-primary-700, text-primary-700, etc.)
+   ============================================ */
+@theme {
+  --color-primary-50:  #EAF4F5;
+  --color-primary-100: #CFE3E6;
+  --color-primary-200: #A4CDD2;
+  --color-primary-300: #6FB1B8;
+  --color-primary-400: #3F95A0;
+  --color-primary-500: #1F6F7A;
+  --color-primary-600: #155461;
+  --color-primary-700: #0F4C5C;
+  --color-primary-800: #0A3A48;
+  --color-primary-900: #06262F;
 }
 
 /* ============================================
@@ -151,7 +169,7 @@ button, a, input, select, textarea, [role="button"] {
 /* High Contrast Mode Support */
 @media (prefers-contrast: high) {
   :root {
-    --color-primary-600: #000000;
+    --color-primary-700: #000000;
     --color-bg-primary: #FFFFFF;
     --color-text-primary: #000000;
   }
@@ -161,7 +179,7 @@ button, a, input, select, textarea, [role="button"] {
    COMPONENT PATTERNS
    ============================================ */
 
-/* Primary Button - Professional Blue */
+/* Primary Button - Finpay Teal */
 .btn-primary {
   font-family: var(--font-body);
   font-size: var(--text-base);
@@ -169,7 +187,7 @@ button, a, input, select, textarea, [role="button"] {
   min-height: 48px;
   padding: 12px 24px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-700) 100%);
+  background: linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-500) 100%);
   color: var(--color-text-inverse);
   border: none;
   box-shadow: var(--shadow-md);
@@ -177,7 +195,7 @@ button, a, input, select, textarea, [role="button"] {
   cursor: pointer;
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-800) 100%);
+  background: linear-gradient(135deg, var(--color-primary-800) 0%, var(--color-primary-600) 100%);
   box-shadow: var(--shadow-lg);
   transform: translateY(-1px);
 }
@@ -207,7 +225,7 @@ button, a, input, select, textarea, [role="button"] {
 .card {
   background: var(--color-bg-primary);
   border: 1px solid var(--color-neutral-200);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   padding: var(--space-6);
   box-shadow: var(--shadow-sm);
   transition: box-shadow 200ms ease, border-color 200ms ease;
@@ -257,12 +275,22 @@ button, a, input, select, textarea, [role="button"] {
 /* ============================================
    COLOR CLASSES (Semantic)
    ============================================ */
-.bg-primary { background-color: var(--color-primary-600); }
+.bg-primary { background-color: var(--color-primary-700); }
 .bg-primary-light { background-color: var(--color-primary-50); }
 .bg-secondary { background-color: var(--color-bg-secondary); }
 
 .text-primary { color: var(--color-primary-700); }
 .text-primary-dark { color: var(--color-primary-900); }
+
+/* ============================================
+   SURFACE UTILITIES (Finpay-style backgrounds)
+   ============================================ */
+.surface-hero {
+  background: var(--gradient-hero);
+}
+.surface-soft {
+  background-color: var(--color-bg-tertiary);
+}
 
 /* ============================================
    OLD DARK THEME REMOVAL

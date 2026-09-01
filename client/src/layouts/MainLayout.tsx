@@ -23,7 +23,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="grid-main" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E3A8A" strokeWidth="1"/>
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0A3A48" strokeWidth="1"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid-main)" />
@@ -36,7 +36,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
             {/* Logo + Title */}
             <Link to="/" className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0 hover:opacity-90 transition-opacity">
-              <div className="bg-blue-700 p-2.5 sm:p-3 md:p-3.5 rounded-xl shadow-md flex-shrink-0">
+              <div className="bg-primary-700 p-2.5 sm:p-3 md:p-3.5 rounded-xl shadow-md flex-shrink-0">
                 <svg
                   className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 text-white"
                   viewBox="0 0 24 24"
@@ -55,9 +55,6 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
                 <h1 className="text-base sm:text-xl md:text-xl font-heading font-bold text-neutral-900 leading-none truncate">
                   {t("common.appName")}
                 </h1>
-                <p className="text-xs md:text-sm text-neutral-600 leading-tight mt-1 truncate">
-                  Government Service Management System
-                </p>
               </div>
             </Link>
 
@@ -72,7 +69,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
                     aria-current={location.pathname === "/" ? "page" : undefined}
                     className={`px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] flex items-center ${
                       location.pathname === "/"
-                        ? "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md"
+                        ? "bg-gradient-to-r from-primary-700 to-primary-500 text-white shadow-md"
                         : "text-neutral-700 hover:bg-white"
                     }`}
                   >
@@ -89,7 +86,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
                     aria-current={isMonitor ? "page" : undefined}
                     className={`px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] flex items-center ${
                       isMonitor
-                        ? "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md"
+                        ? "bg-gradient-to-r from-primary-700 to-primary-500 text-white shadow-md"
                         : "text-neutral-700 hover:bg-white"
                     }`}
                   >
@@ -106,7 +103,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
                     aria-current={isServices ? "page" : undefined}
                     className={`px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] flex items-center ${
                       isServices
-                        ? "bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md"
+                        ? "bg-gradient-to-r from-primary-700 to-primary-500 text-white shadow-md"
                         : "text-neutral-700 hover:bg-white"
                     }`}
                   >

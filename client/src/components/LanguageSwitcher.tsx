@@ -17,7 +17,7 @@ const LanguageSwitcher = () => {
           onClick={() => changeLanguage("en")}
           className={`text-[11px] sm:text-sm font-semibold transition-colors px-1.5 sm:px-1.5 py-0.5 rounded-md cursor-pointer ${
             currentLanguage === "en"
-              ? "text-[#2563EB] bg-blue-50"
+              ? "text-primary-700 bg-primary-50"
               : "text-gray-500 hover:text-gray-800 hover:bg-gray-50"
           }`}
         >
@@ -29,7 +29,7 @@ const LanguageSwitcher = () => {
           onClick={() => changeLanguage("ne")}
           className={`text-[11px] sm:text-sm font-semibold transition-colors px-1.5 py-0.5 rounded-md cursor-pointer ${
             currentLanguage === "ne"
-              ? "text-[#2563EB] bg-blue-50"
+              ? "text-primary-700 bg-primary-50"
               : "text-gray-500 hover:text-gray-800 hover:bg-gray-50"
           }`}
         >

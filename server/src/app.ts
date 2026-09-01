@@ -1,8 +1,8 @@
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-import citizenAuthRoutes from "./routes/auth/citizen";
-import staffAuthRoutes from "./routes/auth/staff";
+import citizenAuthRoutes from "./routes/auth/citizen.js";
+import staffAuthRoutes from "./routes/auth/staff.js";
 
 const app = express();
 

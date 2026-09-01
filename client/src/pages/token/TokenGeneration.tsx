@@ -65,7 +65,7 @@ const TokenGeneration = () => {
             {/* Spinner */}
             <div className="relative w-24 h-24">
               <div className="absolute inset-0 border-8 border-gray-200 rounded-full"></div>
-              <div className="absolute inset-0 border-8 border-[#2563EB] border-t-transparent rounded-full animate-spin"></div>
+              <div className="absolute inset-0 border-8 border-primary-700 border-t-transparent rounded-full animate-spin"></div>
             </div>
 
             {/* Generating text */}
@@ -76,7 +76,7 @@ const TokenGeneration = () => {
             {/* Token Icon Animation */}
             <div className="flex items-center gap-2 animate-bounce">
               <svg
-                className="w-12 h-12 text-[#2563EB]"
+                className="w-12 h-12 text-primary-700"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >

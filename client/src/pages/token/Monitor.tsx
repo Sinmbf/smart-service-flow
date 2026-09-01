@@ -70,7 +70,7 @@ const Monitor = () => {
               </span>
               <button
                 onClick={fetchQueue}
-                className="px-4 py-2 bg-white border-2 border-blue-500 text-blue-700 hover:bg-blue-50 rounded-lg text-sm font-heading font-semibold transition-colors min-h-[44px]"
+                className="px-4 py-2 bg-white border-2 border-primary-500 text-primary-700 hover:bg-primary-50 rounded-lg text-sm font-heading font-semibold transition-colors min-h-[44px]"
               >
                 {t("token.monitor.refresh")}
               </button>
@@ -81,7 +81,7 @@ const Monitor = () => {
         {/* Loading */}
         {loading ? (
           <div className="text-center py-16" role="status" aria-live="polite">
-            <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
+            <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4" />
             <p className="text-neutral-700 font-medium">{t("common.loading")}</p>
           </div>
         ) : (
@@ -92,20 +92,20 @@ const Monitor = () => {
                   {/* Service name */}
                   <div className="flex items-center justify-between gap-2">
                     <h3 className="text-lg font-heading font-bold text-neutral-900 leading-tight">{s.name}</h3>
-                    <span className="text-xs font-heading font-semibold text-blue-700 bg-blue-50 px-3 py-1 rounded-full whitespace-nowrap">
+                    <span className="text-xs font-heading font-semibold text-primary-700 bg-primary-50 px-3 py-1 rounded-full whitespace-nowrap">
                       {t("token.display.service")}
                     </span>
                   </div>
 
                   {/* Main stat: currently serving */}
-                  <div className="bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 text-white rounded-xl p-4 shadow-md">
-                    <div className="text-xs font-heading font-medium text-blue-100 uppercase tracking-wider">
+                  <div className="bg-gradient-to-br from-primary-700 via-primary-600 to-primary-500 text-white rounded-xl p-4 shadow-md">
+                    <div className="text-xs font-heading font-medium text-primary-100 uppercase tracking-wider">
                       {t("token.monitor.currentlyServing")}
                     </div>
                     <div className="text-5xl font-heading font-bold leading-none mt-2">
                       {s.currentNumber}
                     </div>
-                    <div className="text-sm text-blue-100 mt-2">
+                    <div className="text-sm text-primary-100 mt-2">
                       {t("token.display.status")}: {t("token.display.waiting")}
                     </div>
                   </div>
@@ -133,7 +133,7 @@ const Monitor = () => {
         <div className="text-center pt-6">
           <a
             href="/token/services"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 hover:from-blue-800 hover:via-blue-700 hover:to-blue-600 text-white text-lg font-heading font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all cursor-pointer min-h-[48px]"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 hover:from-primary-800 hover:via-primary-700 hover:to-primary-600 text-white text-lg font-heading font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all cursor-pointer min-h-[48px]"
           >
             {t("token.monitor.getToken")}
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

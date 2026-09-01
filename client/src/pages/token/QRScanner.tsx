@@ -87,7 +87,7 @@ const QRScanner = () => {
         canvasRef.current.height = size;
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, size, size);
-        ctx.fillStyle = "#1E3A8A";
+        ctx.fillStyle = "#0F4C5C";
         for (let r = 0; r < matrix.length; r++) {
           for (let c = 0; c < matrix[r].length; c++) {
             if (matrix[r][c]) {
@@ -131,7 +131,7 @@ const QRScanner = () => {
               <a
                 href={qrSvg}
                 download="smart-service-flow-qr.svg"
-                className="inline-flex items-center gap-2 text-base text-blue-700 hover:text-blue-800 font-heading font-semibold hover:underline"
+                className="inline-flex items-center gap-2 text-base text-primary-700 hover:text-primary-800 font-heading font-semibold hover:underline"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -164,7 +164,7 @@ const QRScanner = () => {
                   { num: "3", title: t("token.scanner.step3Title"), desc: t("token.scanner.step3Desc") },
                 ].map((step) => (
                   <div key={step.num} className="flex items-start gap-4">
-                    <div className="bg-gradient-to-br from-blue-700 to-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-heading font-bold flex-shrink-0 text-sm shadow-md">
+                    <div className="bg-gradient-to-br from-primary-700 to-primary-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-heading font-bold flex-shrink-0 text-sm shadow-md">
                       {step.num}
                     </div>
                     <div>
@@ -177,14 +177,14 @@ const QRScanner = () => {
             </div>
           </Card>
 
-          <Card className="bg-blue-50 border-2 border-blue-200">
+          <Card className="bg-primary-50 border-2 border-primary-200">
             <div className="flex items-start gap-3">
-              <svg className="w-6 h-6 text-blue-700 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <svg className="w-6 h-6 text-primary-700 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
               <div>
-                <h4 className="font-heading font-semibold text-blue-900 text-base mb-1">{t("token.scanner.noticeTitle")}</h4>
-                <p className="text-base text-blue-900 leading-relaxed">{t("token.scanner.noticeText")}</p>
+                <h4 className="font-heading font-semibold text-primary-900 text-base mb-1">{t("token.scanner.noticeTitle")}</h4>
+                <p className="text-base text-primary-900 leading-relaxed">{t("token.scanner.noticeText")}</p>
               </div>
             </div>
           </Card>

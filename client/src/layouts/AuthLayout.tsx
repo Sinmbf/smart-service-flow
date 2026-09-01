@@ -17,7 +17,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="grid-auth" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E3A8A" strokeWidth="1"/>
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0A3A48" strokeWidth="1"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid-auth)" />
@@ -29,7 +29,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
         <div className="max-w-5xl mx-auto lg:flex lg:items-center lg:justify-between">
           {/* Logo + Title */}
           <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <div className="bg-blue-700 p-3 rounded-xl shadow-md flex-shrink-0">
+            <div className="bg-primary-700 p-3 rounded-xl shadow-md flex-shrink-0">
               <svg
                 className="h-10 w-10 text-white"
                 viewBox="0 0 24 24"
@@ -48,9 +48,6 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
               <h1 className="text-xl font-heading font-bold text-neutral-900 leading-tight">
                 {t("common.appName")}
               </h1>
-              <p className="text-sm text-neutral-600 mt-0.5 hidden sm:block">
-                Government Service Management System
-              </p>
             </div>
           </Link>
 
