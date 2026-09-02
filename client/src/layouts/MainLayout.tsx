@@ -36,7 +36,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
             {/* Logo + Title */}
             <Link to="/" className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0 hover:opacity-90 transition-opacity">
-              <div className="bg-primary-700 p-2.5 sm:p-3 md:p-3.5 rounded-xl shadow-md flex-shrink-0">
+              <div className="bg-neutral-900 p-2.5 sm:p-3 md:p-3.5 rounded-xl flex-shrink-0">
                 <svg
                   className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 text-white"
                   viewBox="0 0 24 24"
@@ -69,7 +69,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
                     aria-current={location.pathname === "/" ? "page" : undefined}
                     className={`px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] flex items-center ${
                       location.pathname === "/"
-                        ? "bg-gradient-to-r from-primary-700 to-primary-500 text-white shadow-md"
+                        ? "bg-neutral-900 text-white"
                         : "text-neutral-700 hover:bg-white"
                     }`}
                   >
@@ -86,7 +86,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
                     aria-current={isMonitor ? "page" : undefined}
                     className={`px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] flex items-center ${
                       isMonitor
-                        ? "bg-gradient-to-r from-primary-700 to-primary-500 text-white shadow-md"
+                        ? "bg-neutral-900 text-white"
                         : "text-neutral-700 hover:bg-white"
                     }`}
                   >
@@ -103,7 +103,7 @@ const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
                     aria-current={isServices ? "page" : undefined}
                     className={`px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] flex items-center ${
                       isServices
-                        ? "bg-gradient-to-r from-primary-700 to-primary-500 text-white shadow-md"
+                        ? "bg-neutral-900 text-white"
                         : "text-neutral-700 hover:bg-white"
                     }`}
                   >

@@ -124,8 +124,8 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 600;
   line-height: 1.2;
-  color: var(--color-text-primary);
   letter-spacing: -0.025em;
+  color: inherit;
 }
 
 h1 { font-size: var(--text-4xl); }
@@ -169,9 +169,30 @@ button, a, input, select, textarea, [role="button"] {
 /* High Contrast Mode Support */
 @media (prefers-contrast: high) {
   :root {
-    --color-primary-700: #000000;
+    --color-primary-700: #06262F;
     --color-bg-primary: #FFFFFF;
     --color-text-primary: #000000;
+  }
+
+  /* Force text to remain white on dark teal/gray cards */
+  .bg-gradient-to-br.from-primary-800,
+  .bg-gradient-to-br.via-primary-700,
+  .bg-gradient-to-br.to-primary-600,
+  .bg-neutral-900 {
+    --color-text-primary: #FFFFFF;
+  }
+
+  [class*="bg-neutral-900"] h1,
+  [class*="bg-neutral-900"] h2,
+  [class*="bg-neutral-900"] h3,
+  [class*="bg-neutral-900"] h4,
+  [class*="bg-neutral-900"] p,
+  [class*="bg-gradient-to-br"] h1,
+  [class*="bg-gradient-to-br"] h2,
+  [class*="bg-gradient-to-br"] h3,
+  [class*="bg-gradient-to-br"] h4,
+  [class*="bg-gradient-to-br"] p {
+    color: #FFFFFF !important;
   }
 }
 

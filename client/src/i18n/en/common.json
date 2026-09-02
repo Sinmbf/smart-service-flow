@@ -150,9 +150,9 @@
   },
   "home": {
     "hero": {
-      "headline1": "Skip the line.",
-      "headline2": "Get serviced faster.",
-      "subheadline": "Generate queue tokens, monitor wait times in real-time, and access government services from anywhere — all in one place.",
+      "headline1": "Queue online.",
+      "headline2": "Visit when ready.",
+      "subheadline": "Book your queue token online, track real-time waiting times, and visit government offices only when it's your turn.",
       "emailPlaceholder": "your@email.com",
       "getStarted": "Get Started",
       "cardIssuer": "Citizen Services",

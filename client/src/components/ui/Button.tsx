@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "danger" | "ghost";
+  variant?: "primary" | "secondary" | "outline" | "danger" | "ghost" | "success";
   size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
   isLoading?: boolean;
@@ -21,23 +21,38 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const baseStyles =
-    "inline-flex items-center justify-center font-heading font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-200 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md cursor-pointer min-h-[48px] min-w-[44px]";
+    "inline-flex items-center justify-center font-heading font-semibold rounded-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer min-h-[48px] min-w-[44px]";
 
   const variants = {
+    // Primary — solid teal (only for ONE primary action per screen)
     primary:
-      "bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 text-white hover:from-primary-800 hover:via-primary-700 hover:to-primary-600 focus:ring-primary-300 shadow-lg hover:shadow-xl active:scale-[0.98]",
+      "bg-primary-700 text-white hover:bg-primary-800 focus-visible:ring-primary-300 shadow-sm hover:shadow-md active:scale-[0.98]",
+
+    // Secondary — subtle filled neutral (for "View" / "Cancel" / less-prominent actions)
     secondary:
-      "bg-white text-neutral-900 hover:bg-neutral-50 border-2 border-primary-500 focus:ring-primary-200",
+      "bg-neutral-100 text-neutral-900 hover:bg-neutral-200 focus-visible:ring-neutral-300 shadow-none",
+
+    // Outline — bordered, transparent (for "Back", "Change", link-like actions)
+    outline:
+      "bg-white text-neutral-700 border border-neutral-300 hover:border-neutral-400 hover:bg-neutral-50 focus-visible:ring-neutral-300 shadow-none",
+
+    // Danger — red, only for destructive actions (Cancel/Delete/Remove)
     danger:
-      "bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 focus:ring-red-200 shadow-lg hover:shadow-xl active:scale-[0.98]",
+      "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-300 shadow-sm hover:shadow-md active:scale-[0.98]",
+
+    // Success — green, for "Confirm"/"Verify"/"Approve" positive actions
+    success:
+      "bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:ring-emerald-300 shadow-sm hover:shadow-md active:scale-[0.98]",
+
+    // Ghost — text only, for tertiary actions
     ghost:
-      "bg-transparent text-primary-700 hover:bg-primary-50 focus:ring-primary-200 shadow-none",
+      "bg-transparent text-neutral-700 hover:bg-neutral-100 focus-visible:ring-neutral-300 shadow-none",
   };
 
   const sizes = {
     sm: "px-4 py-2.5 text-sm",
-    md: "px-6 py-3.5 text-base",
-    lg: "px-8 py-4 text-lg",
+    md: "px-6 py-3 text-base",
+    lg: "px-7 py-3.5 text-lg",
   };
 
   const widthClass = fullWidth ? "w-full" : "";

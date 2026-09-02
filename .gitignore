@@ -29,3 +29,8 @@ coverage/
 Thumbs.db
 # Claude Code local data (skills, MCP config - not part of project)
 .claude/
+
+# Local skill/tooling data (not part of project)
+.agents/
+agents.md
+skills-lock.json

@@ -29,7 +29,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
         <div className="max-w-5xl mx-auto lg:flex lg:items-center lg:justify-between">
           {/* Logo + Title */}
           <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <div className="bg-primary-700 p-3 rounded-xl shadow-md flex-shrink-0">
+            <div className="bg-neutral-900 p-3 rounded-xl flex-shrink-0">
               <svg
                 className="h-10 w-10 text-white"
                 viewBox="0 0 24 24"

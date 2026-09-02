@@ -107,19 +107,19 @@ const Login = () => {
 
         {/* Messages */}
         {serverMessage && (
-          <div className="mb-6 p-4 bg-primary-50 border-2 border-primary-200 rounded-lg text-base text-primary-700" role="status">
+          <div className="mb-6 p-4 bg-neutral-100 border border-neutral-300 rounded-lg text-base text-neutral-800" role="status">
             {serverMessage}
           </div>
         )}
         {errors.api && (
-          <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-lg text-base text-red-700" role="alert">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-base text-red-700" role="alert">
             {errors.api}
           </div>
         )}
 
         {/* Staff Login */}
         {!otpStep && (
-          <form onSubmit={handleStaffLogin} className="space-y-6" noValidate>
+          <form onSubmit={handleStaffLogin} className="space-y-6" noValidate aria-describedby="login-error">
             <Input
               label={t("auth.staff.email")}
               type="email"
@@ -148,7 +148,7 @@ const Login = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, rememberMe: e.target.checked })
                   }
-                  className="w-5 h-5 text-primary-600 bg-white border-2 border-neutral-300 rounded focus:ring-4 focus:ring-primary-200 cursor-pointer"
+                  className="w-5 h-5 text-primary-600 bg-white border-2 border-neutral-300 rounded focus-visible:ring-4 focus-visible:ring-primary-200 focus-visible:ring-offset-2 cursor-pointer"
                 />
                 <span className="text-base text-neutral-700 group-hover:text-neutral-900">
                   {t("auth.login.rememberMe")}
@@ -158,7 +158,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => navigate("/forgot-password")}
-                className="text-base text-primary-700 hover:text-primary-800 font-medium hover:underline min-h-[44px] flex items-center"
+                className="text-base text-neutral-700 hover:text-neutral-900 font-medium hover:underline min-h-[44px] flex items-center"
               >
                 {t("auth.login.forgotPassword")}
               </button>
@@ -241,7 +241,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => navigate("/staff-register")}
-                className="text-primary-700 hover:text-primary-800 font-semibold hover:underline inline-flex items-center gap-1 min-h-[44px]"
+                className="text-neutral-900 hover:text-primary-700 font-semibold hover:underline inline-flex items-center gap-1 min-h-[44px]"
               >
                 {t("auth.staff.registerLink")}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
