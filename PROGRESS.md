@@ -135,6 +135,7 @@
 |---|---|---|
 | `feat(server): log successful DB connection on startup` | Added `src/dbCheck.js`; `server.js` now logs `✅ Connected to PostgreSQL (Xms) — N offices, N services, N users` on boot, with helpful error messages for ECONNREFUSED, auth failures, missing database. | Make the DB connection status visible in the console at startup, not just a silent 200 from the first request. |
 | `feat(server): log OTPs to stdout and server/otp.log` | `deliverOTPToConsole` now writes `[OTP]  YYYY-MM-DD HH:MM:SS  +9779841234567  →  313572` to both stdout and `server/otp.log`. `server/otp.log` is gitignored. Startup banner shows the log file path. | When running the server in the background or in an IDE, OTPs were lost. Now every OTP is captured to a file the developer can `Get-Content otp.log -Wait` in a second terminal. |
+| `fix(server): restore multi-line OTP box on stdout + keep one-liner in otp.log` | Restored the box-style OTP display in the terminal (matches the original format) while keeping the one-liner append in `otp.log`. | The previous `process.stdout.write` change was correct but the box format is more visible. The foreground terminal still shows the OTP because `console.log` writes to the terminal where the server was launched. |
 
 ---
 
