@@ -1,7 +1,7 @@
 
 import { forwardRef } from "react";
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
+const Input = forwardRef(
   ({ label, error, helperText, icon, className = "", id, ...props }, ref) => {
     const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
 

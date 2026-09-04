@@ -3,7 +3,7 @@ import { Globe } from "lucide-react";
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
-  const changeLanguage = (language: ) => {
+  const changeLanguage = (language) => {
     i18n.changeLanguage(language);
     localStorage.setItem("language", language);
   };

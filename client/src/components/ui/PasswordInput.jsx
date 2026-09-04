@@ -2,7 +2,7 @@
 import { forwardRef, useState } from "react";
 import { Eye, EyeOff, Lock } from "lucide-react";
 
-const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
+const PasswordInput = forwardRef(
   ({ label, error, helperText, className = "", id, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
     const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");

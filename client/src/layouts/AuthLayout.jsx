@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 
-const AuthLayout = ({ children }: AuthLayoutProps) => {
+const AuthLayout = ({ children }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const isTokenRoute = location.pathname.startsWith("/token");
