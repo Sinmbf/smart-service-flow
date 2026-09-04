@@ -1,7 +1,7 @@
-export { default } from "./Login";
-export { default } from "./Register";
-export { default } from "./VerifyPhone";
-export { default } from "./ForgotPassword";
-export { default } from "./ResetPassword";
-export { default } from "./CitizenOTP";
-export { default } from "./StaffRegister";
+export { default as Login } from "./Login";
+export { default as Register } from "./Register";
+export { default as VerifyPhone } from "./VerifyPhone";
+export { default as ForgotPassword } from "./ForgotPassword";
+export { default as ResetPassword } from "./ResetPassword";
+export { default as CitizenOTP } from "./CitizenOTP";
+export { default as StaffRegister } from "./StaffRegister";

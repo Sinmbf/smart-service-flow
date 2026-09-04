@@ -12,9 +12,11 @@ i18n.use(initReactI18next).init({
     ne,
   },
 
-  lng === "ne" ? "ne" : "en",
+  lng: savedLanguage === "ne" ? "ne" : "en",
   fallbackLng: "en",
 
-  interpolation,
+  interpolation: {
+    escapeValue: false,
+  },
 });
 export default i18n;

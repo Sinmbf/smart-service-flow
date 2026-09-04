@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import Footer from "../components/Footer";
 
-const MainLayout = ({ children, showHeader = true }: MainLayoutProps) => {
+const MainLayout = ({ children, showHeader = true }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const isTokenRoute = location.pathname.startsWith("/token");
