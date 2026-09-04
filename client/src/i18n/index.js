@@ -1,15 +1,14 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-
-import en from "./en/common.json";
-import ne from "./ne/common.json";
+import * as en from "./en/common.json";
+import * as ne from "./ne/common.json";
 
 const savedLanguage = localStorage.getItem("language");
 
 i18n.use(initReactI18next).init({
   resources: {
-    en,
-    ne,
+    en: { translation: en },
+    ne: { translation: ne },
   },
 
   lng: savedLanguage === "ne" ? "ne" : "en",
