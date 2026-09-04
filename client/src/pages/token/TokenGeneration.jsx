@@ -32,7 +32,14 @@ const TokenGeneration = () => {
 
       // Navigate to token display with generated data
       navigate("/token/display", {
-        state,
+        state: {
+          tokenNumber,
+          service,
+          queuePosition,
+          estimatedWait,
+          status: "waiting",
+          generatedAt: new Date().toISOString(),
+        },
       });
     }, 2000);
 
