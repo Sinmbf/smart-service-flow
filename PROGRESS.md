@@ -1,8 +1,8 @@
 # Smart Service Flow — Progress Tracker
 
-> **Purpose:** Track the project's status against `complete_project_roadmap.md` and `plans/implementation_plan.md`. Updated after every major change.
+> **Purpose:** Track the project's status against `complete_project_roadmap.md` and `plans/implementation_plan.md`. Updated after every major change so you can resume work in any session.
 
-> **Last updated:** 2026-09-05
+> **Last updated:** 2026-09-05 (end of session 1)
 
 ---
 
@@ -15,8 +15,10 @@
 | Next step | **Step 2 — JWT + bcrypt + auth middleware** |
 | Increment | 1 (Foundation) — 80% done |
 | Server runs on | `http://localhost:5000` |
-| Client runs on | `http://localhost:5174` (or next free port) |
-| Database | PostgreSQL 18 (`smart_service_flow` db, seeded) |
+| Client runs on | `http://localhost:5173+` (Vite auto-picks next free port) |
+| Database | PostgreSQL 18, db `smart_service_flow` (locally installed, **no Docker**) |
+| Server status at handoff | **stopped** (port 5000 free) — you start it in your own terminal |
+| Seeded data | 2 offices, 3 services, 14 stages, 10 required documents, 4 users (3 demo + 1 you created via the citizen OTP flow) |
 
 ---
 
@@ -27,19 +29,19 @@
 | Phase | Step | Status | Notes |
 |---|---|---|---|
 | 1.1 Repo & dev setup | — | ✅ Done | monorepo, client/ + server/, .gitignore, scripts |
-| 1.2 Frontend foundation | — | ✅ Done | React + Vite + Tailwind + i18next + Lucide + PWA |
-| 1.3 Backend foundation | — | ✅ Done | Express + TS→JS, helmet, cors, health, /api routes |
-| **1.4 Database foundation** | **Step 1** | ✅ **Done** | Prisma 7 + PostgreSQL 18 + seed (2 offices, 3 services, 14 stages, 10 docs, 3 users) |
-| 1.5 Authentication | Step 2 | ⏳ Next | JWT + bcrypt + auth middleware (upcoming) |
-| 1.5 Frontend auth state | Step 3 | 🔜 Pending | AuthContext + ProtectedRoute + protected routes |
-| 1.5 Logout + lang | Step 4 | 🔜 Pending | Logout endpoint, language persistence |
-| 1.6 Bilingual | — | ✅ Done | EN + NE, LanguageSwitcher, localStorage persistence |
+| 1.2 Frontend foundation | — | ✅ Done | React 19 + Vite + Tailwind v4 + i18next + Lucide + PWA |
+| 1.3 Backend foundation | — | ✅ Done | Express 5 (ESM, plain JS) + Helmet + CORS, /api routes |
+| **1.4 Database foundation** | **Step 1** | ✅ **Done** | Prisma 7.10 + PostgreSQL 18 + seed |
+| 1.5 Authentication (server) | Step 2 | ⏳ **Next** | JWT + bcrypt + auth middleware |
+| 1.5 Frontend auth state | Step 3 | 🔜 Pending | AuthContext + ProtectedRoute |
+| 1.5 Logout + lang | Step 4 | 🔜 Pending | Logout endpoint, language persistence endpoint |
+| 1.6 Bilingual | — | ✅ Done | EN + NE, LanguageSwitcher, localStorage |
 
 ### Increment 2 — Service Information & Citizen Guidance
 
 | Phase | Step | Status | Notes |
 |---|---|---|---|
-| 2.1 Service info | Step 5 | 🔜 Pending | Service listing/detail pages, /api/services |
+| 2.1 Service info | Step 5 | 🔜 Pending | Service list/detail pages, GET /api/services |
 | 2.2 Service roadmap | Step 6 | 🔜 Pending | ServiceRoadmap component (DB-driven) |
 | 2.3 Required docs | Step 7 | 🔜 Pending | RequiredDocumentsList per stage |
 | 2.4 Office guidance | Step 7 | 🔜 Pending | Office info block on detail page |
@@ -55,7 +57,7 @@
 
 | Phase | Step | Status | Notes |
 |---|---|---|---|
-| 4.1–4.3 Stage queues + staff ops | Step 10 | 🔜 Pending | Per-stage queue lists, call/skip/recall/complete |
+| 4.1–4.3 Stage queues + staff ops | Step 10 | 🔜 Pending | call/skip/recall/complete per token |
 | 4.4 Multiple counters | Step 11 | 🔜 Pending | Counter model, assign/release |
 | 4.5 Stage progress | Step 12 | 🔜 Pending | Citizen progress view |
 
@@ -63,7 +65,7 @@
 
 | Phase | Step | Status | Notes |
 |---|---|---|---|
-| 5.1–5.5 Engine | Step 13 | 🔜 Pending | ServiceDurationHistory + estimator |
+| 5.1–5.5 Engine | Step 13 | 🔜 Pending | ServiceDurationHistory + estimator (no AI yet) |
 
 ### Increment 6 — Priority & Deferred
 
@@ -71,11 +73,12 @@
 |---|---|---|---|
 | 6.1–6.4 Priority + audit | Step 14 | 🔜 Pending | PriorityRequest model, audit log, deferred handling |
 
-### Increment 10 — Staff & Administration (partial, jumping ahead)
+### Increment 10 — Staff & Administration
 
 | Phase | Step | Status | Notes |
 |---|---|---|---|
 | Staff dashboard | Step 15 | 🔜 Pending | Quick UI for current stage/queue |
+| Admin CRUD | Step 19 | 🔜 Pending | Office/service/stage/document/counter/staff mgmt |
 
 ### Increment 7 — Real-time Communication
 
@@ -94,12 +97,6 @@
 | Phase | Step | Status | Notes |
 |---|---|---|---|
 | 9 In-app notifications | Step 18 | 🔜 Pending | Notification model, bell UI |
-
-### Increment 10 (continued) — Admin
-
-| Phase | Step | Status | Notes |
-|---|---|---|---|
-| Admin CRUD | Step 19 | 🔜 Pending | Office/service/stage/document/counter/staff mgmt |
 
 ### Increment 11 — Analytics & Reports
 
@@ -126,33 +123,62 @@
 | Branch | Last commit | Status |
 |---|---|---|
 | `feature/db` | `feat(db): add Prisma schema, migration, and seed` | ✅ Merged (Step 1) |
-| `feature/remove-typescript` | `fix(client): restore navigate state object in TokenGeneration (stripped during TS->JS)` | ✅ **Merged to main on 2026-09-05** (Step 1.5) |
-| `feature/auth-jwt` | — | 🔜 Next (Step 2) |
+| `feature/remove-typescript` | `fix(client): restore navigate state object in TokenGeneration` | ✅ Merged to main (Step 1.5) |
+| `feature/auth-jwt` | — | 🔜 **Next** (Step 2) |
 
 ### Server-side quality-of-life commits
 
 | Commit | What | Why |
 |---|---|---|
-| `feat(server): log successful DB connection on startup` | Added `src/dbCheck.js`; `server.js` now logs `✅ Connected to PostgreSQL (Xms) — N offices, N services, N users` on boot, with helpful error messages for ECONNREFUSED, auth failures, missing database. | Make the DB connection status visible in the console at startup, not just a silent 200 from the first request. |
-| `feat(server): log OTPs to stdout and server/otp.log` | `deliverOTPToConsole` now writes `[OTP]  YYYY-MM-DD HH:MM:SS  +9779841234567  →  313572` to both stdout and `server/otp.log`. `server/otp.log` is gitignored. Startup banner shows the log file path. | When running the server in the background or in an IDE, OTPs were lost. Now every OTP is captured to a file the developer can `Get-Content otp.log -Wait` in a second terminal. |
-| `fix(server): restore multi-line OTP box on stdout + keep one-liner in otp.log` | Restored the box-style OTP display in the terminal (matches the original format) while keeping the one-liner append in `otp.log`. | The previous `process.stdout.write` change was correct but the box format is more visible. The foreground terminal still shows the OTP because `console.log` writes to the terminal where the server was launched. |
+| `feat(server): log successful DB connection on startup` | Added `src/dbCheck.js`; `server.js` logs `✅ Connected to PostgreSQL (Xms) — N offices, N services, N users` on boot. | Make the DB connection status visible at startup, not silently failing on the first request. |
+| `feat(server): log OTPs to stdout and server/otp.log` | `deliverOTPToConsole` writes both a multi-line box to stdout (the original behaviour) AND a one-liner to `server/otp.log`. `server/otp.log` is gitignored. | When the foreground terminal is closed or the server runs in an IDE, OTPs were lost. The file is the safety net. |
+| `fix(server): restore multi-line OTP box on stdout + keep one-liner in otp.log` | Switched back from `process.stdout.write` to `console.log` for the box; kept the file append. | `console.log` is what makes the multi-line box render correctly in a TTY. The file still gets the one-liner. |
+| `fix(client): import i18n JSON as namespace to match Vite's named-export transform` | Changed `client/src/i18n/index.js` from `import en from ...` to `import * as en from ...` and wrapped resources in `en: { translation: en }`. | Vite turns JSON into named exports (one per top-level key), so the default export was `undefined`, which broke all translations — pages were showing raw keys like `common.appName`. |
+| `fix(client): restore framer-motion variants and object property keys stripped during TS->JS` | Repaired `Home.jsx`, `Monitor.jsx`, `Button.jsx` (icon prop), `TokenGeneration.jsx` (navigate state object). | The regex strip script over-aggressively removed `key:` pairs in object literals. |
+
+---
+
+## Current API Routes (working)
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/api/health` | Liveness check |
+| POST | `/api/auth/citizen/send-otp` | Sends OTP to phone (logs to console + `server/otp.log`) |
+| POST | `/api/auth/citizen/verify` | Verifies OTP, upserts Citizen user, returns base64 token (will become JWT in Step 2) |
+| POST | `/api/auth/staff/register` | Register staff (plaintext password — bcrypt in Step 2) |
+| POST | `/api/auth/staff/login` | Email + password → 2FA OTP |
+| POST | `/api/auth/staff/verify-otp` | 2FA OTP → base64 token |
+| GET | `/api/queue/status` | All services with current token counts (DB-driven) |
+| GET | `/api/queue/services` | Service list (id, nameEn, nameNe) |
+| GET | `/api/queue/:serviceId` | Single service queue status |
+| GET | `/api/admin/_debug/seed-check` | Row counts per table (dev only — will be removed in Step 19) |
+| GET | `/api/admin/_debug/services` | Services with office name (dev only) |
 
 ---
 
 ## Environment
 
 **PostgreSQL**
+- Local install (no Docker)
 - Database: `smart_service_flow`
-- Connection: `postgresql://postgres:sinmbf12345@localhost:5432/smartservice` (per `.env`; Prisma maps this to `smart_service_flow`)
-- Started locally (no Docker)
+- Connection string in `server/.env`: `postgresql://postgres:sinmbf12345@localhost:5432/smartservice` — Prisma maps the `smartservice` slug to the actual `smart_service_flow` database name
+- Verification: `curl http://localhost:5000/api/admin/_debug/seed-check` (only works when server is running)
 
 **Server (port 5000)**
 - Dev: `cd server && npm run dev` (uses `node --watch`)
-- Seed: `npm run db:seed` (runs `node prisma/seed.js`)
+- Seed: `cd server && npm run db:seed` (runs `node prisma/seed.js`)
+- Health: `curl http://localhost:5000/api/health`
+- DB check: `curl http://localhost:5000/api/admin/_debug/seed-check`
+- OTP log: `server/otp.log` (auto-created, gitignored)
 
-**Client (port 5173+, vite picks next free)**
+**Client (port 5173+)**
 - Dev: `cd client && npm run dev`
 - Build: `npm run build` (Vite, no tsc)
+
+**Demo credentials (seeded)**
+- Citizen: `+9779841234567` (Siddhartha Shakya) — uses OTP flow
+- Staff: `staff@dotm.gov.np` (Ramesh Sharma) — uses email + 2FA OTP (password: not seeded; register a new one)
+- Admin: `admin@smartservice.gov.np`
 
 ---
 
@@ -163,7 +189,10 @@
 3. **Prisma uses `prisma-client-js` (not `prisma-client`)** — the newer `prisma-client` provider requires the `prisma7.config.ts` adapter and a runtime-built client, which broke our build. Sticking with `prisma-client-js` (the standard one).
 4. **No TypeScript** — all `.ts`/`.tsx` removed; plain `.js`/`.jsx` only. No `tsc`, no JSDoc, no `.d.ts`.
 5. **Vite picks next free port** if 5173 is busy. Watch the terminal output for the actual URL.
-6. **Startup logs DB status** — `server.js` calls `checkDatabaseConnection()` before starting Express. If the DB is unreachable, the server exits with code 1 instead of silently failing on the first request.
+6. **Startup logs DB status** — `server.js` calls `checkDatabaseConnection()` before starting Express. If the DB is unreachable, the server exits with code 1.
+7. **OTP log file path** — `server/otp.log`. To tail in another PowerShell: `Get-Content C:\Users\LOQ\OneDrive\Documents\GitHub\Master-web-development-AI-Era\PERN\smart-service-flow\server\otp.log -Wait`.
+8. **Only one server can hold port 5000** — if your foreground server is replaced by a background process, you'll lose the terminal OTP output. Always start the server yourself with `npm run dev` and leave it running.
+9. **Staff password is null in the seed** — staff can be registered via `/api/auth/staff/register` but cannot log in until a real bcrypt-hashed password is set. This is a known gap that's closed in Step 2.
 
 ---
 
@@ -173,24 +202,39 @@
 # Server health
 curl http://localhost:5000/api/health
 
-# Database seed check (dev only)
+# Database seed check
 curl http://localhost:5000/api/admin/_debug/seed-check
 
 # Service listing
 curl http://localhost:5000/api/queue/services
+
+# Citizen OTP flow (check otp.log for the code)
+curl -X POST http://localhost:5000/api/auth/citizen/send-otp \
+  -H "Content-Type: application/json" \
+  -d '{"phoneNumber":"+9779841234567"}'
 ```
 
 ---
 
-## How to Resume Work
+## How to Resume Work (in the next session)
 
-1. Check this file to find the current step.
-2. Check `plans/implementation_plan.md` for the step's full task list.
-3. Create the next feature branch off `main`:
+1. **Read this file first** — it has the current position, what was done, and what's pending.
+2. **Start the database** if not already running (PostgreSQL 18 service on Windows).
+3. **Start the server yourself in a terminal** — `cd server && npm run dev`. Watch for the startup banner:
+   ```
+   ✅ Connected to PostgreSQL (Xms) — N offices, N services, N users
+   ✅ Server is running on http://localhost:5000
+   ```
+4. **Tail the OTP log in a second terminal** — `Get-Content server/otp.log -Wait` (optional but helpful while testing auth).
+5. **Start the client** in a third terminal — `cd client && npm run dev`. Vite will print the URL.
+6. **Create the next feature branch** off `main`:
    ```bash
    git checkout main
    git pull
    git checkout -b feature/auth-jwt
    ```
-4. After completing a step, commit on the branch, then update this file (set the step's status to ✅ Done, advance the cursor, append a commit-log row, note any new gotchas).
-5. Merge to `main` when green.
+7. **Do Step 2 (JWT + bcrypt)** from `plans/implementation_plan.md`. The full task list is in that file under "STEP 2 — Increment 1.5: Real Authentication (JWT + bcrypt + middleware) (in Plain JS)".
+8. **After completing the step**, commit on the branch, then update this file (set the step's status to ✅ Done, advance the cursor, append a commit-log row, note any new gotchas).
+9. **Merge to `main`** when green.
+
+**Today's stopping point:** all of Increment 1 except JWT/bcrypt (Step 2) is in place. The next session should pick up with Step 2 immediately.
