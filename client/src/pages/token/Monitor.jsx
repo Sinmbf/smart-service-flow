@@ -116,10 +116,11 @@ const Monitor = () => {
             initial="hidden"
             animate="visible"
             variants={{
-              hidden,
+              hidden: { opacity: 0, y: 20 },
               visible: {
                 opacity: 1,
-                transition
+                y: 0,
+                transition: { staggerChildren: 0.05 }
               }
             }}
           >
@@ -129,8 +130,8 @@ const Monitor = () => {
                 <motion.div
                   key={s.id}
                   variants={{
-                    hidden,
-                    visible
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
                   }}
                 >
                   <Card className="overflow-hidden hover:border-neutral-300">

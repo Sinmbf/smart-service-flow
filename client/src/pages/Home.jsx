@@ -236,28 +236,28 @@ const Home = () => {
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
               variants={{
-                hidden,
+                hidden: { opacity: 0 },
                 visible: {
                   opacity: 1,
-                  transition
+                  transition: { staggerChildren: 0.1 }
                 }
               }}
             >
               {[
                 {
-                  icon,
+                  icon: Users,
                   title: t("home.features.f1Title"),
                   desc: t("home.features.f1Desc"),
                   tag: "01",
                 },
                 {
-                  icon,
+                  icon: Zap,
                   title: t("home.features.f2Title"),
                   desc: t("home.features.f2Desc"),
                   tag: "02",
                 },
                 {
-                  icon,
+                  icon: Lock,
                   title: t("home.features.f3Title"),
                   desc: t("home.features.f3Desc"),
                   tag: "03",
@@ -268,8 +268,8 @@ const Home = () => {
                   <motion.div
                     key={i}
                     variants={{
-                      hidden,
-                      visible
+                      hidden: { opacity: 0 },
+                      visible: { opacity: 1 }
                     }}
                     className="group relative bg-white border border-neutral-200 hover:border-neutral-300 rounded-3xl p-5 sm:p-7 lg:p-8 transition-all hover:shadow-md"
                   >

@@ -4,7 +4,7 @@ const Button = ({
   size = "md",
   fullWidth = false,
   isLoading = false,
-  icon,
+  icon = undefined,
   children,
   className = "",
   disabled,
