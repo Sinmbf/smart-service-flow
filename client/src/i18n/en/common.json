@@ -16,7 +16,10 @@
     "resend": "Resend",
     "change": "Change",
     "or": "or",
-    "home": "Home"
+    "home": "Home",
+    "queue": "Queue",
+    "onlinePeriod": "online.",
+    "visitWhenReady": "Visit when ready."
   },
   "auth": {
     "login": {
@@ -159,7 +162,14 @@
       "cardLabel": "Active Token",
       "cardService1": "Citizenship Application",
       "cardService2": "Passport Renewal",
-      "cardCta": "View My Token"
+      "cardCta": "View My Token",
+      "liveServices": "Live · Government Services",
+      "getToken": "Get a Token",
+      "viewLiveQueue": "View Live Queue",
+      "tokensIssued": "tokens issued this week",
+      "counter": "Counter",
+      "nowServing": "Now Serving",
+      "active": "Active"
     },
     "trust": {
       "gov": "Government",
@@ -178,10 +188,6 @@
       "f3Title": "Unmatched security",
       "f3Desc": "Your data is protected with end-to-end encryption, MFA, and audit-level access controls."
     },
-    "actions": {
-      "title": "Get Started in Seconds",
-      "subtitle": "Three ways to begin your service journey. Choose what works for you."
-    },
     "getQueueToken": "Get Queue Token",
     "getQueueTokenDesc": "Request a token for government services",
     "startQueue": "Start Queue",
@@ -193,7 +199,21 @@
     "loginAsStaff": "Login as Staff",
     "displayQrCode": "Display QR Code",
     "displayQrCodeDesc": "Show QR code at your counter for citizens to scan",
-    "qrInstructions": "Citizens scan this code to join the queue"
+    "qrInstructions": "Citizens scan this code to join the queue",
+    "citizenLabel": "Citizen",
+    "liveLabel": "Live",
+    "staffLabel": "Staff",
+    "openLabel": "Open",
+    "walkIn": "Walk-in Access",
+    "qrHeadline": "Scan. Join. Wait anywhere.",
+    "qrSub": "Walk-in Access",
+    "qrScan": "Point your camera at the code",
+    "actions": {
+      "title": "Get Started in Seconds",
+      "subtitle": "Three ways to begin your service journey. Choose what works for you.",
+      "getStarted": "Get Started",
+      "counterDisplay": "Counter Display"
+    }
   },
   "token": {
     "scanner": {
@@ -264,6 +284,33 @@
       "keepThisPage": "Keep this page open to receive notifications",
       "cancelToken": "Cancel Token",
       "confirmCancel": "Are you sure you want to cancel your token?"
+    },
+    "monitor": {
+      "title": "Queue Status",
+      "subtitle": "Live queue updates for all services",
+      "lastUpdated": "Last updated",
+      "refresh": "Refresh",
+      "currentlyServing": "Now Serving",
+      "inQueue": "In Queue",
+      "people": "people",
+      "estimatedWait": "Est. Wait",
+      "getToken": "Get Your Token",
+      "noQueueData": "No queue data available",
+      "live": "Live",
+      "queueLoad": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      }
     }
+  },
+  "footer": {
+    "services": "Services",
+    "generateToken": "Generate Token",
+    "monitorQueue": "Monitor Queue",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "allRightsReserved": "All rights reserved"
   }
 }

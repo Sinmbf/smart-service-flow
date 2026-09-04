@@ -3,7 +3,7 @@
 // Additional models (Token, Notification, etc.) will be added in later steps.
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 

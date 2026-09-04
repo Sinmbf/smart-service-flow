@@ -1,0 +1,28 @@
+import express from "express";
+import helmet from "helmet";
+import cors from "cors";
+import citizenAuthRoutes from "./routes/auth/citizen.js";
+import staffAuthRoutes from "./routes/auth/staff.js";
+import queueRoutes from "./routes/queue.js";
+import adminDebugRoutes from "./routes/admin/debug.js";
+const app = express();
+app.use(helmet()); // For security headers
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true
+}));
+app.use(express.json());
+app.get("/api/health", (_req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "API is running"
+    });
+});
+// Authentication routes
+app.use("/api/auth/citizen", citizenAuthRoutes);
+app.use("/api/auth/staff", staffAuthRoutes);
+// Queue routes
+app.use("/api/queue", queueRoutes);
+// Admin / debug routes (temporary, removed in Step 19)
+app.use("/api/admin/_debug", adminDebugRoutes);
+export default app;
