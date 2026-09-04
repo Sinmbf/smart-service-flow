@@ -10,8 +10,8 @@
 
 | Field | Value |
 |---|---|
-| Active branch | `feature/remove-typescript` (ready to merge → `main`) |
-| Current step | **Step 1.5 — Plain JS conversion (COMPLETE, pending merge)** |
+| Active branch | `main` |
+| Current step | **Step 1.5 — Plain JS conversion (✅ MERGED)** |
 | Next step | **Step 2 — JWT + bcrypt + auth middleware** |
 | Increment | 1 (Foundation) — 80% done |
 | Server runs on | `http://localhost:5000` |
@@ -126,7 +126,7 @@
 | Branch | Last commit | Status |
 |---|---|---|
 | `feature/db` | `feat(db): add Prisma schema, migration, and seed` | ✅ Merged (Step 1) |
-| `feature/remove-typescript` | `fix(client): import i18n JSON as namespace to match Vite's named-export transform` | ⏳ Ready to merge (Step 1.5) |
+| `feature/remove-typescript` | `fix(client): restore navigate state object in TokenGeneration (stripped during TS->JS)` | ✅ **Merged to main on 2026-09-05** (Step 1.5) |
 | `feature/auth-jwt` | — | 🔜 Next (Step 2) |
 
 ---
@@ -181,7 +181,7 @@ curl http://localhost:5000/api/queue/services
    ```bash
    git checkout main
    git pull
-   git checkout -b feature/<next-step-name>
+   git checkout -b feature/auth-jwt
    ```
 4. After completing a step, commit on the branch, then update this file (set the step's status to ✅ Done, advance the cursor, append a commit-log row, note any new gotchas).
 5. Merge to `main` when green.
