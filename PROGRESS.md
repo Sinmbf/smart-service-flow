@@ -6,6 +6,90 @@
 
 ---
 
+## ⏭️ Instructions for the Next Session
+
+**Read this section first, then start coding.**
+
+### Context snapshot
+- Increment 1 (Foundation) is ~80% done. The only Increment-1 work remaining is **Step 2: JWT + bcrypt + auth middleware**.
+- The codebase is **plain JavaScript only** (no TypeScript anywhere — Step 1.5 completed).
+- Database is wired up via Prisma 7 + PostgreSQL 18 (db: `smart_service_flow`, locally installed, **no Docker**).
+- All the Increment 2–13 work follows Step 2 in the order defined by `plans/implementation_plan.md`.
+
+### First message to send to the next session
+Open the new session with this exact prompt (copy-paste it):
+> "Read `PROGRESS.md` and continue from where it left off. Start with Step 2 (JWT + bcrypt + auth middleware)."
+
+### Step 1 — Set up the environment (in your own terminals)
+```powershell
+# Terminal 1 — start PostgreSQL if not already running
+# (Windows Service: it should already be up; verify with `psql -U postgres -c "SELECT 1;"`)
+
+# Terminal 2 — start the server in the FOREGROUND
+cd C:\Users\LOQ\OneDrive\Documents\GitHub\Master-web-development-AI-Era\PERN\smart-service-flow\server
+npm run dev
+# You should see:
+#   🚀 Starting Smart Service Flow API...
+#   ✅ Connected to PostgreSQL (Xms) — N offices, N services, N users
+#   ✅ Server is running on http://localhost:5000
+
+# Terminal 3 — tail the OTP log (only needed while testing auth)
+Get-Content C:\Users\LOQ\OneDrive\Documents\GitHub\Master-web-development-AI-Era\PERN\smart-service-flow\server\otp.log -Wait
+
+# Terminal 4 — start the client
+cd C:\Users\LOQ\OneDrive\Documents\GitHub\Master-web-development-AI-Era\PERN\smart-service-flow\client
+npm run dev
+# Vite will print: Local: http://localhost:5173 (or 5174 if 5173 is busy)
+```
+
+### Step 2 — Confirm the project is healthy before coding
+```powershell
+# Server liveness
+curl http://localhost:5000/api/health
+# Expected: {"success":true,"message":"API is running"}
+
+# Database seed check
+curl http://localhost:5000/api/admin/_debug/seed-check
+# Expected: {"success":true,"counts":{"offices":2,"services":3,"stages":14,"documents":10,"users":4}}
+
+# Service listing
+curl http://localhost:5000/api/queue/services
+# Expected: list of 3 services (Driving License, Renewal, Citizenship)
+```
+
+If any of these fail, fix the environment first before proceeding.
+
+### Step 3 — Create the feature branch and start Step 2
+```powershell
+cd C:\Users\LOQ\OneDrive\Documents\GitHub\Master-web-development-AI-Era\PERN\smart-service-flow
+git checkout main
+git pull
+git checkout -b feature/auth-jwt
+```
+
+Then send the next-session prompt to start coding. The full task list for Step 2 is in `plans/implementation_plan.md` under **"STEP 2 — Increment 1.5: Real Authentication (JWT + bcrypt + middleware) (in Plain JS)"**.
+
+### Step 4 — When Step 2 is done
+1. Commit on `feature/auth-jwt`.
+2. Update `PROGRESS.md`: set Step 2 to ✅ Done, advance the cursor, add a row to the **Branch & Commit Log**, and note any new gotchas.
+3. Merge to `main`:
+   ```powershell
+   git checkout main
+   git merge --no-ff feature/auth-jwt -m "Merge feature/auth-jwt: ..."
+   git push
+   ```
+4. Continue to **Step 3** (AuthContext + ProtectedRoute).
+
+### Things to tell the next session explicitly
+- The project is **plain JavaScript only** (no TS, no JSDoc, no `.d.ts`).
+- **Do not put the server in the background** — keep it foreground in Terminal 2 so OTPs appear live.
+- **Do not touch the seed** unless explicitly told to. The seeded users/services are stable.
+- **Do not refactor existing files** during a step unless the step requires it. Convert/fix only files you actively need to touch.
+- **Do not commit `server/otp.log`** — it's gitignored for a reason (contains dev-only secrets).
+- **Server-only-port-5000**: if you start a server in the background, it kills the user's foreground server. Always assume the foreground server belongs to the user.
+
+---
+
 ## Current Position
 
 | Field | Value |
