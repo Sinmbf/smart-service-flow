@@ -129,6 +129,12 @@
 | `feature/remove-typescript` | `fix(client): restore navigate state object in TokenGeneration (stripped during TS->JS)` | ✅ **Merged to main on 2026-09-05** (Step 1.5) |
 | `feature/auth-jwt` | — | 🔜 Next (Step 2) |
 
+### Server-side quality-of-life commits
+
+| Commit | What | Why |
+|---|---|---|
+| `feat(server): log successful DB connection on startup` | Added `src/dbCheck.js`; `server.js` now logs `✅ Connected to PostgreSQL (Xms) — N offices, N services, N users` on boot, with helpful error messages for ECONNREFUSED, auth failures, missing database. | Make the DB connection status visible in the console at startup, not just a silent 200 from the first request. |
+
 ---
 
 ## Environment
@@ -155,6 +161,7 @@
 3. **Prisma uses `prisma-client-js` (not `prisma-client`)** — the newer `prisma-client` provider requires the `prisma7.config.ts` adapter and a runtime-built client, which broke our build. Sticking with `prisma-client-js` (the standard one).
 4. **No TypeScript** — all `.ts`/`.tsx` removed; plain `.js`/`.jsx` only. No `tsc`, no JSDoc, no `.d.ts`.
 5. **Vite picks next free port** if 5173 is busy. Watch the terminal output for the actual URL.
+6. **Startup logs DB status** — `server.js` calls `checkDatabaseConnection()` before starting Express. If the DB is unreachable, the server exits with code 1 instead of silently failing on the first request.
 
 ---
 
