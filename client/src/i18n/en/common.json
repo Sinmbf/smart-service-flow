@@ -15,7 +15,11 @@
     "verify": "Verify",
     "resend": "Resend",
     "change": "Change",
-    "or": "or"
+    "or": "or",
+    "home": "Home",
+    "queue": "Queue",
+    "onlinePeriod": "online.",
+    "visitWhenReady": "Visit when ready."
   },
   "auth": {
     "login": {
@@ -31,7 +35,53 @@
       "noAccount": "Don't have an account?",
       "registerLink": "Register here",
       "signingIn": "Signing in...",
-      "successMessage": "Login successful"
+      "successMessage": "Login successful",
+      "staffRegister": "Register as Staff"
+    },
+    "citizen": {
+      "title": "Citizen Login",
+      "subtitle": "Verify your phone number to continue",
+      "quickAccess": "Quick Access",
+      "loginWithPhone": "Continue with Phone Number",
+      "phoneNumber": "Phone Number",
+      "sendingOtp": "Sending code...",
+      "sendOtp": "Send Verification Code",
+      "otpInstruction": "Enter the verification code sent to your phone",
+      "otpConsoleNote": "(For demo: check the server console for the OTP code)",
+      "enterOtp": "Verification Code",
+      "submitting": "Verifying...",
+      "confirmOtp": "Verify and Continue",
+      "backToPhone": "← Change phone number",
+      "backToLogin": "Back to Login",
+      "backToHome": "Back to Home"
+    },
+    "staff": {
+      "email": "Work Email",
+      "password": "Password",
+      "signingIn": "Signing in...",
+      "loginButton": "Sign In",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register here",
+      "otpSentToConsole": "OTP sent. Check the server console for the code.",
+      "enterOtp": "Enter Verification Code",
+      "otpConsoleNote": "(For demo: check the server console for the OTP code)",
+      "otpCode": "6-digit Code",
+      "verifying": "Verifying...",
+      "verifyButton": "Verify and Sign In",
+      "backToLogin": "Back to Sign In"
+    },
+    "staffRegister": {
+      "title": "Staff Registration",
+      "subtitle": "Create your staff account to manage service queues",
+      "fullName": "Full Name",
+      "email": "Work Email",
+      "employeeId": "Employee ID",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "creating": "Creating account...",
+      "createButton": "Create Staff Account",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign in here"
     },
     "register": {
       "title": "Create Account",
@@ -100,5 +150,167 @@
     "errors": {
       "generic": "Something went wrong. Please try again."
     }
+  },
+  "home": {
+    "hero": {
+      "headline1": "Queue online.",
+      "headline2": "Visit when ready.",
+      "subheadline": "Book your queue token online, track real-time waiting times, and visit government offices only when it's your turn.",
+      "emailPlaceholder": "your@email.com",
+      "getStarted": "Get Started",
+      "cardIssuer": "Citizen Services",
+      "cardLabel": "Active Token",
+      "cardService1": "Citizenship Application",
+      "cardService2": "Passport Renewal",
+      "cardCta": "View My Token",
+      "liveServices": "Live · Government Services",
+      "getToken": "Get a Token",
+      "viewLiveQueue": "View Live Queue",
+      "tokensIssued": "tokens issued this week",
+      "counter": "Counter",
+      "nowServing": "Now Serving",
+      "active": "Active"
+    },
+    "trust": {
+      "gov": "Government",
+      "public": "Public Services",
+      "digital": "Digital Nepal",
+      "national": "National ID"
+    },
+    "features": {
+      "kicker": "Why Smart Service Flow",
+      "title": "Service that grows with your needs.",
+      "description": "A modern queue management system built for citizens, staff, and government — simple to use, secure by design, and always available.",
+      "f1Title": "Free tokens",
+      "f1Desc": "Generate digital queue tokens instantly — no paperwork, no waiting in line just to get a number.",
+      "f2Title": "Multiple services",
+      "f2Desc": "Access all government services in one place: citizenship, passport, land registry, and more.",
+      "f3Title": "Unmatched security",
+      "f3Desc": "Your data is protected with end-to-end encryption, MFA, and audit-level access controls."
+    },
+    "getQueueToken": "Get Queue Token",
+    "getQueueTokenDesc": "Request a token for government services",
+    "startQueue": "Start Queue",
+    "viewLiveQueue": "View Live Queue",
+    "viewLiveQueueDesc": "Monitor queue status in real-time",
+    "viewQueue": "View Queue",
+    "staffLogin": "Staff Login",
+    "staffLoginDesc": "Access staff dashboard and queue management",
+    "loginAsStaff": "Login as Staff",
+    "displayQrCode": "Display QR Code",
+    "displayQrCodeDesc": "Show QR code at your counter for citizens to scan",
+    "qrInstructions": "Citizens scan this code to join the queue",
+    "citizenLabel": "Citizen",
+    "liveLabel": "Live",
+    "staffLabel": "Staff",
+    "openLabel": "Open",
+    "walkIn": "Walk-in Access",
+    "qrHeadline": "Scan. Join. Wait anywhere.",
+    "qrSub": "Walk-in Access",
+    "qrScan": "Point your camera at the code",
+    "actions": {
+      "title": "Get Started in Seconds",
+      "subtitle": "Three ways to begin your service journey. Choose what works for you.",
+      "getStarted": "Get Started",
+      "counterDisplay": "Counter Display"
+    }
+  },
+  "token": {
+    "scanner": {
+      "title": "Get Your Token",
+      "subtitle": "Scan this QR code with your phone to access the queue system",
+      "instructions": "Scan with any QR reader or phone camera to open the queue system",
+      "howItWorks": "How it Works",
+      "step1Title": "Scan the QR Code",
+      "step1Desc": "Use your phone camera or any QR reader app to scan the code above",
+      "step2Title": "Select Your Service",
+      "step2Desc": "Choose the government service you need and generate your token",
+      "step3Title": "Monitor & Visit Counter",
+      "step3Desc": "Track your queue position remotely and visit when your turn is near",
+      "noticeTitle": "Monitor from Anywhere",
+      "noticeText": "After generating your token, you can monitor your queue position from any device. You'll be notified when it's your turn.",
+      "downloadQr": "Download QR Code"
+    },
+    "monitor": {
+      "title": "Queue Status",
+      "subtitle": "Live queue updates for all services",
+      "lastUpdated": "Last updated",
+      "refresh": "Refresh",
+      "currentlyServing": "Now Serving",
+      "inQueue": "In Queue",
+      "people": "people",
+      "estimatedWait": "Est. Wait",
+      "getToken": "Get Your Token",
+      "noQueueData": "No queue data available"
+    },
+    "services": {
+      "title": "Select Service",
+      "subtitle": "Choose the government service you need",
+      "citizenship": "Citizenship",
+      "citizenshipDesc": "Apply for citizenship certificate",
+      "passport": "Passport",
+      "passportDesc": "Passport application and renewal",
+      "landRegistry": "Land Registry",
+      "landRegistryDesc": "Land registration and verification",
+      "permits": "Business Permits",
+      "permitsDesc": "Business license and permits",
+      "taxClearance": "Tax Clearance",
+      "taxClearanceDesc": "Tax clearance certificate",
+      "birthCertificate": "Birth Certificate",
+      "birthCertificateDesc": "Birth certificate registration",
+      "continueButton": "Continue"
+    },
+    "generation": {
+      "title": "Generating Token",
+      "subtitle": "Please wait while we generate your token",
+      "generating": "Generating your token..."
+    },
+    "display": {
+      "title": "Your Token",
+      "subtitle": "Please wait for your number to be called",
+      "tokenNumber": "Token Number",
+      "queuePosition": "Queue Position",
+      "estimatedWait": "Estimated Wait Time",
+      "minutes": "minutes",
+      "service": "Service",
+      "status": "Status",
+      "waiting": "Waiting",
+      "called": "Called",
+      "serving": "Being Served",
+      "completed": "Completed",
+      "currentlyServing": "Currently Serving",
+      "yourTurn": "It's your turn!",
+      "proceedToCounter": "Please proceed to Counter",
+      "keepThisPage": "Keep this page open to receive notifications",
+      "cancelToken": "Cancel Token",
+      "confirmCancel": "Are you sure you want to cancel your token?"
+    },
+    "monitor": {
+      "title": "Queue Status",
+      "subtitle": "Live queue updates for all services",
+      "lastUpdated": "Last updated",
+      "refresh": "Refresh",
+      "currentlyServing": "Now Serving",
+      "inQueue": "In Queue",
+      "people": "people",
+      "estimatedWait": "Est. Wait",
+      "getToken": "Get Your Token",
+      "noQueueData": "No queue data available",
+      "live": "Live",
+      "queueLoad": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      }
+    }
+  },
+  "footer": {
+    "services": "Services",
+    "generateToken": "Generate Token",
+    "monitorQueue": "Monitor Queue",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "allRightsReserved": "All rights reserved"
   }
 }
