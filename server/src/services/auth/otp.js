@@ -22,16 +22,18 @@ export function generateOTP(length = 6) {
  */
 export function deliverOTPToConsole(target, code) {
   const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
+  const line = `[OTP]  ${timestamp}  ${target}  →  ${code}\n`;
 
-  // 1. Plain single-line log to stdout (easy to spot in any terminal)
-  console.log(`[OTP]  ${timestamp}  ${target}  →  ${code}`);
+  // 1. Write directly to stdout (avoids any console.log buffering in non-TTY environments
+  //    like IDE run consoles or background processes where console.log can be delayed).
+  process.stdout.write(line);
 
   // 2. Same line appended to a fixed log file at server/otp.log
   try {
     const logFile = path.join(process.cwd(), "otp.log");
-    fs.appendFileSync(logFile, `[OTP]  ${timestamp}  ${target}  →  ${code}\n`);
+    fs.appendFileSync(logFile, line);
   } catch (err) {
     // File logging is best-effort; never break the request because of a log error
-    console.warn(`[OTP]  (could not write to otp.log: ${err.message})`);
+    process.stdout.write(`[OTP]  (could not write to otp.log: ${err.message})\n`);
   }
 }
