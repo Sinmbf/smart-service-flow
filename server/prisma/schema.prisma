@@ -1,0 +1,250 @@
+// Smart Service Flow — Database schema
+// Step 1 of the implementation plan: foundation models per roadmap §1.4
+// Additional models (Token, Notification, etc.) will be added in later steps.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Enums ----------
+
+enum Role {
+  CITIZEN
+  STAFF
+  ADMIN
+}
+
+enum Language {
+  EN
+  NE
+}
+
+enum TokenStatus {
+  GENERATED
+  CHECKED_IN
+  SERVING
+  COMPLETED
+  SKIPPED
+  EXPIRED
+  CANCELLED
+  DEFERRED
+}
+
+enum PriorityReason {
+  SENIOR_CITIZEN
+  DISABILITY
+  PREGNANT
+  EMERGENCY
+  OTHER
+}
+
+enum PriorityDecision {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ---------- Identity ----------
+
+model User {
+  id                String   @id @default(cuid())
+  phoneNumber       String?  @unique
+  email             String?  @unique
+  password          String?  // bcrypt hash; null for OTP-only citizens
+  name              String?
+  employeeId        String?  @unique
+  role              Role     @default(CITIZEN)
+  preferredLanguage Language @default(EN)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  tokens            Token[]
+  priorityRequests  PriorityRequest[]
+  notifications     Notification[]
+  auditLogs         AuditLog[]        @relation("AuditActor")
+
+  @@index([role])
+}
+
+// ---------- Office / Service / Stage / Document ----------
+
+model GovernmentOffice {
+  id        String   @id @default(cuid())
+  nameEn    String
+  nameNe    String
+  location  String
+  hours     String   // e.g. "Sun-Fri 10:00-16:00"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  services  Service[]
+}
+
+model Service {
+  id            String   @id @default(cuid())
+  officeId      String
+  office        GovernmentOffice @relation(fields: [officeId], references: [id])
+  nameEn        String
+  nameNe        String
+  descriptionEn String?
+  descriptionNe String?
+  category      String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  stages        ServiceStage[]
+  tokens        Token[]
+
+  @@index([officeId])
+  @@index([isActive])
+}
+
+model ServiceStage {
+  id              String   @id @default(cuid())
+  serviceId       String
+  service         Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  stageOrder      Int      // 1-based, drives roadmap order
+  nameEn          String
+  nameNe          String
+  baselineMinutes Int      @default(10) // seed value used by waiting-time engine
+  location        String?  // room / counter hint
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  documents       RequiredDocument[]
+  tokens          Token[]              @relation("CurrentStage")
+  counters        Counter[]
+  durations       ServiceDurationHistory[]
+
+  @@unique([serviceId, stageOrder])
+  @@index([serviceId])
+}
+
+model RequiredDocument {
+  id          String   @id @default(cuid())
+  stageId     String
+  stage       ServiceStage @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  nameEn      String
+  nameNe      String
+  description String?
+  type        String?  // free-form, e.g. "id", "photo", "receipt"
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([stageId])
+}
+
+// ---------- Queue / Token (Step 8) ----------
+
+model Token {
+  id              String      @id @default(cuid())
+  tokenNumber     String      @unique // e.g. "A001" — human-readable
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  serviceId       String
+  service         Service     @relation(fields: [serviceId], references: [id])
+  currentStageId  String
+  currentStage    ServiceStage @relation("CurrentStage", fields: [currentStageId], references: [id])
+  position        Int         // queue position reserved at generation time
+  status          TokenStatus @default(GENERATED)
+  generatedAt     DateTime    @default(now())
+  checkedInAt     DateTime?
+  serviceStartedAt DateTime?
+  serviceCompletedAt DateTime?
+  completedAt     DateTime?
+  cancelledAt     DateTime?
+  notes           String?
+
+  durations       ServiceDurationHistory[]
+  priorityRequests PriorityRequest[]
+
+  @@index([serviceId, currentStageId, status])
+  @@index([userId])
+  @@index([status])
+}
+
+model ServiceDurationHistory {
+  id             String   @id @default(cuid())
+  tokenId        String
+  token          Token    @relation(fields: [tokenId], references: [id], onDelete: Cascade)
+  serviceId      String
+  stageId        String
+  stage          ServiceStage @relation(fields: [stageId], references: [id])
+  actualMinutes  Float
+  startedAt      DateTime
+  completedAt    DateTime @default(now())
+
+  @@index([stageId, completedAt])
+}
+
+// ---------- Counter (Step 11) ----------
+
+model Counter {
+  id              String   @id @default(cuid())
+  stageId         String
+  stage           ServiceStage @relation(fields: [stageId], references: [id])
+  name            String   // e.g. "Counter 1"
+  isActive        Boolean  @default(true)
+  currentTokenId  String?  @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([stageId])
+}
+
+// ---------- Priority (Step 14) ----------
+
+model PriorityRequest {
+  id          String   @id @default(cuid())
+  tokenId     String
+  token       Token    @relation(fields: [tokenId], references: [id], onDelete: Cascade)
+  requestedById String
+  requestedBy User     @relation(fields: [requestedById], references: [id])
+  reason      PriorityReason
+  reasonNote  String?
+  decision    PriorityDecision @default(PENDING)
+  decidedById String?
+  decidedAt   DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([tokenId])
+  @@index([decision])
+}
+
+// ---------- Audit + Notifications (Step 14, 18) ----------
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actor     User?    @relation("AuditActor", fields: [actorId], references: [id])
+  action    String   // e.g. "TOKEN_CALLED", "STAGE_COMPLETED"
+  target    String?  // entity id
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // e.g. "TOKEN_CREATED", "STAGE_COMPLETED"
+  titleEn   String
+  titleNe   String
+  messageEn String
+  messageNe String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read, createdAt])
+}

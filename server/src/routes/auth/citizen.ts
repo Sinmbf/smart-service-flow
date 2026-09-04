@@ -2,18 +2,17 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import { generateOTP, deliverOTPToConsole } from "../../services/auth/otp";
 import { storeOTP, verifyOTP, deleteOTP, isOTPExpired } from "../../services/auth/otpStore";
+import { prisma } from "../../db";
+import { Role, Language } from "../../generated/prisma/enums";
 
 const router = Router();
-
-// In-memory "users" for demo — replace with DB in production
-const users: Map<string, { phoneNumber: string; name?: string }> = new Map();
 
 /**
  * POST /api/auth/citizen/send-otp
  * Sends (console-logs) an OTP to the given phone number.
  * Body: { phoneNumber: string }
  */
-router.post("/send-otp", (req: Request, res: Response) => {
+router.post("/send-otp", async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
 
   if (!phoneNumber || typeof phoneNumber !== "string") {
@@ -39,10 +38,11 @@ router.post("/send-otp", (req: Request, res: Response) => {
 
 /**
  * POST /api/auth/citizen/verify
- * Verifies the OTP and returns a token (creates user if new).
+ * Verifies the OTP, upserts a Citizen user, and returns a base64 token.
+ * (Step 2 will replace the base64 token with a real JWT.)
  * Body: { phoneNumber: string, otp: string }
  */
-router.post("/verify", (req: Request, res: Response) => {
+router.post("/verify", async (req: Request, res: Response) => {
   const { phoneNumber, otp } = req.body;
 
   if (!phoneNumber || !otp) {
@@ -51,38 +51,44 @@ router.post("/verify", (req: Request, res: Response) => {
 
   const normalized = phoneNumber.replace(/\s/g, "");
 
-  // Check if OTP is expired
   if (isOTPExpired(normalized)) {
     return res.status(401).json({ success: false, message: "OTP expired, please request a new one" });
   }
 
-  // Verify OTP
   if (!verifyOTP(normalized, otp)) {
     return res.status(401).json({ success: false, message: "Invalid OTP" });
   }
 
-  // Create or retrieve user
-  let user = users.get(normalized);
-  if (!user) {
-    user = { phoneNumber: normalized };
-    users.set(normalized, user);
-    console.log(`[User Registered] Phone: ${normalized}`);
-  }
+  // Upsert the citizen in DB (creates on first login)
+  const user = await prisma.user.upsert({
+    where: { phoneNumber: normalized },
+    update: {},
+    create: {
+      phoneNumber: normalized,
+      role: Role.CITIZEN,
+      preferredLanguage: Language.EN,
+    },
+  });
+
+  console.log(`[Citizen Auth] Phone: ${user.phoneNumber}, ID: ${user.id}`);
 
   // Clean up OTP
   deleteOTP(normalized);
 
-  // Generate a simple token (in production, use JWT with proper signing)
-  const token = Buffer.from(`${user.phoneNumber}:${Date.now()}`).toString("base64");
+  // Placeholder token (Step 2 will replace with JWT)
+  const token = Buffer.from(`${user.id}:${Date.now()}`).toString("base64");
 
   res.status(200).json({
     success: true,
     message: "Verification successful",
     token,
     user: {
+      id: user.id,
       type: "citizen",
       phoneNumber: user.phoneNumber,
       name: user.name,
+      role: user.role,
+      preferredLanguage: user.preferredLanguage,
     },
   });
 });

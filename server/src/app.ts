@@ -4,6 +4,7 @@ import cors from "cors";
 import citizenAuthRoutes from "./routes/auth/citizen.js";
 import staffAuthRoutes from "./routes/auth/staff.js";
 import queueRoutes from "./routes/queue.js";
+import adminDebugRoutes from "./routes/admin/debug.js";
 
 const app = express();
 
@@ -29,5 +30,8 @@ app.use("/api/auth/staff", staffAuthRoutes);
 
 // Queue routes
 app.use("/api/queue", queueRoutes);
+
+// Admin / debug routes (temporary, removed in Step 19)
+app.use("/api/admin/_debug", adminDebugRoutes);
 
 export default app;

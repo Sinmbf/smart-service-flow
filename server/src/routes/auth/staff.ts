@@ -2,91 +2,87 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 import { storeOTP, verifyOTP, deleteOTP, isOTPExpired } from "../../services/auth/otpStore";
 import { generateOTP, deliverOTPToConsole } from "../../services/auth/otp";
+import { prisma } from "../../db";
+import { Role } from "../../generated/prisma/enums";
 
 const router = Router();
 
-// In-memory "users" for demo — replace with DB in production
-interface StaffUser {
-  id: string;
-  email: string;
-  password: string; // In production: use bcrypt hashing!
-  name: string;
-  employeeId?: string;
-}
-
-const staffUsers: Map<string, StaffUser> = new Map();
-
 /**
  * POST /api/auth/staff/register
- * Registers a new staff user with email + password.
+ * Registers a new staff user with email + password (plaintext for now — bcrypt in Step 2).
  * Body: { name, email, password, employeeId? }
  */
-router.post("/register", (req: Request, res: Response) => {
+router.post("/register", async (req: Request, res: Response) => {
   const { name, email, password, employeeId } = req.body;
 
-  // Basic validation
   if (!name || !email || !password) {
     return res.status(400).json({ success: false, message: "Name, email, and password are required" });
   }
 
-  // Email format check
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ success: false, message: "Invalid email format" });
   }
 
-  // Password strength (min 8 chars)
   if (password.length < 8) {
     return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
   }
 
   // Check if user already exists
-  for (const existing of staffUsers.values()) {
-    if (existing.email.toLowerCase() === email.toLowerCase()) {
-      return res.status(409).json({ success: false, message: "User with this email already exists" });
-    }
+  const existing = await prisma.user.findFirst({
+    where: { email: email.toLowerCase() },
+  });
+  if (existing) {
+    return res.status(409).json({ success: false, message: "User with this email already exists" });
   }
 
-  // Create user
-  const id = `staff_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-  const user: StaffUser = { id, name, email: email.toLowerCase(), password, employeeId };
-  staffUsers.set(id, user);
+  const user = await prisma.user.create({
+    data: {
+      name,
+      email: email.toLowerCase(),
+      password, // TODO Step 2: bcrypt
+      employeeId,
+      role: Role.STAFF,
+    },
+  });
 
   console.log(`[Staff Registered] Email: ${user.email}, ID: ${user.id}`);
 
   res.status(201).json({
     success: true,
     message: "Staff account created successfully",
-    user: { id: user.id, name: user.name, email: user.email, employeeId: user.employeeId },
+    user: { id: user.id, name: user.name, email: user.email, employeeId: user.employeeId, role: user.role },
   });
 });
 
 /**
  * POST /api/auth/staff/login
- * Logs in a staff user with email + password, returns a token.
+ * Logs in with email + password, then triggers 2FA OTP.
  * Body: { email, password }
  */
-router.post("/login", (req: Request, res: Response) => {
+router.post("/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ success: false, message: "Email and password are required" });
   }
 
-  // Find user
-  const user = Array.from(staffUsers.values()).find(
-    (u) => u.email.toLowerCase() === email.toLowerCase()
-  );
+  const user = await prisma.user.findFirst({
+    where: { email: email.toLowerCase() },
+  });
 
   if (!user) {
     return res.status(401).json({ success: false, message: "Invalid credentials" });
   }
 
-  // Validate password (plaintext for demo — bcrypt in production)
+  // TODO Step 2: bcrypt.compare
   if (user.password !== password) {
     return res.status(401).json({ success: false, message: "Invalid credentials" });
   }
 
-  // In production, send OTP to staff email for 2FA
+  if (user.role !== Role.STAFF && user.role !== Role.ADMIN) {
+    return res.status(403).json({ success: false, message: "Not a staff account" });
+  }
+
   const otp = generateOTP(6);
   storeOTP(`staff_${user.email}`, otp);
   deliverOTPToConsole(user.email, otp);
@@ -99,42 +95,43 @@ router.post("/login", (req: Request, res: Response) => {
 
 /**
  * POST /api/auth/staff/verify-otp
- * Verifies staff 2FA OTP after login.
+ * Verifies staff 2FA OTP and returns a token.
  * Body: { email, otp }
  */
-router.post("/verify-otp", (req: Request, res: Response) => {
+router.post("/verify-otp", async (req: Request, res: Response) => {
   const { email, otp } = req.body;
 
   if (!email || !otp) {
     return res.status(400).json({ success: false, message: "Email and OTP are required" });
   }
 
-  if (isOTPExpired(`staff_${email.toLowerCase()}`)) {
+  const key = `staff_${email.toLowerCase()}`;
+  if (isOTPExpired(key)) {
     return res.status(401).json({ success: false, message: "OTP expired, please log in again" });
   }
 
-  if (!verifyOTP(`staff_${email.toLowerCase()}`, otp)) {
+  if (!verifyOTP(key, otp)) {
     return res.status(401).json({ success: false, message: "Invalid OTP" });
   }
 
-  deleteOTP(`staff_${email.toLowerCase()}`);
+  deleteOTP(key);
 
-  const user = Array.from(staffUsers.values()).find(
-    (u) => u.email.toLowerCase() === email.toLowerCase()
-  );
+  const user = await prisma.user.findFirst({
+    where: { email: email.toLowerCase() },
+  });
 
   if (!user) {
     return res.status(401).json({ success: false, message: "User not found" });
   }
 
-  // In production, use JWT
+  // Placeholder token (Step 2 will replace with JWT)
   const token = Buffer.from(`${user.id}:${user.email}:${Date.now()}`).toString("base64");
 
   res.status(200).json({
     success: true,
     message: "Staff login successful",
     token,
-    user: { id: user.id, name: user.name, email: user.email, employeeId: user.employeeId, type: "staff" },
+    user: { id: user.id, name: user.name, email: user.email, employeeId: user.employeeId, role: user.role, type: "staff" },
   });
 });
 
