@@ -46,6 +46,9 @@ server/src/generated/
 *.d.ts
 **/*.d.ts
 
+# OTP delivery log (regenerated at runtime; contains dev-only secrets)
+server/otp.log
+
 # Prisma platform skills (downloaded by `prisma skills sync`)
 .cursor/
 .devin/
