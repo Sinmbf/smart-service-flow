@@ -2,7 +2,7 @@
 
 > **Purpose:** Track the project's status against `complete_project_roadmap.md` and `plans/implementation_plan.md`. Updated after every major change so you can resume work in any session.
 
-> **Last updated:** 2026-09-05 (end of session 4 — Step 3 merged)
+> **Last updated:** 2026-09-05 (end of session 5 — Step 4 merged; Increment 1 closed)
 
 ---
 
@@ -11,8 +11,8 @@
 **Read this section first, then start coding.**
 
 ### Context snapshot
-- Increment 1 (Foundation) is ~95% done. Step 3 (AuthContext + ProtectedRoute) is now merged.
-- Next: **Step 4 — Logout endpoint + language persistence endpoint**.
+- **Increment 1 (Foundation) is closed.** All 4 sub-steps (db, JWT, AuthContext, logout/lang) are merged.
+- Next: **Step 5 — Increment 2.1: Service Information (API + UI)**.
 - The codebase is **plain JavaScript only** (no TypeScript anywhere).
 - Database is wired up via Prisma 7 + PostgreSQL 18 (db: `smart_service_flow`, locally installed, **no Docker**).
 - Prisma 7 uses `prisma.config.js` for CLI tooling; the runtime still uses `@prisma/adapter-pg` in `db.js`.
@@ -20,11 +20,11 @@
 - The frontend has an AuthContext: `useAuth()` returns `{ user, token, isAuthenticated, isLoading, login, logout }`.
 - JWT is validated against `GET /api/auth/me` on every app load; stale tokens are auto-cleared.
 - `/dashboard` (any role) and `/staff/dashboard` (STAFF/ADMIN) are protected; both are stubs pending Step 4+.
-- SmartRedirect: authed users visiting `/login`/`/citizen-login`/`/staff-register` are pushed to their dashboard.
+- The language switcher persists to `PUT /api/auth/me/language` when authed.
 
 ### First message to send to the next session
 Open the new session with this exact prompt (copy-paste it):
-> "Read `PROGRESS.md` and continue from where it left off. Start with Step 4 (logout + language persistence endpoint)."
+> "Read `PROGRESS.md` and continue from where it left off. Start with Step 5 (Service Information: GET /api/services + list/detail pages)."
 
 ### Step 1 — Set up the environment (in your own terminals)
 ```powershell
@@ -110,8 +110,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | Field | Value |
 |---|---|
 | Active branch | `main` |
-| Current step | **Step 3 — AuthContext + ProtectedRoute (✅ MERGED)** |
-| Next step | **Step 4 — Logout + language persistence endpoint** |
+| Current step | **Step 4 — Logout + language persistence endpoint (✅ MERGED)** |
+| Next step | **Step 5 — Service Information (API + UI)** |
 | Increment | 1 (Foundation) — 85% done |
 | Server runs on | `http://localhost:5000` |
 | Client runs on | `http://localhost:5173+` (Vite auto-picks next free port) |
@@ -133,8 +133,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | **1.4 Database foundation** | **Step 1** | ✅ **Done** | Prisma 7.10 + PostgreSQL 18 + seed |
 | **1.5 Authentication (server)** | **Step 2** | ✅ **Done** | JWT + bcrypt + `requireAuth`/`requireRole` middleware + `GET /api/auth/me` |
 | **1.5 Frontend auth state** | **Step 3** | ✅ **Done** | AuthContext + ProtectedRoute + stub `/dashboard` and `/staff/dashboard` + smart redirect + auth pill in MainLayout |
-| 1.5 Logout + lang | Step 4 | ⏳ **Next** | Logout endpoint, language persistence endpoint |
-| 1.6 Bilingual | — | ✅ Done | EN + NE, LanguageSwitcher, localStorage |
+| 1.5 Logout + lang | Step 4 | ✅ **Done** | `POST /api/auth/logout` (stateless) + `PUT /api/auth/me/language` + `LanguageSwitcher` server persistence |
+| 1.6 Bilingual | — | ✅ Done | EN + NE, LanguageSwitcher, localStorage; server-side persistence via `me/language` now active |
 
 ### Increment 2 — Service Information & Citizen Guidance
 
