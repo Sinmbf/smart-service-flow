@@ -96,7 +96,8 @@ function AppRoutes() {
         <Route path="/token/scanner" element={<QRScanner />} />
         <Route path="/token/services" element={<ServiceSelection />} />
         <Route path="/token/generate" element={<TokenGeneration />} />
-        <Route path="/token/display" element={<TokenDisplay />} />
+        <Route path="/token/display/:id" element={<TokenDisplay />} />
+        <Route path="/token/display" element={<Navigate to="/dashboard" replace />} />
         <Route path="/token/monitor" element={<Monitor />} />
 
         {/* Catch-all - redirect to landing page */}
