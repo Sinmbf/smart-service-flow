@@ -7,6 +7,7 @@ import StaffDashboard from "../pages/StaffDashboard";
 import ServiceList from "../pages/services/ServiceList";
 import ServiceDetail from "../pages/services/ServiceDetail";
 import { QRScanner, ServiceSelection, TokenGeneration, TokenDisplay, Monitor } from "../pages/token";
+import CheckIn from "../pages/staff/CheckIn";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { useAuth } from "../auth/AuthContext";
 
@@ -84,6 +85,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute roles={["STAFF", "ADMIN"]}>
               <StaffDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/check-in"
+          element={
+            <ProtectedRoute roles={["STAFF", "ADMIN"]}>
+              <CheckIn />
             </ProtectedRoute>
           }
         />
