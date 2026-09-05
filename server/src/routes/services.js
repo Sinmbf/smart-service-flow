@@ -93,3 +93,38 @@ router.get("/:id", async (req, res) => {
 });
 
 export default router;
+
+/**
+ * GET /api/services/:id/stages/:stageId/documents
+ * List required documents for a single service stage.
+ */
+router.get("/:id/stages/:stageId/documents", async (req, res) => {
+  try {
+    const { id, stageId } = req.params;
+
+    // Verify service exists and is active
+    const service = await prisma.service.findUnique({ where: { id } });
+    if (!service || !service.isActive) {
+      return res.status(404).json({ success: false, message: "Service not found" });
+    }
+
+    // Verify stage belongs to service
+    const stage = await prisma.serviceStage.findUnique({
+      where: { id: stageId },
+      include: { service: { select: { id: true } } },
+    });
+    if (!stage || stage.service.id !== id) {
+      return res.status(404).json({ success: false, message: "Stage not found for this service" });
+    }
+
+    const docs = await prisma.requiredDocument.findMany({
+      where: { stageId, isActive: true },
+      orderBy: { createdAt: "asc" },
+    });
+
+    res.status(200).json({ success: true, serviceId: id, stageId, documents: docs });
+  } catch (err) {
+    console.error("[GET /api/services/:id/stages/:stageId/documents] error:", err);
+    res.status(500).json({ success: false, message: "Failed to load required documents" });
+  }
+});

@@ -6,6 +6,8 @@ import MainLayout from "../../layouts/MainLayout";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import ServiceRoadmap from "../../components/ServiceRoadmap";
+import OfficeInfoBlock from "../../components/OfficeInfoBlock";
+import RequiredDocumentsList from "../../components/RequiredDocumentsList";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { fetchServiceById } from "../../services/services";
 
@@ -84,22 +86,9 @@ const ServiceDetail = () => {
 
             {/* Office info */}
             {service.office && (
-              <Card className="mb-6 p-5">
-                <h2 className="font-heading font-semibold text-neutral-900 flex items-center gap-2 mb-3">
-                  <Building2 className="h-5 w-5 text-primary-700" />
-                  {pick(service.office.nameEn, service.office.nameNe)}
-                </h2>
-                <div className="space-y-2 text-sm text-neutral-600">
-                  <p className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 flex-shrink-0" />
-                    {service.office.location}
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 flex-shrink-0" />
-                    {service.office.hours}
-                  </p>
-                </div>
-              </Card>
+              <div className="mb-6">
+                <OfficeInfoBlock office={service.office} />
+              </div>
             )}
 
             {/* Stages (the ServiceRoadmap renders its own header) */}

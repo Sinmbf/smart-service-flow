@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { MapPin, FileText, Check, Loader, ChevronDown, ChevronUp } from "lucide-react";
+import { MapPin, FileText, Check, Loader } from "lucide-react";
+import RequiredDocumentsList from "./RequiredDocumentsList";
 
 /**
  * Status keys for roadmap stages. `current` is the stage the user is
@@ -88,8 +88,6 @@ const ServiceRoadmap = ({
                 : "upcoming"
               : "remaining";
           const s = STATUS_STYLES[status];
-          const docCount = stage.documents?.length ?? 0;
-          const showInlineDocs = docCount > 0 && docCount <= 2;
 
           return (
             <li key={stage.id} className="relative flex gap-4 pb-6 last:pb-0">
@@ -140,67 +138,13 @@ const ServiceRoadmap = ({
                 </div>
 
                 {/* Documents */}
-                {showInlineDocs && (
-                  <ul className="mt-2 space-y-1">
-                    {stage.documents.map((doc) => (
-                      <li
-                        key={doc.id}
-                        className="text-xs text-neutral-600 flex items-start gap-1.5"
-                      >
-                        <FileText className="h-3.5 w-3.5 flex-shrink-0 mt-0.5 text-neutral-400" />
-                        <span>{pick(doc.nameEn, doc.nameNe)}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                {docCount > 2 && <CollapsibleDocs stage={stage} pick={pick} t={t} />}
+                <RequiredDocumentsList stage={stage} />
               </div>
             </li>
           );
         })}
       </ol>
     </section>
-  );
-};
-
-/**
- * CollapsibleDocs — used when a stage has 3+ required documents.
- * Renders a small count badge that toggles the full list.
- */
-const CollapsibleDocs = ({ stage, pick, t }) => {
-  const [open, setOpen] = useState(false);
-  const count = stage.documents.length;
-  return (
-    <div className="mt-2">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary-700 hover:text-primary-800 px-2 py-1 -ml-2 rounded-md hover:bg-primary-50 transition"
-        aria-expanded={open}
-      >
-        <FileText className="h-3.5 w-3.5" />
-        {t("services.roadmap.documentsCount", { count })}
-        {open ? (
-          <ChevronUp className="h-3.5 w-3.5" />
-        ) : (
-          <ChevronDown className="h-3.5 w-3.5" />
-        )}
-      </button>
-      {open && (
-        <ul className="mt-2 space-y-1 pl-2 border-l-2 border-primary-200">
-          {stage.documents.map((doc) => (
-            <li
-              key={doc.id}
-              className="text-xs text-neutral-600 flex items-start gap-1.5"
-            >
-              <FileText className="h-3.5 w-3.5 flex-shrink-0 mt-0.5 text-neutral-400" />
-              <span>{pick(doc.nameEn, doc.nameNe)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
   );
 };
 
