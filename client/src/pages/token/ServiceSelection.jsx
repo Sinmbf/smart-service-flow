@@ -151,9 +151,9 @@ const ServiceSelection = () => {
                             {isNe ? service.descriptionNe : service.descriptionEn}
                           </p>
                           {service.office && (
-                            <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                              <Building2 className="h-3 w-3" />
-                              {isNe ? service.office.nameNe : service.office.nameEn}
+                            <p className="text-xs text-gray-500 mt-1 flex items-start gap-1">
+                              <Building2 className="h-3 w-3 mt-0.5 flex-shrink-0" />
+                              <span>{isNe ? service.office.nameNe : service.office.nameEn}</span>
                             </p>
                           )}
                         </div>
