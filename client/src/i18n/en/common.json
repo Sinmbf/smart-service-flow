@@ -350,6 +350,16 @@
       "getToken": "Get a Token",
       "notFound": "This service could not be found.",
       "error": "Could not load this service. Please try again."
+    },
+    "roadmap": {
+      "ariaLabel": "Service steps",
+      "stepLabel": "Step {{n}}",
+      "status": {
+        "completed": "Completed",
+        "current": "In progress",
+        "upcoming": "Upcoming",
+        "remaining": "Remaining"
+      }
     }
   }
 }

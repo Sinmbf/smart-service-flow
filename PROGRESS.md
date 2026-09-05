@@ -108,8 +108,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | Field | Value |
 |---|---|
 | Active branch | `main` |
-| Current step | **Step 5 — Service Information (API + UI) (✅ MERGED)** |
-| Next step | **Step 6 — Service Roadmap visualization** |
+| Current step | **Step 6 — Service Roadmap visualization (✅ MERGED)** |
+| Next step | **Step 7 — Required documents + office guidance** |
 | Increment | 1 (Foundation) — 85% done |
 | Server runs on | `http://localhost:5000` |
 | Client runs on | `http://localhost:5173+` (Vite auto-picks next free port) |
@@ -139,7 +139,7 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | Phase | Step | Status | Notes |
 |---|---|---|---|
 | 2.1 Service info | Step 5 | ✅ **Done** | `GET /api/services` (+search/pagination), `GET /api/services/:id`; ServiceList + ServiceDetail + ServiceCard; routes `/services`, `/services/:id` |
-| 2.2 Service roadmap | Step 6 | 🔜 Pending | ServiceRoadmap component (DB-driven) |
+| 2.2 Service roadmap | Step 6 | ✅ **Done** | `ServiceRoadmap` component embedded in `ServiceDetail`; status states (completed/current/upcoming); EN + NE via `i18n.language` |
 | 2.3 Required docs | Step 7 | 🔜 Pending | RequiredDocumentsList per stage |
 | 2.4 Office guidance | Step 7 | 🔜 Pending | Office info block on detail page |
 

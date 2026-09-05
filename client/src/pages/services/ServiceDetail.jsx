@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Building2, MapPin, Clock, ArrowLeft, FileText } from "lucide-react";
+import { Building2, MapPin, Clock, ArrowLeft } from "lucide-react";
 import MainLayout from "../../layouts/MainLayout";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
+import ServiceRoadmap from "../../components/ServiceRoadmap";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { fetchServiceById } from "../../services/services";
 
@@ -107,36 +108,7 @@ const ServiceDetail = () => {
                 <h2 className="font-heading font-semibold text-neutral-900 mb-3">
                   {t("services.detail.stagesTitle")}
                 </h2>
-                <ol className="space-y-3">
-                  {service.stages.map((stage) => (
-                    <li key={stage.id} className="flex gap-3">
-                      <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary-700 text-white text-sm font-semibold flex items-center justify-center">
-                        {stage.stageOrder}
-                      </span>
-                      <div className="flex-1 pb-1">
-                        <p className="font-medium text-neutral-900">
-                          {pick(stage.nameEn, stage.nameNe)}
-                        </p>
-                        {stage.location && (
-                          <p className="text-xs text-neutral-500 mt-0.5 flex items-center gap-1">
-                            <MapPin className="h-3 w-3" />
-                            {stage.location}
-                          </p>
-                        )}
-                        {stage.documents && stage.documents.length > 0 && (
-                          <ul className="mt-2 space-y-1">
-                            {stage.documents.map((doc) => (
-                              <li key={doc.id} className="text-xs text-neutral-600 flex items-center gap-1.5">
-                                <FileText className="h-3 w-3 flex-shrink-0 text-neutral-400" />
-                                {pick(doc.nameEn, doc.nameNe)}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ol>
+                <ServiceRoadmap stages={service.stages} />
               </div>
             )}
 
