@@ -264,7 +264,11 @@
       "taxClearanceDesc": "Tax clearance certificate",
       "birthCertificate": "Birth Certificate",
       "birthCertificateDesc": "Birth certificate registration",
-      "continueButton": "Continue"
+      "continueButton": "Continue",
+      "searchPlaceholder": "Search services…",
+      "viewDetails": "View details",
+      "empty": "No services found.",
+      "loadError": "Could not load services. Please try again."
     },
     "generation": {
       "title": "Generating Token",

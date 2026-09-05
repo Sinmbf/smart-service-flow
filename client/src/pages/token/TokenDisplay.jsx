@@ -6,10 +6,19 @@ import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 
 const TokenDisplay = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const tokenData = location.state;
+
+  // `service` may be a real service object (from /api/services) or, for older
+  // navigations, a string key. Resolve a display name for either shape.
+  const serviceName = (() => {
+    const s = tokenData?.service;
+    if (!s) return "";
+    if (typeof s === "string") return t(`token.services.${s}`);
+    return i18n.language === "ne" ? s.nameNe : s.nameEn;
+  })();
 
   const [currentServing, setCurrentServing] = useState("A001");
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
@@ -95,7 +104,7 @@ const TokenDisplay = () => {
                     {t("token.display.service")}
                   </span>
                   <span className="text-gray-900 font-semibold text-base sm:text-lg break-words">
-                    {t(`token.services.${tokenData.service}`)}
+                    {serviceName}
                   </span>
                 </div>
 
