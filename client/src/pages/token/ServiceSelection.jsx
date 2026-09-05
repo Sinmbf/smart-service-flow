@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
+import { useAuth } from "../../auth/AuthContext";
 
 const ServiceSelection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
   const [selectedService, setSelectedService] = useState("");
 
   const services= [
@@ -78,8 +80,14 @@ const ServiceSelection = () => {
   };
 
   const handleContinue = () => {
-    if (selectedService) {
-      // Redirect to verification before generating token
+    if (!selectedService) return;
+    // If the citizen is already authenticated, skip the phone+OTP step
+    // and go straight to token generation. Otherwise verify the phone
+    // number first.
+    if (isLoading) return;
+    if (isAuthenticated) {
+      navigate("/token/generate", { state: { service: selectedService } });
+    } else {
       navigate("/citizen-login", { state: { service: selectedService } });
     }
   };
