@@ -4,9 +4,14 @@ import { motion } from "framer-motion";
 import { Users, Zap, Lock, ArrowRight, Check, QrCode, Activity, ShieldCheck, Clock, Sparkles, ChevronRight, ArrowUpRight } from "lucide-react";
 import MainLayout from "../layouts/MainLayout";
 import Card from "../components/ui/Card";
+import { useAuth } from "../auth/AuthContext";
+import { useActiveToken } from "../hooks/useActiveToken";
 
 const Home = () => {
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuth();
+  const { activeToken } = useActiveToken();
+  const ctaHref = activeToken ? `/token/display/${activeToken.id}` : "/token/services";
 
   return (
     <MainLayout>
@@ -70,11 +75,13 @@ const Home = () => {
               {/* Single direct CTA — no email field */}
               <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 justify-center lg:justify-start">
                 <Link
-                  to="/token/services"
+                  to={ctaHref}
                   className="inline-flex items-center justify-center gap-2 min-h-[56px] px-8 bg-primary-700 hover:bg-primary-800 text-white font-semibold rounded-2xl shadow-sm hover:shadow-md transition-all group touch-manipulation"
                   style={{ color: "#ffffff" }}
                 >
-                  <span>{t("home.hero.getToken")}</span>
+                  <span>
+                    {activeToken ? t("home.hero.viewMyToken", "View my Token") : t("home.hero.getToken")}
+                  </span>
                   <ArrowUpRight className="h-5 w-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
                 <Link

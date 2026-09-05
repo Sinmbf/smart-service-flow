@@ -31,6 +31,31 @@ router.post("/", requireAuth, async (req, res) => {
       return res.status(404).json({ success: false, message: "Service not found" });
     }
 
+    // Constraint: a citizen may only have one active (non-terminal) token
+    // at a time. Check before doing any work.
+    const activeToken = await prisma.token.findFirst({
+      where: {
+        userId: req.user.id,
+        status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
+      },
+      include: {
+        service: { select: { id: true, nameEn: true, nameNe: true } },
+      },
+    });
+    if (activeToken) {
+      return res.status(409).json({
+        success: false,
+        code: "ACTIVE_TOKEN_EXISTS",
+        message: "You already have an active token. Please complete or cancel it first.",
+        activeToken: {
+          id: activeToken.id,
+          tokenNumber: activeToken.tokenNumber,
+          status: activeToken.status,
+          service: activeToken.service,
+        },
+      });
+    }
+
     // Pick the first stage (entry stage for this service).
     const entryStage = await prisma.serviceStage.findFirst({
       where: { serviceId, stageOrder: 1 },

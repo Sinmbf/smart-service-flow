@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import MainLayout from "../../layouts/MainLayout";
 import Card from "../../components/ui/Card";
 import { useAuth } from "../../auth/AuthContext";
+import { useActiveToken } from "../../hooks/useActiveToken";
 import { generateToken } from "../../services/tokens";
 
 const TokenGeneration = () => {
@@ -11,12 +12,17 @@ const TokenGeneration = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { activeToken, isLoading: activeLoading } = useActiveToken();
   const service = location.state?.service;
 
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (authLoading) return;
+    if (activeToken && !isLoading) {
+      navigate(`/token/display/${activeToken.id}`, { replace: true });
+      return;
+    }
     if (!service) {
       navigate("/token/services", { replace: true });
       return;
@@ -56,6 +62,11 @@ const TokenGeneration = () => {
       } catch (err) {
         if (cancelled) return;
         console.error("[TokenGeneration] error:", err);
+        // 409 with activeToken — server says we already have one. Route there.
+        if (err.response?.status === 409 && err.response?.data?.activeToken) {
+          navigate(`/token/display/${err.response.data.activeToken.id}`, { replace: true });
+          return;
+        }
         setError(
           err.response?.data?.message ||
             (i18n.language === "ne"

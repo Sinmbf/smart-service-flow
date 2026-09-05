@@ -175,7 +175,9 @@
       "tokensIssued": "tokens issued this week",
       "counter": "Counter",
       "nowServing": "Now Serving",
-      "active": "Active"
+      "active": "Active",
+      "viewMyToken": "View my Token",
+      "getToken": "Get a Token"
     },
     "trust": {
       "gov": "Government",
@@ -268,7 +270,9 @@
       "searchPlaceholder": "Search services…",
       "viewDetails": "View details",
       "empty": "No services found.",
-      "loadError": "Could not load services. Please try again."
+      "loadError": "Could not load services. Please try again.",
+      "activeTokenExists": "You already have an active token",
+      "cancelFirst": "Please cancel or complete it before generating a new one."
     },
     "generation": {
       "title": "Generating Token",

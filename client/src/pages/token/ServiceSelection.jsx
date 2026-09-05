@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Building2, ArrowRight, Info, Search } from "lucide-react";
+import { Building2, ArrowRight, Info, Search, QrCode, AlertTriangle } from "lucide-react";
 import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import { useAuth } from "../../auth/AuthContext";
 import { fetchServices } from "../../services/services";
+import { useActiveToken } from "../../hooks/useActiveToken";
 
 const ServiceSelection = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
+  const { activeToken, isLoading: activeTokenLoading } = useActiveToken();
   const [selectedService, setSelectedService] = useState(null);
   const [services, setServices] = useState([]);
   const [search, setSearch] = useState("");
@@ -67,6 +69,21 @@ const ServiceSelection = () => {
   return (
     <MainLayout>
       <div className="max-w-4xl mx-auto">
+        {/* Block new tokens if already have an active one */}
+        {isAuthenticated && activeToken && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800 flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+            <div>
+              <p className="font-medium">{t("token.services.activeTokenExists", "You already have an active token")}</p>
+              <p className="mt-1 text-amber-700">{t("token.services.cancelFirst", "Please cancel or complete it before generating a new one.")}</p>
+              <div className="mt-3 flex gap-2">
+                <a href={`/token/display/${activeToken.id}`} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary-700 text-white text-xs font-medium hover:bg-primary-800">
+                  <QrCode className="h-3.5 w-3.5" /> {t("token.display.yourToken")}
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
         <Card className="backdrop-blur-md bg-white/95">
           <div className="space-y-6 py-2">
             {/* Title */}
@@ -197,7 +214,7 @@ const ServiceSelection = () => {
             <div className="pt-2 px-2">
               <Button
                 onClick={handleContinue}
-                disabled={!selectedService}
+                disabled={!selectedService || Boolean(activeToken)}
                 className="w-full md:w-auto md:min-w-64 md:mx-auto md:block"
               >
                 {t("token.services.continueButton")}
