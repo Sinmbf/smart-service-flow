@@ -13,7 +13,7 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    rememberMe,
+    rememberMe: false,
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +52,7 @@ const Login = () => {
     try {
       await axios.post("/auth/staff/login", {
         email: formData.email,
-        password,
+        password: formData.password,
       });
 
       setPendingEmail(formData.email);
