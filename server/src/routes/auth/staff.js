@@ -1,6 +1,8 @@
 import { Router } from "express";
+import bcrypt from "bcrypt";
 import { storeOTP, verifyOTP, deleteOTP, isOTPExpired } from "../../services/auth/otpStore.js";
 import { generateOTP, deliverOTPToConsole } from "../../services/auth/otp.js";
+import { signToken } from "../../services/auth/jwt.js";
 import { prisma } from "../../db.js";
 import { Role } from "../../generated/prisma/index.js";
 
@@ -8,7 +10,7 @@ const router = Router();
 
 /**
  * POST /api/auth/staff/register
- * Registers a new staff user with email + password (plaintext for now — bcrypt in Step 2).
+ * Registers a new staff user with email + password (bcrypt-hashed).
  * Body: { name, email, password, employeeId? }
  */
 router.post("/register", async (req, res) => {
@@ -31,11 +33,13 @@ router.post("/register", async (req, res) => {
     return res.status(409).json({ success: false, message: "User with this email already exists" });
   }
 
+  const hashed = await bcrypt.hash(password, 10);
+
   const user = await prisma.user.create({
     data: {
       name,
       email: email.toLowerCase(),
-      password, // TODO Step 2: bcrypt
+      password: hashed,
       employeeId,
       role: Role.STAFF,
     },
@@ -68,8 +72,8 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ success: false, message: "Invalid credentials" });
   }
 
-  // TODO Step 2: bcrypt.compare
-  if (user.password !== password) {
+  const passwordOk = user.password ? await bcrypt.compare(password, user.password) : false;
+  if (!passwordOk) {
     return res.status(401).json({ success: false, message: "Invalid credentials" });
   }
 
@@ -116,8 +120,12 @@ router.post("/verify-otp", async (req, res) => {
     return res.status(401).json({ success: false, message: "User not found" });
   }
 
-  // Placeholder token (Step 2 will replace with JWT)
-  const token = Buffer.from(`${user.id}:${user.email}:${Date.now()}`).toString("base64");
+  // Sign a JWT for the staff user
+  const token = signToken({
+    sub: user.id,
+    role: user.role,
+    lang: user.preferredLanguage,
+  });
 
   res.status(200).json({
     success: true,
