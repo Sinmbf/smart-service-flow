@@ -150,7 +150,7 @@ model Token {
   id              String      @id @default(cuid())
   tokenNumber     String      @unique // e.g. "A001" — human-readable
   userId          String
-  user            User        @relation(fields: [userId], references: [id])
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   serviceId       String
   service         Service     @relation(fields: [serviceId], references: [id])
   currentStageId  String
