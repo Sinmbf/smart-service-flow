@@ -2,7 +2,7 @@
 
 > **Purpose:** Track the project's status against `complete_project_roadmap.md` and `plans/implementation_plan.md`. Updated after every major change so you can resume work in any session.
 
-> **Last updated:** 2026-09-05 (end of session 3 — Step 2.5 foundation fixes merged)
+> **Last updated:** 2026-09-05 (end of session 4 — Step 3 merged)
 
 ---
 
@@ -11,18 +11,20 @@
 **Read this section first, then start coding.**
 
 ### Context snapshot
-- Increment 1 (Foundation) is ~90% done. Steps 2 (JWT + bcrypt) and 2.5 (auth foundation fixes) are merged.
-- Next: **Step 3 — Frontend auth state (AuthContext + ProtectedRoute)**.
+- Increment 1 (Foundation) is ~95% done. Step 3 (AuthContext + ProtectedRoute) is now merged.
+- Next: **Step 4 — Logout endpoint + language persistence endpoint**.
 - The codebase is **plain JavaScript only** (no TypeScript anywhere).
 - Database is wired up via Prisma 7 + PostgreSQL 18 (db: `smart_service_flow`, locally installed, **no Docker**).
 - Prisma 7 uses `prisma.config.js` for CLI tooling; the runtime still uses `@prisma/adapter-pg` in `db.js`.
-- The `User` table now has `lastLoginAt` and `passwordChangedAt` columns.
-- Citizen first-login now requires a name (2–80 chars); returning users skip the name step.
-- JWT carries a `pwd` claim; `requireAuth` middleware rejects tokens with a stale `pwd` (i.e. password changed after the token was issued).
+- The `User` table has `lastLoginAt` and `passwordChangedAt` columns.
+- The frontend has an AuthContext: `useAuth()` returns `{ user, token, isAuthenticated, isLoading, login, logout }`.
+- JWT is validated against `GET /api/auth/me` on every app load; stale tokens are auto-cleared.
+- `/dashboard` (any role) and `/staff/dashboard` (STAFF/ADMIN) are protected; both are stubs pending Step 4+.
+- SmartRedirect: authed users visiting `/login`/`/citizen-login`/`/staff-register` are pushed to their dashboard.
 
 ### First message to send to the next session
 Open the new session with this exact prompt (copy-paste it):
-> "Read `PROGRESS.md` and continue from where it left off. Start with Step 3 (AuthContext + ProtectedRoute)."
+> "Read `PROGRESS.md` and continue from where it left off. Start with Step 4 (logout + language persistence endpoint)."
 
 ### Step 1 — Set up the environment (in your own terminals)
 ```powershell
@@ -108,8 +110,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | Field | Value |
 |---|---|
 | Active branch | `main` |
-| Current step | **Step 2 — JWT + bcrypt + middleware (✅ MERGED)** |
-| Next step | **Step 3 — AuthContext + ProtectedRoute** |
+| Current step | **Step 3 — AuthContext + ProtectedRoute (✅ MERGED)** |
+| Next step | **Step 4 — Logout + language persistence endpoint** |
 | Increment | 1 (Foundation) — 85% done |
 | Server runs on | `http://localhost:5000` |
 | Client runs on | `http://localhost:5173+` (Vite auto-picks next free port) |
@@ -130,8 +132,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | 1.3 Backend foundation | — | ✅ Done | Express 5 (ESM, plain JS) + Helmet + CORS, /api routes |
 | **1.4 Database foundation** | **Step 1** | ✅ **Done** | Prisma 7.10 + PostgreSQL 18 + seed |
 | **1.5 Authentication (server)** | **Step 2** | ✅ **Done** | JWT + bcrypt + `requireAuth`/`requireRole` middleware + `GET /api/auth/me` |
-| 1.5 Frontend auth state | Step 3 | ⏳ **Next** | AuthContext + ProtectedRoute |
-| 1.5 Logout + lang | Step 4 | 🔜 Pending | Logout endpoint, language persistence endpoint |
+| **1.5 Frontend auth state** | **Step 3** | ✅ **Done** | AuthContext + ProtectedRoute + stub `/dashboard` and `/staff/dashboard` + smart redirect + auth pill in MainLayout |
+| 1.5 Logout + lang | Step 4 | ⏳ **Next** | Logout endpoint, language persistence endpoint |
 | 1.6 Bilingual | — | ✅ Done | EN + NE, LanguageSwitcher, localStorage |
 
 ### Increment 2 — Service Information & Citizen Guidance
@@ -223,7 +225,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | `feature/remove-typescript` | `fix(client): restore navigate state object in TokenGeneration` | ✅ Merged to main (Step 1.5) |
 | `feature/auth-jwt` | `feat(auth): replace base64 with JWT, add bcrypt password hashing` | ✅ Merged to main (Step 2) |
 | `feature/auth-foundation-fixes` | `feat(auth-foundation): add lastLoginAt, passwordChangedAt columns + first-login name prompt` | ✅ Merged to main (Step 2.5) |
-| `feature/auth-context` | — | 🔜 **Next** (Step 3) |
+| `feature/auth-context` | `feat(auth): AuthContext + ProtectedRoute + stub dashboards + smart redirect` | ✅ Merged to main (Step 3) |
+| `feature/logout-lang` | — | 🔜 **Next** (Step 4) |
 
 ### Post-Step-2.5 hotfix
 

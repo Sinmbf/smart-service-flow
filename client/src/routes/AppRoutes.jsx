@@ -22,10 +22,14 @@ function ScrollToTop() {
 
 /**
  * SmartRedirect — when an authed user lands on a public auth page
- * (e.g. /login or /staff-register), push them to the right dashboard
- * for their role. Otherwise render the public page.
+ * (currently only /login), push them to the right dashboard for their role.
+ * Otherwise render the public page.
+ *
+ * Note: this only wraps /login. /citizen-login and /staff-register are NOT
+ * wrapped, because the token flow + registration flow expect the user to
+ * remain on those pages even after `login()` flips isAuthenticated true.
  */
-function SmartRedirect({ children, kind }) {
+function SmartRedirect({ children }) {
   const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
 
@@ -36,12 +40,6 @@ function SmartRedirect({ children, kind }) {
     if (role === "STAFF" || role === "ADMIN") {
       return <Navigate to="/staff/dashboard" replace />;
     }
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  // Citizens and staff have separate auth entry points; keep a logged-in
-  // staff member from accidentally landing on the citizen OTP page.
-  if (kind === "citizen" && isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
 
@@ -59,11 +57,13 @@ function AppRoutes() {
         {/* Landing page - public entry point for all users */}
         <Route path="/" element={<Home />} />
 
-        {/* Authentication routes — authed users get redirected to their dashboard */}
-        <Route path="/login" element={<SmartRedirect kind="staff"><Login /></SmartRedirect>} />
-        <Route path="/citizen-login" element={<SmartRedirect kind="citizen"><CitizenOTP /></SmartRedirect>} />
-        <Route path="/staff-register" element={<SmartRedirect><StaffRegister /></SmartRedirect>} />
-        <Route path="/register" element={<SmartRedirect><Register /></SmartRedirect>} />
+        {/* Authentication routes — /login redirects authed users to dashboard; */}
+        {/* /citizen-login and /staff-register stay accessible so users can start */}
+        {/* the flow or log in with a different account */}
+        <Route path="/login" element={<SmartRedirect><Login /></SmartRedirect>} />
+        <Route path="/citizen-login" element={<CitizenOTP />} />
+        <Route path="/staff-register" element={<StaffRegister />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/verify-phone" element={<VerifyPhone />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
