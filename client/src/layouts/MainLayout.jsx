@@ -1,12 +1,17 @@
 
 import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import Footer from "../components/Footer";
+import { useAuth } from "../auth/AuthContext";
 
 const MainLayout = ({ children, showHeader = true }) => {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading, user, logout } = useAuth();
+  const isStaffOrAdmin =
+    isAuthenticated && ["STAFF", "ADMIN"].includes((user?.role || "").toUpperCase());
   const isTokenRoute = location.pathname.startsWith("/token");
   const isMonitor = location.pathname === "/token/monitor";
   const isServices = location.pathname === "/token/services";
@@ -112,6 +117,40 @@ const MainLayout = ({ children, showHeader = true }) => {
                   </Link>
                 </nav>
               )}
+
+              {/* Authed user pill — shows when logged in. Links to the
+                  dashboard for the user's role, plus a logout button. */}
+              {!isLoading && isAuthenticated && (
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <Link
+                    to={isStaffOrAdmin ? "/staff/dashboard" : "/dashboard"}
+                    className="hidden sm:inline-flex items-center gap-2 px-2 sm:px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] text-neutral-700 hover:bg-neutral-100"
+                    aria-label={t("common.appName")}
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span className="text-xs sm:text-sm">
+                      {user?.name || (isStaffOrAdmin ? t("auth.staff.title") : t("auth.citizen.title"))}
+                    </span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      navigate("/");
+                    }}
+                    className="inline-flex items-center gap-1 px-2 sm:px-3 py-2 rounded-md font-heading font-semibold transition-all min-h-[44px] text-neutral-700 hover:bg-neutral-100"
+                    aria-label={t("common.logout")}
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span className="hidden sm:inline text-xs sm:text-sm">{t("common.logout")}</span>
+                  </button>
+                </div>
+              )}
+
               <LanguageSwitcher />
             </div>
           </div>

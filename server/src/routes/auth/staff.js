@@ -45,28 +45,56 @@ router.post("/register", async (req, res) => {
       });
   }
 
-  const existing = await prisma.user.findFirst({
+  const existingEmail = await prisma.user.findFirst({
     where: { email: email.toLowerCase() },
   });
-  if (existing) {
+  if (existingEmail) {
     return res
       .status(409)
       .json({ success: false, message: "User with this email already exists" });
   }
 
+  if (employeeId) {
+    const existingEmployee = await prisma.user.findFirst({
+      where: { employeeId },
+    });
+    if (existingEmployee) {
+      return res
+        .status(409)
+        .json({ success: false, message: "Employee ID is already in use" });
+    }
+  }
+
   const hashed = await bcrypt.hash(password, 10);
   const now = new Date();
 
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email: email.toLowerCase(),
-      password: hashed,
-      passwordChangedAt: now,
-      employeeId,
-      role: Role.STAFF,
-    },
-  });
+  let user;
+  try {
+    user = await prisma.user.create({
+      data: {
+        name,
+        email: email.toLowerCase(),
+        password: hashed,
+        passwordChangedAt: now,
+        employeeId,
+        role: Role.STAFF,
+      },
+    });
+  } catch (err) {
+    // Safety net for any other unique-constraint we might add later.
+    if (err.code === "P2002") {
+      const target = Array.isArray(err.meta?.target) ? err.meta.target.join(", ") : err.meta?.target;
+      return res
+        .status(409)
+        .json({
+          success: false,
+          message: target
+            ? `A user with this ${target} already exists`
+            : "A user with these details already exists",
+        });
+    }
+    throw err;
+  }
 
   console.log(`[Staff Registered] Email: ${user.email}, ID: ${user.id}`);
 
