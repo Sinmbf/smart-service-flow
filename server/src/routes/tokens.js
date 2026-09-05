@@ -43,71 +43,99 @@ router.post("/", requireAuth, async (req, res) => {
     // Transactional position reservation (atomic). The single-active-token
     // check runs INSIDE the transaction so two concurrent requests can't
     // both pass the check and create two tokens (race condition).
-    let result;
-    try {
-      result = await prisma.$transaction(async (tx) => {
-        // Single-active-token guard (atomic with the insert).
-        const activeToken = await tx.token.findFirst({
-          where: {
-            userId: req.user.id,
-            status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
-          },
-          include: {
-            service: { select: { id: true, nameEn: true, nameNe: true } },
-          },
+    // Retry up to maxRetries times on P2002 (token-number collision).
+    let result = null;
+    let retries = 0;
+    const maxRetries = 3;
+
+    while (retries < maxRetries) {
+      try {
+        result = await prisma.$transaction(async (tx) => {
+          // Single-active-token guard (atomic with the insert).
+          const activeToken = await tx.token.findFirst({
+            where: {
+              userId: req.user.id,
+              status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
+            },
+            include: {
+              service: { select: { id: true, nameEn: true, nameNe: true } },
+            },
+          });
+          if (activeToken) {
+            const err = new Error("ACTIVE_TOKEN_EXISTS");
+            err.code = "ACTIVE_TOKEN_EXISTS";
+            err.activeToken = activeToken;
+            throw err;
+          }
+
+          // Queue position: number of currently active tokens ahead of you.
+          const activeCount = await tx.token.count({
+            where: {
+              serviceId,
+              currentStageId: entryStage.id,
+              status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
+            },
+          });
+          const nextPosition = activeCount + 1;
+
+          // Human-readable token number: must be globally unique. Use the
+          // lifetime count so EXPIRED/COMPLETED/CANCELLED tokens still
+          // consume a number (avoids A001 collisions across days).
+          const lifetimeCount = await tx.token.count({
+            where: {
+              serviceId,
+              currentStageId: entryStage.id,
+            },
+          });
+          const nextSequence = lifetimeCount + 1;
+          const prefix = service.office?.nameEn?.charAt(0)?.toUpperCase() ?? "A";
+          const number = String(nextSequence).padStart(3, "0");
+          const tokenNumber = `${prefix}${number}`;
+
+          const token = await tx.token.create({
+            data: {
+              tokenNumber,
+              userId: req.user.id,
+              serviceId,
+              currentStageId: entryStage.id,
+              position: nextPosition,
+              status: "GENERATED",
+              generatedAt: new Date(),
+            },
+            include: { service: true, currentStage: true },
+          });
+
+          return { token, tokenNumber, position: nextPosition };
         });
-        if (activeToken) {
-          // Throw a marker that the catch below translates to 409.
-          const err = new Error("ACTIVE_TOKEN_EXISTS");
-          err.code = "ACTIVE_TOKEN_EXISTS";
-          err.activeToken = activeToken;
-          throw err;
+        break; // success — exit retry loop
+      } catch (innerErr) {
+        if (innerErr.code === "ACTIVE_TOKEN_EXISTS") {
+          return res.status(409).json({
+            success: false,
+            code: "ACTIVE_TOKEN_EXISTS",
+            message: "You already have an active token. Please complete or cancel it first.",
+            activeToken: innerErr.activeToken,
+          });
         }
-
-        // Queue position: number of currently active tokens ahead of you
-        // (GENERATED/CHECKED_IN/SERVING).
-        const activeCount = await tx.token.count({
-          where: {
-            serviceId,
-            currentStageId: entryStage.id,
-            status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
-          },
-        });
-        const nextPosition = activeCount + 1;
-
-        // Human-readable token number: must be globally unique across the
-        // Token table. We use the lifetime count of tokens for this
-        // service+stage (NOT the active count), so EXPIRED/COMPLETED/CANCELLED
-        // tokens still consume a number and avoid collisions.
-        const lifetimeCount = await tx.token.count({
-          where: {
-            serviceId,
-            currentStageId: entryStage.id,
-          },
-        });
-        const nextSequence = lifetimeCount + 1;
-        const prefix = service.office?.nameEn?.charAt(0)?.toUpperCase() ?? "A";
-        const number = String(nextSequence).padStart(3, "0");
-        const tokenNumber = `${prefix}${number}`;
-
-        const token = await tx.token.create({
-          data: {
-            tokenNumber,
-            userId: req.user.id,
-            serviceId,
-            currentStageId: entryStage.id,
-            position: nextPosition,
-            status: "GENERATED",
-            generatedAt: new Date(),
-          },
-          include: { service: true, currentStage: true },
-        });
-
-        return { token, tokenNumber, position: nextPosition };
-      });
-    } catch (innerErr) {
-      // Re-throw so the outer handler can return the right status code.
-      throw innerErr;
+        if (innerErr.code === "P2002") {
+          retries++;
+          if (retries >= maxRetries) {
+            console.error("[POST /api/tokens] unique-constraint after retries:", innerErr);
+            return res.status(409).json({
+              success: false,
+              message: "Could not reserve unique token number; please retry",
+            });
+          }
+          // Retry: the next iteration will re-read lifetimeCount (now N+1
+          // because the previous insert committed) and use a unique number.
+          continue;
+        }
+        // Unknown error: re-throw to the outer catch.
+        throw innerErr;
+      }
+    }
+    if (!result) {
+      return res.status(500).json({ success: false, message: "Failed to generate token" });
     }
 
     const { token, tokenNumber, position } = result;
