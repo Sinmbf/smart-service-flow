@@ -5,11 +5,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../../services/api";
 import AuthLayout from "../../layouts/AuthLayout";
 import { Button, Card, Input } from "../../components/ui";
+import { useAuth } from "../../auth/AuthContext";
 
 const CitizenOTP = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
   const [step, setStep] = useState("phone");
 
   const [phone, setPhone] = useState("");
@@ -69,8 +71,8 @@ const CitizenOTP = () => {
         otp,
       });
 
-      // Store token
-      localStorage.setItem("token", response.data.token);
+      // Hand off to AuthContext
+      login(response.data.token, response.data.user);
 
       console.log("✅ Citizen authenticated:", response.data.user);
 
@@ -113,7 +115,7 @@ const CitizenOTP = () => {
         name: trimmed,
       });
 
-      localStorage.setItem("token", response.data.token);
+      login(response.data.token, response.data.user);
       console.log("✅ Citizen authenticated:", response.data.user);
 
       const pendingService = location.state?.service;

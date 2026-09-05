@@ -60,6 +60,7 @@
       "nameContinue": "Continue"
     },
     "staff": {
+      "title": "Staff",
       "email": "Work Email",
       "password": "Password",
       "signingIn": "Signing in...",
@@ -317,5 +318,17 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "allRightsReserved": "All rights reserved"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}",
+    "subtitle": "Your queue tokens, service history, and notifications will live here.",
+    "comingSoon": "Step 5+ will replace this stub with the real dashboard."
+  },
+  "staff": {
+    "dashboard": {
+      "welcome": "Staff Console — {{name}}",
+      "subtitle": "Manage queues, call tokens, and update stage progress from here.",
+      "comingSoon": "Step 4+ (Increment 10) will replace this stub with the real staff console."
+    }
   }
 }
