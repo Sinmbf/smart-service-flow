@@ -1,13 +1,35 @@
 import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
+import axios from "../services/api";
+import { useAuth } from "../auth/AuthContext";
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
-  const changeLanguage = (language) => {
+  const { isAuthenticated } = useAuth();
+  const currentLanguage = i18n.language;
+
+  const changeLanguage = async (language) => {
+    // 1. Always update local state instantly so the UI doesn't wait.
     i18n.changeLanguage(language);
     localStorage.setItem("language", language);
+
+    // 2. If the user is signed in, persist to the server so their preference
+    //    survives across devices. Fire-and-forget: a failure here should
+    //    not block the user.
+    if (!isAuthenticated) return;
+
+    try {
+      await axios.put(
+        "/auth/me/language",
+        { language: language.toUpperCase() },
+        { skipGlobalErrorToast: true }
+      );
+    } catch {
+      // Silent: the localStorage write is the source of truth for the
+      // current session; the next page load will re-derive from the
+      // (un-persisted) server value via /api/auth/me.
+    }
   };
-  const currentLanguage = i18n.language;
 
   return (
     <div className="flex items-center gap-1 sm:gap-1.5 bg-white/95 backdrop-blur-sm px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-xl shadow-md">
