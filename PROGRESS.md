@@ -14,9 +14,10 @@
 - **Increment 1 (Foundation) is closed.** All 4 sub-steps (db, JWT, AuthContext, logout/lang) are merged.
 - **Step 5 merged:** `/api/services` list + detail; `/services` and `/services/:id` pages; `ServiceCard`.
 - **Step 6 merged:** `ServiceRoadmap` component embedded in `ServiceDetail`; status states (completed/current/upcoming); collapsible documents; visual polish; `currentStageOrder` prop ready for Step 14.
+- **Step 7 merged:** `RequiredDocumentsList` + `OfficeInfoBlock` reusable components; `GET /api/services/:id/stages/:stageId/documents` endpoint for deep-linking.
 - **Post-Step-5 fix:** `/token/services` now uses real `/api/services` data (not the hardcoded mock list).
 - **Post-Step-6 hotfixes:** service tile icons (main + office footer) pinned to top with `items-start`.
-- Next: **Step 7 — Increment 2.3 & 2.4: Required Documents + Office/Stage Guidance**.
+- Next: **Step 8 — Increment 3.1–3.3: Token data model + generation + QR**.
 - The codebase is **plain JavaScript only** (no TypeScript anywhere).
 - Database is wired up via Prisma 7 + PostgreSQL 18 (db: `smart_service_flow`, locally installed, **no Docker**).
 - Prisma 7 uses `prisma.config.js` for CLI tooling; the runtime still uses `@prisma/adapter-pg` in `db.js`.
@@ -25,7 +26,7 @@
 
 ### First message to send to the next session
 Open the new session with this exact prompt (copy-paste it):
-> "Read `PROGRESS.md` and continue from where it left off. Start with Step 7 (Required Documents + Office/Stage Guidance)."
+> "Read `PROGRESS.md` and continue from where it left off. Start with Step 8 (Token data model + POST /api/tokens + QR rendering)."
 
 ### Step 1 — Set up the environment (in your own terminals)
 ```powershell
@@ -111,8 +112,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | Field | Value |
 |---|---|
 | Active branch | `main` |
-| Current step | **Step 6 — Service Roadmap visualization (✅ MERGED)** |
-| Next step | **Step 7 — Required documents + office guidance** |
+| Current step | **Step 7 — Required documents + office guidance (✅ MERGED)** |
+| Next step | **Step 8 — Token data model + generation + QR** |
 | Increment | 1 (Foundation) — 85% done |
 | Server runs on | `http://localhost:5000` |
 | Client runs on | `http://localhost:5173+` (Vite auto-picks next free port) |
@@ -143,8 +144,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 |---|---|---|---|
 | 2.1 Service info | Step 5 | ✅ **Done** | `GET /api/services` (+search/pagination), `GET /api/services/:id`; ServiceList + ServiceDetail + ServiceCard; routes `/services`, `/services/:id` |
 | 2.2 Service roadmap | Step 6 | ✅ **Done** | `ServiceRoadmap` component embedded in `ServiceDetail`; status states; collapsible docs; visual polish; EN/NE; `currentStageOrder` prop ready |
-| 2.3 Required docs | Step 7 | ⏳ **Next** | RequiredDocumentsList per stage (already embedded in ServiceRoadmap; formalize as standalone component) |
-| 2.4 Office guidance | Step 7 | ⏳ **Next** | Office info block on detail page (already shown; formalize as OfficeInfoBlock) |
+| 2.3 Required docs | Step 7 | ✅ **Done** | `RequiredDocumentsList` reusable component; inline for ≤2, collapsible for 3+; per-stage EN/NE |
+| 2.4 Office guidance | Step 7 | ✅ **Done** | `OfficeInfoBlock` reusable component; location + hours with icons |
 
 ### Increment 3 — Digital Token & Check-in
 
