@@ -112,8 +112,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | Field | Value |
 |---|---|
 | Active branch | `main` |
-| Current step | **Step 7 — Required documents + office guidance (✅ MERGED)** |
-| Next step | **Step 8 — Token data model + generation + QR** |
+| Current step | **Step 8 — Token data model + generation + QR (✅ MERGED)** |
+| Next step | **Step 8.5 — single-active-token enforcement + cancel (✅ MERGED)** → **Step 9 — Check-in + no-show + cancel** |
 | Increment | 1 (Foundation) — 85% done |
 | Server runs on | `http://localhost:5000` |
 | Client runs on | `http://localhost:5173+` (Vite auto-picks next free port) |
@@ -151,7 +151,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 
 | Phase | Step | Status | Notes |
 |---|---|---|---|
-| 3.1–3.3 Token + QR | Step 8 | 🔜 Pending | POST /api/tokens, position reservation, QR rendering |
+| 3.1–3.3 Token + QR | Step 8 | ✅ **Done** | POST /api/tokens (atomic position reservation); GET /api/tokens/:id; GET /api/tokens?mine=true; client-side QR rendering (qrcode pkg); URL-based /token/display/:id; dashboard shows active tokens |
+| 3.1–3.3 (single-active) | Step 8.5 | ✅ **Done** | Server 409 on duplicate active token; useActiveToken hook; home CTA swaps; ServiceSelection banner + cancel |
 | 3.4–3.6 Check-in, no-show, cancel | Step 9 | 🔜 Pending | Staff check-in endpoint, no-show sweeper |
 
 ### Increment 4 — Multi-Stage Service Flow
