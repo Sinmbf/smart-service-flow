@@ -362,6 +362,15 @@
         "upcoming": "Upcoming",
         "remaining": "Remaining"
       }
+    },
+    "office": {
+      "ariaLabel": "Office information",
+      "location": "Location",
+      "hours": "Opening hours"
+    },
+    "documents": {
+      "none": "No documents required for this step.",
+      "countLabel": "{{count}} required documents"
     }
   }
 }
