@@ -6,6 +6,7 @@ import staffAuthRoutes from "./routes/auth/staff.js";
 import meRoutes from "./routes/auth/me.js";
 import logoutRoutes from "./routes/auth/logout.js";
 import queueRoutes from "./routes/queue.js";
+import serviceRoutes from "./routes/services.js";
 import adminDebugRoutes from "./routes/admin/debug.js";
 const app = express();
 app.use(helmet()); // For security headers
@@ -25,6 +26,8 @@ app.use("/api/auth/citizen", citizenAuthRoutes);
 app.use("/api/auth/staff", staffAuthRoutes);
 app.use("/api/auth/me", meRoutes);
 app.use("/api/auth/logout", logoutRoutes);
+// Service information routes
+app.use("/api/services", serviceRoutes);
 // Queue routes
 app.use("/api/queue", queueRoutes);
 // Admin / debug routes (temporary, removed in Step 19)
