@@ -1,11 +1,25 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Login, Register, VerifyPhone, ForgotPassword, ResetPassword, CitizenOTP, StaffRegister } from "../pages/auth";
 import Home from "../pages/Home";
 import { QRScanner, ServiceSelection, TokenGeneration, TokenDisplay, Monitor } from "../pages/token";
 
+// Scrolls the window to the top whenever the route changes,
+// so navigating between pages always starts from the top.
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
+
+  return null;
+}
+
 function AppRoutes() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* Landing page - public entry point for all users */}
         <Route path="/" element={<Home />} />
