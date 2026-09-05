@@ -225,6 +225,14 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | `feature/auth-foundation-fixes` | `feat(auth-foundation): add lastLoginAt, passwordChangedAt columns + first-login name prompt` | ✅ Merged to main (Step 2.5) |
 | `feature/auth-context` | — | 🔜 **Next** (Step 3) |
 
+### Post-Step-2.5 hotfix
+
+| Commit | What | Why |
+|---|---|---|
+| `fix(auth): regenerate Prisma 7 client + add generate to dev/postinstall; add migration commands` | Server `dev` and `start` now run `prisma generate` automatically; added `postinstall: prisma generate`; `db:migrate` no longer forces `--name init`; added `db:migrate:create` for new migrations. | After adding new columns to the User table in Step 2.5, the running server still held the old Prisma client in memory, causing `PrismaClientValidationError: Unknown argument 'lastLoginAt'` on `/api/auth/citizen/verify`. Auto-generating on `dev` start and `postinstall` prevents the same trap for future schema changes and for fresh clones. |
+
+### Server-side quality-of-life commits
+
 ### Session 2 housekeeping (commited before starting Step 2)
 
 | Commit | What | Why |
@@ -301,6 +309,7 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 9. **Staff password is null in the seed** — staff can be registered via `/api/auth/staff/register` but cannot log in until a real bcrypt-hashed password is set. The seed creates staff with `password = null`; register a new account for testing.
 10. **JWT requires `JWT_SECRET` in `.env`** — the `.env` already has `JWT_SECRET=dev-secret-key-change-in-production`. If it's missing or blank, JWT tokens will fail to sign/verify and all protected routes will return 401. Always confirm `JWT_SECRET` is non-empty before testing auth flows.
 11. **Server-side quality notes from Step 2** — `jwt.js` uses `jsonwebtoken` (HS256); `auth.js` middleware hydrates the user from DB on every protected request; `me.js` exposes `GET /api/auth/me`. The `requireAuth` middleware attaches `req.user`; `requireRole(...)` gates after it.
+12. **Prisma client regeneration** — Prisma 7's generated client (in `server/src/generated/prisma/`) does NOT auto-reload at runtime. After any schema change (new column, model, enum), you must `npm run dev` (or `npx prisma generate`) to refresh the client. The `dev` and `start` scripts now run `prisma generate` automatically, and `postinstall` regenerates after fresh `npm install`. **Always restart the server after a schema change** — the running process holds the old client in memory. Symptom of a stale client: `PrismaClientValidationError: Unknown argument 'X'` against a column that exists in the DB.
 
 ---
 
