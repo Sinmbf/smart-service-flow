@@ -42,18 +42,30 @@ router.post("/", requireAuth, async (req, res) => {
 
     // Transactional position reservation (atomic).
     const result = await prisma.$transaction(async (tx) => {
-      const maxPos = await tx.token.aggregate({
+      // Queue position: number of currently active tokens ahead of you
+      // (GENERATED/CHECKED_IN/SERVING).
+      const activeCount = await tx.token.count({
         where: {
           serviceId,
           currentStageId: entryStage.id,
           status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
         },
-        _max: { position: true },
       });
+      const nextPosition = activeCount + 1;
 
-      const nextPosition = (maxPos._max?.position ?? 0) + 1;
+      // Human-readable token number: must be globally unique across the
+      // Token table. We use the lifetime count of tokens for this
+      // service+stage (NOT the active count), so EXPIRED/COMPLETED/CANCELLED
+      // tokens still consume a number and avoid collisions.
+      const lifetimeCount = await tx.token.count({
+        where: {
+          serviceId,
+          currentStageId: entryStage.id,
+        },
+      });
+      const nextSequence = lifetimeCount + 1;
       const prefix = service.office?.nameEn?.charAt(0)?.toUpperCase() ?? "A";
-      const number = String(nextPosition).padStart(3, "0");
+      const number = String(nextSequence).padStart(3, "0");
       const tokenNumber = `${prefix}${number}`;
 
       const token = await tx.token.create({
@@ -94,6 +106,13 @@ router.post("/", requireAuth, async (req, res) => {
       qrPayload: urlPayload,
     });
   } catch (err) {
+    if (err.code === "P2002") {
+      // Should not happen with the lifetime count above, but guard anyway.
+      console.error("[POST /api/tokens] unique-constraint error:", err);
+      return res
+        .status(409)
+        .json({ success: false, message: "Token number already taken; please retry" });
+    }
     console.error("[POST /api/tokens] error:", err);
     res.status(500).json({ success: false, message: "Failed to generate token" });
   }
