@@ -26,3 +26,12 @@ export async function fetchMyActiveTokens({ all = false } = {}) {
   const { data } = await api.get("/tokens", { params: { mine: "true", ...(all ? { all: "true" } : {}) } });
   return data;
 }
+
+/**
+ * Cancel a token by id (citizen self-cancel; staff can cancel any).
+ * @param {string} id
+ */
+export async function cancelToken(id) {
+  const { data } = await api.post(`/tokens/${id}/cancel`);
+  return data;
+}

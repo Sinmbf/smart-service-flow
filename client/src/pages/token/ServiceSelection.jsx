@@ -8,6 +8,7 @@ import Card from "../../components/ui/Card";
 import { useAuth } from "../../auth/AuthContext";
 import { fetchServices } from "../../services/services";
 import { useActiveToken } from "../../hooks/useActiveToken";
+import { cancelToken } from "../../services/tokens";
 
 const ServiceSelection = () => {
   const { t, i18n } = useTranslation();
@@ -77,9 +78,26 @@ const ServiceSelection = () => {
               <p className="font-medium">{t("token.services.activeTokenExists", "You already have an active token")}</p>
               <p className="mt-1 text-amber-700">{t("token.services.cancelFirst", "Please cancel or complete it before generating a new one.")}</p>
               <div className="mt-3 flex gap-2">
-                <a href={`/token/display/${activeToken.id}`} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary-700 text-white text-xs font-medium hover:bg-primary-800">
+                <Link
+                  to={`/token/display/${activeToken.id}`}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary-700 text-white text-xs font-medium hover:bg-primary-800"
+                >
                   <QrCode className="h-3.5 w-3.5" /> {t("token.display.yourToken")}
-                </a>
+                </Link>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await cancelToken(activeToken.id);
+                      window.location.reload();
+                    } catch {
+                      // silent — user can retry from display page
+                    }
+                  }}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-100 text-red-700 text-xs font-medium hover:bg-red-200"
+                >
+                  <AlertTriangle className="h-3.5 w-3.5" /> Cancel
+                </button>
               </div>
             </div>
           </div>

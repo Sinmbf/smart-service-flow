@@ -5,7 +5,7 @@ import QRCode from "qrcode";
 import MainLayout from "../../layouts/MainLayout";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
-import { fetchToken } from "../../services/tokens";
+import { fetchToken, cancelToken } from "../../services/tokens";
 
 const STATUS_FALLBACK_LABEL = {
   GENERATED: "Waiting",
@@ -31,6 +31,8 @@ const TokenDisplay = () => {
   const [liveStatus, setLiveStatus] = useState(null);
   const [qrSvg, setQrSvg] = useState(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState("");
   const qrCanvasRef = useRef(null);
 
   // If no state was passed (e.g. page reload or deep link), fetch the token
@@ -138,8 +140,25 @@ const TokenDisplay = () => {
   const statusKey = STATUS_FALLBACK_LABEL[status] ? status : "GENERATED";
   const generatedDate = token.generatedAt ? new Date(token.generatedAt) : new Date();
 
-  const handleCancelToken = () => setShowCancelConfirm(true);
-  const confirmCancel = () => navigate("/token/services", { replace: true });
+  const handleCancelToken = () => {
+    setShowCancelConfirm(true);
+    setCancelError("");
+  };
+  const confirmCancel = async () => {
+    if (!token?.id) return;
+    setCancelling(true);
+    setCancelError("");
+    try {
+      await cancelToken(token.id);
+      // Route to the home page; the CTA hook will now show "Get a Token"
+      navigate("/", { replace: true });
+    } catch (err) {
+      setCancelError(err.response?.data?.message || "Failed to cancel token");
+    } finally {
+      setCancelling(false);
+      setShowCancelConfirm(false);
+    }
+  };
 
   return (
     <MainLayout>
@@ -205,6 +224,11 @@ const TokenDisplay = () => {
 
           {/* Mobile cancel */}
           <div className="lg:hidden px-2">
+            {cancelError && (
+              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700" role="alert">
+                {cancelError}
+              </div>
+            )}
             {!showCancelConfirm ? (
               <Button onClick={handleCancelToken} className="w-full bg-red-600 hover:bg-red-700">
                 {t("token.display.cancelToken")}
@@ -216,11 +240,11 @@ const TokenDisplay = () => {
                     {t("token.display.confirmCancel")}
                   </p>
                   <div className="flex gap-3">
-                    <Button onClick={() => setShowCancelConfirm(false)} variant="secondary" className="flex-1">
+                    <Button onClick={() => setShowCancelConfirm(false)} variant="secondary" className="flex-1" disabled={cancelling}>
                       {t("common.cancel")}
                     </Button>
-                    <Button onClick={confirmCancel} variant="danger" className="flex-1">
-                      {t("common.submit")}
+                    <Button onClick={confirmCancel} variant="danger" className="flex-1" disabled={cancelling} isLoading={cancelling}>
+                      {cancelling ? "..." : t("common.submit")}
                     </Button>
                   </div>
                 </div>
@@ -270,6 +294,11 @@ const TokenDisplay = () => {
 
           {/* Desktop cancel */}
           <div className="hidden lg:block">
+            {cancelError && (
+              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700" role="alert">
+                {cancelError}
+              </div>
+            )}
             {!showCancelConfirm ? (
               <Button onClick={handleCancelToken} className="w-full bg-red-600 hover:bg-red-700">
                 {t("token.display.cancelToken")}
@@ -281,11 +310,11 @@ const TokenDisplay = () => {
                     {t("token.display.confirmCancel")}
                   </p>
                   <div className="space-y-2">
-                    <Button onClick={() => setShowCancelConfirm(false)} variant="secondary" className="w-full">
+                    <Button onClick={() => setShowCancelConfirm(false)} variant="secondary" className="w-full" disabled={cancelling}>
                       {t("common.cancel")}
                     </Button>
-                    <Button onClick={confirmCancel} variant="danger" className="w-full">
-                      {t("common.submit")}
+                    <Button onClick={confirmCancel} variant="danger" className="w-full" disabled={cancelling} isLoading={cancelling}>
+                      {cancelling ? "..." : t("common.submit")}
                     </Button>
                   </div>
                 </div>

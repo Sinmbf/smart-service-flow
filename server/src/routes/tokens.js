@@ -179,6 +179,42 @@ router.get("/", requireAuth, async (req, res) => {
  * GET /api/tokens/:id
  * Citizen polls for token status. Requires auth (own token or staff/admin).
  */
+router.post("/:id/cancel", requireAuth, async (req, res) => {
+  try {
+    const token = await prisma.token.findUnique({
+      where: { id: req.params.id },
+      include: { user: { select: { id: true, role: true } } },
+    });
+
+    if (!token) {
+      return res.status(404).json({ success: false, message: "Token not found" });
+    }
+
+    // Only the owner (or staff/admin) can cancel.
+    const allowedRoles = ["STAFF", "ADMIN"];
+    const isOwn = token.userId === req.user.id;
+    const isStaff = allowedRoles.includes(req.user.role);
+    if (!isOwn && !isStaff) {
+      return res.status(403).json({ success: false, message: "Not authorized" });
+    }
+
+    // Only cancel from non-terminal statuses.
+    if (["COMPLETED", "CANCELLED", "SKIPPED", "EXPIRED"].includes(token.status)) {
+      return res.status(400).json({ success: false, message: "Token is already terminal" });
+    }
+
+    await prisma.token.update({
+      where: { id: req.params.id },
+      data: { status: "CANCELLED", cancelledAt: new Date() },
+    });
+
+    res.status(200).json({ success: true, message: "Token cancelled" });
+  } catch (err) {
+    console.error("[POST /api/tokens/:id/cancel] error:", err);
+    res.status(500).json({ success: false, message: "Failed to cancel token" });
+  }
+});
+
 router.get("/:id", requireAuth, async (req, res) => {
   try {
     const token = await prisma.token.findUnique({
