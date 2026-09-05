@@ -31,31 +31,6 @@ router.post("/", requireAuth, async (req, res) => {
       return res.status(404).json({ success: false, message: "Service not found" });
     }
 
-    // Constraint: a citizen may only have one active (non-terminal) token
-    // at a time. Check before doing any work.
-    const activeToken = await prisma.token.findFirst({
-      where: {
-        userId: req.user.id,
-        status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
-      },
-      include: {
-        service: { select: { id: true, nameEn: true, nameNe: true } },
-      },
-    });
-    if (activeToken) {
-      return res.status(409).json({
-        success: false,
-        code: "ACTIVE_TOKEN_EXISTS",
-        message: "You already have an active token. Please complete or cancel it first.",
-        activeToken: {
-          id: activeToken.id,
-          tokenNumber: activeToken.tokenNumber,
-          status: activeToken.status,
-          service: activeToken.service,
-        },
-      });
-    }
-
     // Pick the first stage (entry stage for this service).
     const entryStage = await prisma.serviceStage.findFirst({
       where: { serviceId, stageOrder: 1 },
@@ -65,49 +40,75 @@ router.post("/", requireAuth, async (req, res) => {
       return res.status(400).json({ success: false, message: "Service has no entry stage" });
     }
 
-    // Transactional position reservation (atomic).
-    const result = await prisma.$transaction(async (tx) => {
-      // Queue position: number of currently active tokens ahead of you
-      // (GENERATED/CHECKED_IN/SERVING).
-      const activeCount = await tx.token.count({
-        where: {
-          serviceId,
-          currentStageId: entryStage.id,
-          status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
-        },
-      });
-      const nextPosition = activeCount + 1;
+    // Transactional position reservation (atomic). The single-active-token
+    // check runs INSIDE the transaction so two concurrent requests can't
+    // both pass the check and create two tokens (race condition).
+    let result;
+    try {
+      result = await prisma.$transaction(async (tx) => {
+        // Single-active-token guard (atomic with the insert).
+        const activeToken = await tx.token.findFirst({
+          where: {
+            userId: req.user.id,
+            status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
+          },
+          include: {
+            service: { select: { id: true, nameEn: true, nameNe: true } },
+          },
+        });
+        if (activeToken) {
+          // Throw a marker that the catch below translates to 409.
+          const err = new Error("ACTIVE_TOKEN_EXISTS");
+          err.code = "ACTIVE_TOKEN_EXISTS";
+          err.activeToken = activeToken;
+          throw err;
+        }
 
-      // Human-readable token number: must be globally unique across the
-      // Token table. We use the lifetime count of tokens for this
-      // service+stage (NOT the active count), so EXPIRED/COMPLETED/CANCELLED
-      // tokens still consume a number and avoid collisions.
-      const lifetimeCount = await tx.token.count({
-        where: {
-          serviceId,
-          currentStageId: entryStage.id,
-        },
-      });
-      const nextSequence = lifetimeCount + 1;
-      const prefix = service.office?.nameEn?.charAt(0)?.toUpperCase() ?? "A";
-      const number = String(nextSequence).padStart(3, "0");
-      const tokenNumber = `${prefix}${number}`;
+        // Queue position: number of currently active tokens ahead of you
+        // (GENERATED/CHECKED_IN/SERVING).
+        const activeCount = await tx.token.count({
+          where: {
+            serviceId,
+            currentStageId: entryStage.id,
+            status: { in: ["GENERATED", "CHECKED_IN", "SERVING"] },
+          },
+        });
+        const nextPosition = activeCount + 1;
 
-      const token = await tx.token.create({
-        data: {
-          tokenNumber,
-          userId: req.user.id,
-          serviceId,
-          currentStageId: entryStage.id,
-          position: nextPosition,
-          status: "GENERATED",
-          generatedAt: new Date(),
-        },
-        include: { service: true, currentStage: true },
-      });
+        // Human-readable token number: must be globally unique across the
+        // Token table. We use the lifetime count of tokens for this
+        // service+stage (NOT the active count), so EXPIRED/COMPLETED/CANCELLED
+        // tokens still consume a number and avoid collisions.
+        const lifetimeCount = await tx.token.count({
+          where: {
+            serviceId,
+            currentStageId: entryStage.id,
+          },
+        });
+        const nextSequence = lifetimeCount + 1;
+        const prefix = service.office?.nameEn?.charAt(0)?.toUpperCase() ?? "A";
+        const number = String(nextSequence).padStart(3, "0");
+        const tokenNumber = `${prefix}${number}`;
 
-      return { token, tokenNumber, position: nextPosition };
-    });
+        const token = await tx.token.create({
+          data: {
+            tokenNumber,
+            userId: req.user.id,
+            serviceId,
+            currentStageId: entryStage.id,
+            position: nextPosition,
+            status: "GENERATED",
+            generatedAt: new Date(),
+          },
+          include: { service: true, currentStage: true },
+        });
+
+        return { token, tokenNumber, position: nextPosition };
+      });
+    } catch (innerErr) {
+      // Re-throw so the outer handler can return the right status code.
+      throw innerErr;
+    }
 
     const { token, tokenNumber, position } = result;
 
@@ -131,12 +132,17 @@ router.post("/", requireAuth, async (req, res) => {
       qrPayload: urlPayload,
     });
   } catch (err) {
+    if (err.code === "ACTIVE_TOKEN_EXISTS") {
+      return res.status(409).json({
+        success: false,
+        code: "ACTIVE_TOKEN_EXISTS",
+        message: "You already have an active token. Please complete or cancel it first.",
+        activeToken: err.activeToken,
+      });
+    }
     if (err.code === "P2002") {
-      // Should not happen with the lifetime count above, but guard anyway.
       console.error("[POST /api/tokens] unique-constraint error:", err);
-      return res
-        .status(409)
-        .json({ success: false, message: "Token number already taken; please retry" });
+      return res.status(409).json({ success: false, message: "Token number already taken; please retry" });
     }
     console.error("[POST /api/tokens] error:", err);
     res.status(500).json({ success: false, message: "Failed to generate token" });

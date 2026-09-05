@@ -82,7 +82,7 @@ const ServiceSelection = () => {
                   to={`/token/display/${activeToken.id}`}
                   className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary-700 text-white text-xs font-medium hover:bg-primary-800"
                 >
-                  <QrCode className="h-3.5 w-3.5" /> {t("token.display.yourToken")}
+                  <QrCode className="h-3.5 w-3.5" /> {t("token.display.title")}
                 </Link>
                 <button
                   type="button"
