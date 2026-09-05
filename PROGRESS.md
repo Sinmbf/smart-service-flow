@@ -2,7 +2,7 @@
 
 > **Purpose:** Track the project's status against `complete_project_roadmap.md` and `plans/implementation_plan.md`. Updated after every major change so you can resume work in any session.
 
-> **Last updated:** 2026-09-05 (end of session 1)
+> **Last updated:** 2026-09-05 (end of session 2 — Step 2 merged)
 
 ---
 
@@ -11,14 +11,15 @@
 **Read this section first, then start coding.**
 
 ### Context snapshot
-- Increment 1 (Foundation) is ~80% done. The only Increment-1 work remaining is **Step 2: JWT + bcrypt + auth middleware**.
-- The codebase is **plain JavaScript only** (no TypeScript anywhere — Step 1.5 completed).
+- Increment 1 (Foundation) is ~85% done. Step 2 (JWT + bcrypt + auth middleware) is now ✅ merged.
+- Next: **Step 3 — Frontend auth state (AuthContext + ProtectedRoute)**.
+- The codebase is **plain JavaScript only** (no TypeScript anywhere).
 - Database is wired up via Prisma 7 + PostgreSQL 18 (db: `smart_service_flow`, locally installed, **no Docker**).
-- All the Increment 2–13 work follows Step 2 in the order defined by `plans/implementation_plan.md`.
+- New API: `GET /api/auth/me` (Bearer token) returns the current user.
 
 ### First message to send to the next session
 Open the new session with this exact prompt (copy-paste it):
-> "Read `PROGRESS.md` and continue from where it left off. Start with Step 2 (JWT + bcrypt + auth middleware)."
+> "Read `PROGRESS.md` and continue from where it left off. Start with Step 3 (AuthContext + ProtectedRoute)."
 
 ### Step 1 — Set up the environment (in your own terminals)
 ```powershell
@@ -55,30 +56,34 @@ curl http://localhost:5000/api/admin/_debug/seed-check
 # Service listing
 curl http://localhost:5000/api/queue/services
 # Expected: list of 3 services (Driving License, Renewal, Citizenship)
+
+# New in Step 2: /api/auth/me should 401 without a token
+curl -i http://localhost:5000/api/auth/me
+# Expected: HTTP/1.1 401
 ```
 
 If any of these fail, fix the environment first before proceeding.
 
-### Step 3 — Create the feature branch and start Step 2
+### Step 3 — Create the feature branch and start Step 3
 ```powershell
 cd C:\Users\LOQ\OneDrive\Documents\GitHub\Master-web-development-AI-Era\PERN\smart-service-flow
 git checkout main
 git pull
-git checkout -b feature/auth-jwt
+git checkout -b feature/auth-context
 ```
 
-Then send the next-session prompt to start coding. The full task list for Step 2 is in `plans/implementation_plan.md` under **"STEP 2 — Increment 1.5: Real Authentication (JWT + bcrypt + middleware) (in Plain JS)"**.
+Then send the next-session prompt to start coding. The full task list for Step 3 is in `plans/implementation_plan.md` under **"STEP 3 — Increment 1.5: Frontend auth state + protected routes"**.
 
-### Step 4 — When Step 2 is done
-1. Commit on `feature/auth-jwt`.
-2. Update `PROGRESS.md`: set Step 2 to ✅ Done, advance the cursor, add a row to the **Branch & Commit Log**, and note any new gotchas.
+### Step 4 — When Step 3 is done
+1. Commit on `feature/auth-context`.
+2. Update `PROGRESS.md`: set Step 3 to ✅ Done, advance the cursor, add a row to the **Branch & Commit Log**, and note any new gotchas.
 3. Merge to `main`:
    ```powershell
    git checkout main
-   git merge --no-ff feature/auth-jwt -m "Merge feature/auth-jwt: ..."
+   git merge --no-ff feature/auth-context -m "Merge feature/auth-context: ..."
    git push
    ```
-4. Continue to **Step 3** (AuthContext + ProtectedRoute).
+4. Continue to **Step 4** (logout + language persistence endpoint).
 
 ### Things to tell the next session explicitly
 - The project is **plain JavaScript only** (no TS, no JSDoc, no `.d.ts`).
@@ -87,6 +92,8 @@ Then send the next-session prompt to start coding. The full task list for Step 2
 - **Do not refactor existing files** during a step unless the step requires it. Convert/fix only files you actively need to touch.
 - **Do not commit `server/otp.log`** — it's gitignored for a reason (contains dev-only secrets).
 - **Server-only-port-5000**: if you start a server in the background, it kills the user's foreground server. Always assume the foreground server belongs to the user.
+- The frontend currently persists auth via `localStorage` directly inside `CitizenOTP.jsx`/`Login.jsx`. Step 3 should centralize that into an AuthContext — do not change the storage keys, only the call sites.
+- The seeded staff user has `password = null` in the DB (no bcrypt hash yet). To test staff login, register a new staff account first (the existing seed user can only be used for citizen OTP).
 
 ---
 
@@ -95,9 +102,9 @@ Then send the next-session prompt to start coding. The full task list for Step 2
 | Field | Value |
 |---|---|
 | Active branch | `main` |
-| Current step | **Step 1.5 — Plain JS conversion (✅ MERGED)** |
-| Next step | **Step 2 — JWT + bcrypt + auth middleware** |
-| Increment | 1 (Foundation) — 80% done |
+| Current step | **Step 2 — JWT + bcrypt + middleware (✅ MERGED)** |
+| Next step | **Step 3 — AuthContext + ProtectedRoute** |
+| Increment | 1 (Foundation) — 85% done |
 | Server runs on | `http://localhost:5000` |
 | Client runs on | `http://localhost:5173+` (Vite auto-picks next free port) |
 | Database | PostgreSQL 18, db `smart_service_flow` (locally installed, **no Docker**) |
@@ -116,8 +123,8 @@ Then send the next-session prompt to start coding. The full task list for Step 2
 | 1.2 Frontend foundation | — | ✅ Done | React 19 + Vite + Tailwind v4 + i18next + Lucide + PWA |
 | 1.3 Backend foundation | — | ✅ Done | Express 5 (ESM, plain JS) + Helmet + CORS, /api routes |
 | **1.4 Database foundation** | **Step 1** | ✅ **Done** | Prisma 7.10 + PostgreSQL 18 + seed |
-| 1.5 Authentication (server) | Step 2 | ⏳ **Next** | JWT + bcrypt + auth middleware |
-| 1.5 Frontend auth state | Step 3 | 🔜 Pending | AuthContext + ProtectedRoute |
+| **1.5 Authentication (server)** | **Step 2** | ✅ **Done** | JWT + bcrypt + `requireAuth`/`requireRole` middleware + `GET /api/auth/me` |
+| 1.5 Frontend auth state | Step 3 | ⏳ **Next** | AuthContext + ProtectedRoute |
 | 1.5 Logout + lang | Step 4 | 🔜 Pending | Logout endpoint, language persistence endpoint |
 | 1.6 Bilingual | — | ✅ Done | EN + NE, LanguageSwitcher, localStorage |
 
@@ -208,7 +215,14 @@ Then send the next-session prompt to start coding. The full task list for Step 2
 |---|---|---|
 | `feature/db` | `feat(db): add Prisma schema, migration, and seed` | ✅ Merged (Step 1) |
 | `feature/remove-typescript` | `fix(client): restore navigate state object in TokenGeneration` | ✅ Merged to main (Step 1.5) |
-| `feature/auth-jwt` | — | 🔜 **Next** (Step 2) |
+| `feature/auth-jwt` | `feat(auth): replace base64 with JWT, add bcrypt password hashing` | ✅ Merged to main (Step 2) |
+| `feature/auth-context` | — | 🔜 **Next** (Step 3) |
+
+### Session 2 housekeeping (commited before starting Step 2)
+
+| Commit | What | Why |
+|---|---|---|
+| `chore(cleanup): remove unused client files; add populated Footer with i18n links; add ScrollToTop` | Removed `client/src/App.css`, `client/src/components/Test.jsx`, `client/dist/`, `server/otp.log`, `server/.agents`, `server/.claude`, `server/.cursor`, `server/.devin`. Populated `Footer.jsx` with brand + Services + Legal columns; Footer "Services" links use `<Link>` to `/token/services` and `/token/monitor`; Legal links stay as anchor placeholders with TODO. Added `ScrollToTop` component so route changes reset scroll to top. | Trim dead code, fill the empty Footer to match the design system, fix the SPA scroll-reset issue reported when clicking footer links. |
 
 ### Server-side quality-of-life commits
 
@@ -228,10 +242,11 @@ Then send the next-session prompt to start coding. The full task list for Step 2
 |---|---|---|
 | GET | `/api/health` | Liveness check |
 | POST | `/api/auth/citizen/send-otp` | Sends OTP to phone (logs to console + `server/otp.log`) |
-| POST | `/api/auth/citizen/verify` | Verifies OTP, upserts Citizen user, returns base64 token (will become JWT in Step 2) |
-| POST | `/api/auth/staff/register` | Register staff (plaintext password — bcrypt in Step 2) |
+| POST | `/api/auth/citizen/verify` | Verifies OTP, upserts Citizen user, returns JWT |
+| POST | `/api/auth/staff/register` | Register staff (bcrypt-hashed password) |
 | POST | `/api/auth/staff/login` | Email + password → 2FA OTP |
-| POST | `/api/auth/staff/verify-otp` | 2FA OTP → base64 token |
+| POST | `/api/auth/staff/verify-otp` | 2FA OTP → JWT |
+| GET | `/api/auth/me` | Returns the current user (Bearer token required) |
 | GET | `/api/queue/status` | All services with current token counts (DB-driven) |
 | GET | `/api/queue/services` | Service list (id, nameEn, nameNe) |
 | GET | `/api/queue/:serviceId` | Single service queue status |
@@ -276,7 +291,9 @@ Then send the next-session prompt to start coding. The full task list for Step 2
 6. **Startup logs DB status** — `server.js` calls `checkDatabaseConnection()` before starting Express. If the DB is unreachable, the server exits with code 1.
 7. **OTP log file path** — `server/otp.log`. To tail in another PowerShell: `Get-Content C:\Users\LOQ\OneDrive\Documents\GitHub\Master-web-development-AI-Era\PERN\smart-service-flow\server\otp.log -Wait`.
 8. **Only one server can hold port 5000** — if your foreground server is replaced by a background process, you'll lose the terminal OTP output. Always start the server yourself with `npm run dev` and leave it running.
-9. **Staff password is null in the seed** — staff can be registered via `/api/auth/staff/register` but cannot log in until a real bcrypt-hashed password is set. This is a known gap that's closed in Step 2.
+9. **Staff password is null in the seed** — staff can be registered via `/api/auth/staff/register` but cannot log in until a real bcrypt-hashed password is set. The seed creates staff with `password = null`; register a new account for testing.
+10. **JWT requires `JWT_SECRET` in `.env`** — the `.env` already has `JWT_SECRET=dev-secret-key-change-in-production`. If it's missing or blank, JWT tokens will fail to sign/verify and all protected routes will return 401. Always confirm `JWT_SECRET` is non-empty before testing auth flows.
+11. **Server-side quality notes from Step 2** — `jwt.js` uses `jsonwebtoken` (HS256); `auth.js` middleware hydrates the user from DB on every protected request; `me.js` exposes `GET /api/auth/me`. The `requireAuth` middleware attaches `req.user`; `requireRole(...)` gates after it.
 
 ---
 

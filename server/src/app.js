@@ -3,6 +3,7 @@ import helmet from "helmet";
 import cors from "cors";
 import citizenAuthRoutes from "./routes/auth/citizen.js";
 import staffAuthRoutes from "./routes/auth/staff.js";
+import meRoutes from "./routes/auth/me.js";
 import queueRoutes from "./routes/queue.js";
 import adminDebugRoutes from "./routes/admin/debug.js";
 const app = express();
@@ -21,6 +22,7 @@ app.get("/api/health", (_req, res) => {
 // Authentication routes
 app.use("/api/auth/citizen", citizenAuthRoutes);
 app.use("/api/auth/staff", staffAuthRoutes);
+app.use("/api/auth/me", meRoutes);
 // Queue routes
 app.use("/api/queue", queueRoutes);
 // Admin / debug routes (temporary, removed in Step 19)
