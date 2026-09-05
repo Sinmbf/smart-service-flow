@@ -4,6 +4,8 @@ import { Login, Register, VerifyPhone, ForgotPassword, ResetPassword, CitizenOTP
 import Home from "../pages/Home";
 import Dashboard from "../pages/Dashboard";
 import StaffDashboard from "../pages/StaffDashboard";
+import ServiceList from "../pages/services/ServiceList";
+import ServiceDetail from "../pages/services/ServiceDetail";
 import { QRScanner, ServiceSelection, TokenGeneration, TokenDisplay, Monitor } from "../pages/token";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { useAuth } from "../auth/AuthContext";
@@ -85,6 +87,10 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        {/* Service information (public) */}
+        <Route path="/services" element={<ServiceList />} />
+        <Route path="/services/:id" element={<ServiceDetail />} />
 
         {/* Token Flow routes (public, no auth needed) */}
         <Route path="/token/scanner" element={<QRScanner />} />

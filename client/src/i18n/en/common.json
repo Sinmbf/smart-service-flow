@@ -330,5 +330,22 @@
       "subtitle": "Manage queues, call tokens, and update stage progress from here.",
       "comingSoon": "Step 4+ (Increment 10) will replace this stub with the real staff console."
     }
+  },
+  "services": {
+    "list": {
+      "title": "Government Services",
+      "subtitle": "Browse services, review requirements, and get a queue token.",
+      "searchPlaceholder": "Search services…",
+      "viewDetails": "View details",
+      "empty": "No services found.",
+      "error": "Could not load services. Please try again."
+    },
+    "detail": {
+      "backToList": "Back to services",
+      "stagesTitle": "Service steps",
+      "getToken": "Get a Token",
+      "notFound": "This service could not be found.",
+      "error": "Could not load this service. Please try again."
+    }
   }
 }
