@@ -6,6 +6,7 @@ import axios from "../../services/api";
 import AuthLayout from "../../layouts/AuthLayout";
 import { Button, Card, Input } from "../../components/ui";
 import { useAuth } from "../../auth/AuthContext";
+import { fetchMyActiveTokens } from "../../services/tokens";
 
 const CitizenOTP = () => {
   const { t } = useTranslation();
@@ -75,6 +76,20 @@ const CitizenOTP = () => {
       login(response.data.token, response.data.user);
 
       console.log("✅ Citizen authenticated:", response.data.user);
+
+      // If user has an existing active token from prior session, show
+      // the message + redirect to their token instead of forcing a new
+      // token generation (which would either create duplicate or redirect
+      // anyway via the 409 guard).
+      try {
+        const { tokens } = await fetchMyActiveTokens();
+        if (tokens && tokens.length > 0) {
+          navigate(`/token/display/${tokens[0].id}?fresh=1`, { replace: true });
+          return;
+        }
+      } catch {
+        // Best-effort: fall through to normal service selection
+      }
 
       // Check if a service was selected before verification
       const pendingService = location.state?.service;

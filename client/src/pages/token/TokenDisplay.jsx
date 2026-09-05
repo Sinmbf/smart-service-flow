@@ -25,6 +25,9 @@ const TokenDisplay = () => {
   const { id: tokenIdParam } = useParams();
   const initialToken = location.state;
 
+  const isFreshFromLogin = new URLSearchParams(location.search).get("fresh") === "1";
+  const [shownFreshNotice, setShownFreshNotice] = useState(false);
+
   const [token, setToken] = useState(initialToken || null);
   const [isLoading, setIsLoading] = useState(!initialToken);
   const [loadError, setLoadError] = useState("");
@@ -136,6 +139,20 @@ const TokenDisplay = () => {
 
   if (!token) return null;
 
+  // Strip the fresh=1 query param from the URL so a page refresh doesn't
+  // re-show the notice.
+  useEffect(() => {
+    if (isFreshFromLogin && !shownFreshNotice) {
+      setShownFreshNotice(true);
+      // Clean the URL without remounting
+      const url = new URL(window.location.href);
+      if (url.searchParams.has("fresh")) {
+        url.searchParams.delete("fresh");
+        window.history.replaceState({}, "", url.toString());
+      }
+    }
+  }, [isFreshFromLogin, shownFreshNotice]);
+
   const status = liveStatus || token.status || "GENERATED";
   const statusKey = STATUS_FALLBACK_LABEL[status] ? status : "GENERATED";
   const generatedDate = token.generatedAt ? new Date(token.generatedAt) : new Date();
@@ -162,6 +179,17 @@ const TokenDisplay = () => {
 
   return (
     <MainLayout>
+      {isFreshFromLogin && shownFreshNotice && (
+        <div className="max-w-3xl mx-auto px-4 pt-4">
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800 flex items-start gap-3 shadow-sm" role="status">
+            <QrCode className="h-5 w-5 flex-shrink-0 text-blue-600" />
+            <div>
+              <p className="font-medium">You have an existing active token from your previous session.</p>
+              <p className="text-blue-700 mt-0.5">You can keep using it, or cancel it to generate a new one.</p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         {/* Main Token Card */}
         <div className="lg:col-span-2 space-y-4">
