@@ -12,19 +12,17 @@
 
 ### Context snapshot
 - **Increment 1 (Foundation) is closed.** All 4 sub-steps (db, JWT, AuthContext, logout/lang) are merged.
-- Next: **Step 5 — Increment 2.1: Service Information (API + UI)**.
+- **Step 5 is merged:** `/api/services` list + detail endpoints, `/services` and `/services/:id` pages.
+- Next: **Step 6 — Increment 2.2: Service Roadmap** (visualize the per-stage flow on the detail page).
 - The codebase is **plain JavaScript only** (no TypeScript anywhere).
 - Database is wired up via Prisma 7 + PostgreSQL 18 (db: `smart_service_flow`, locally installed, **no Docker**).
 - Prisma 7 uses `prisma.config.js` for CLI tooling; the runtime still uses `@prisma/adapter-pg` in `db.js`.
-- The `User` table has `lastLoginAt` and `passwordChangedAt` columns.
-- The frontend has an AuthContext: `useAuth()` returns `{ user, token, isAuthenticated, isLoading, login, logout }`.
-- JWT is validated against `GET /api/auth/me` on every app load; stale tokens are auto-cleared.
-- `/dashboard` (any role) and `/staff/dashboard` (STAFF/ADMIN) are protected; both are stubs pending Step 4+.
+- The frontend has an AuthContext; JWT validated against `GET /api/auth/me` on every app load.
 - The language switcher persists to `PUT /api/auth/me/language` when authed.
 
 ### First message to send to the next session
 Open the new session with this exact prompt (copy-paste it):
-> "Read `PROGRESS.md` and continue from where it left off. Start with Step 5 (Service Information: GET /api/services + list/detail pages)."
+> "Read `PROGRESS.md` and continue from where it left off. Start with Step 6 (Service Roadmap visualization on the detail page)."
 
 ### Step 1 — Set up the environment (in your own terminals)
 ```powershell
@@ -110,8 +108,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | Field | Value |
 |---|---|
 | Active branch | `main` |
-| Current step | **Step 4 — Logout + language persistence endpoint (✅ MERGED)** |
-| Next step | **Step 5 — Service Information (API + UI)** |
+| Current step | **Step 5 — Service Information (API + UI) (✅ MERGED)** |
+| Next step | **Step 6 — Service Roadmap visualization** |
 | Increment | 1 (Foundation) — 85% done |
 | Server runs on | `http://localhost:5000` |
 | Client runs on | `http://localhost:5173+` (Vite auto-picks next free port) |
@@ -140,7 +138,7 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 
 | Phase | Step | Status | Notes |
 |---|---|---|---|
-| 2.1 Service info | Step 5 | 🔜 Pending | Service list/detail pages, GET /api/services |
+| 2.1 Service info | Step 5 | ✅ **Done** | `GET /api/services` (+search/pagination), `GET /api/services/:id`; ServiceList + ServiceDetail + ServiceCard; routes `/services`, `/services/:id` |
 | 2.2 Service roadmap | Step 6 | 🔜 Pending | ServiceRoadmap component (DB-driven) |
 | 2.3 Required docs | Step 7 | 🔜 Pending | RequiredDocumentsList per stage |
 | 2.4 Office guidance | Step 7 | 🔜 Pending | Office info block on detail page |
