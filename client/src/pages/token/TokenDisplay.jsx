@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import QRCode from "qrcode";
 import MainLayout from "../../layouts/MainLayout";
@@ -22,26 +22,56 @@ const TokenDisplay = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const { id: tokenIdParam } = useParams();
   const initialToken = location.state;
 
-  // Resolve a display name for the service (real object or legacy string).
-  const serviceName = (() => {
-    const s = initialToken?.service;
-    if (!s) return "";
-    if (typeof s === "string") return t(`token.services.${s}`);
-    return i18n.language === "ne" ? s.nameNe : s.nameEn;
-  })();
-
   const [token, setToken] = useState(initialToken || null);
+  const [isLoading, setIsLoading] = useState(!initialToken);
+  const [loadError, setLoadError] = useState("");
   const [liveStatus, setLiveStatus] = useState(null);
   const [qrSvg, setQrSvg] = useState(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const qrCanvasRef = useRef(null);
 
-  // Redirect to /token/services if we have no token at all.
+  // If no state was passed (e.g. page reload or deep link), fetch the token
+  // by id from the URL.
   useEffect(() => {
-    if (!initialToken) navigate("/token/services", { replace: true });
-  }, [initialToken, navigate]);
+    if (initialToken?.id) return;
+    if (!tokenIdParam) {
+      navigate("/token/services", { replace: true });
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      setIsLoading(true);
+      setLoadError("");
+      try {
+        const data = await fetchToken(tokenIdParam);
+        if (cancelled) return;
+        setToken({ ...data.token, qrPayload: initialToken?.qrPayload || null });
+      } catch (err) {
+        if (cancelled) return;
+        setLoadError(
+          err.response?.status === 404
+            ? "This token no longer exists."
+            : err.response?.data?.message || "Could not load this token."
+        );
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [tokenIdParam, initialToken, navigate]);
+
+  // Resolve service display name from token.service (real object) or fallback.
+  const serviceName = (() => {
+    const s = token?.service;
+    if (!s) return "";
+    if (typeof s === "string") return t(`token.services.${s}`);
+    return i18n.language === "ne" ? s.nameNe : s.nameEn;
+  })();
 
   // Render QR code into an SVG.
   useEffect(() => {
@@ -75,6 +105,32 @@ const TokenDisplay = () => {
       clearInterval(interval);
     };
   }, [token?.id]);
+
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <div className="max-w-2xl mx-auto py-12 text-center">
+          <div className="inline-block w-12 h-12 border-4 border-neutral-200 border-t-primary-700 rounded-full animate-spin" />
+          <p className="mt-3 text-sm text-neutral-600">Loading your token…</p>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <MainLayout>
+        <div className="max-w-md mx-auto py-12">
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700" role="alert">
+            {loadError}
+          </div>
+          <Button onClick={() => navigate("/token/services")} className="mt-4 w-full">
+            {t("common.back")}
+          </Button>
+        </div>
+      </MainLayout>
+    );
+  }
 
   if (!token) return null;
 

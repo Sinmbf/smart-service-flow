@@ -39,7 +39,9 @@ const TokenGeneration = () => {
         }
         const data = await generateToken({ serviceId: service.id });
         if (cancelled) return;
-        navigate("/token/display", {
+        // Use URL-based navigation so the user can refresh, share, or
+        // come back to their token later from the dashboard.
+        navigate(`/token/display/${data.token.id}`, {
           state: {
             id: data.token.id,
             tokenNumber: data.token.tokenNumber,

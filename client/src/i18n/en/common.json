@@ -329,7 +329,11 @@
   "dashboard": {
     "welcome": "Welcome, {{name}}",
     "subtitle": "Your queue tokens, service history, and notifications will live here.",
-    "comingSoon": "Step 5+ will replace this stub with the real dashboard."
+    "comingSoon": "Step 5+ will replace this stub with the real dashboard.",
+    "activeTokens": "My active tokens",
+    "noActiveTokens": "You don't have any active tokens right now.",
+    "getTokenCta": "Get a Token",
+    "generatedAtLabel": "Generated"
   },
   "staff": {
     "dashboard": {

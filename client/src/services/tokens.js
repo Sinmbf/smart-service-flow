@@ -17,3 +17,12 @@ export async function fetchToken(id) {
   const { data } = await api.get(`/tokens/${id}`);
   return data;
 }
+
+/**
+ * List the current user's active tokens.
+ * @param {{ all?: boolean }} opts
+ */
+export async function fetchMyActiveTokens({ all = false } = {}) {
+  const { data } = await api.get("/tokens", { params: { mine: "true", ...(all ? { all: "true" } : {}) } });
+  return data;
+}

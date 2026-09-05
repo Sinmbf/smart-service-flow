@@ -119,6 +119,38 @@ router.post("/", requireAuth, async (req, res) => {
 });
 
 /**
+ * GET /api/tokens?mine=true&status=active
+ * List the current citizen's active (non-terminal) tokens.
+ * `?all=true` returns all of the user's tokens (any status).
+ */
+router.get("/", requireAuth, async (req, res) => {
+  try {
+    const mine = req.query.mine === "true" || req.query.mine === "1";
+    const all = req.query.all === "true" || req.query.all === "1";
+    if (!mine) {
+      return res.status(400).json({ success: false, message: "Only mine=true is supported" });
+    }
+    const where = { userId: req.user.id };
+    if (!all) {
+      where.status = { in: ["GENERATED", "CHECKED_IN", "SERVING"] };
+    }
+    const tokens = await prisma.token.findMany({
+      where,
+      include: {
+        service: { select: { id: true, nameEn: true, nameNe: true } },
+        currentStage: { select: { id: true, stageOrder: true, nameEn: true, nameNe: true } },
+      },
+      orderBy: { generatedAt: "desc" },
+      take: 25,
+    });
+    res.status(200).json({ success: true, tokens });
+  } catch (err) {
+    console.error("[GET /api/tokens] error:", err);
+    res.status(500).json({ success: false, message: "Failed to load tokens" });
+  }
+});
+
+/**
  * GET /api/tokens/:id
  * Citizen polls for token status. Requires auth (own token or staff/admin).
  */
