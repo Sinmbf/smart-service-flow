@@ -346,7 +346,6 @@
     },
     "detail": {
       "backToList": "सेवाहरूमा फर्कनुहोस्",
-      "stagesTitle": "सेवाका चरणहरू",
       "getToken": "टोकन प्राप्त गर्नुहोस्",
       "notFound": "यो सेवा फेला पार्न सकिएन।",
       "error": "यो सेवा लोड गर्न सकिएन। कृपया पुनः प्रयास गर्नुहोस्।"
@@ -354,6 +353,9 @@
     "roadmap": {
       "ariaLabel": "सेवाका चरणहरू",
       "stepLabel": "चरण {{n}}",
+      "stagesCount": "{{count}} चरणहरू",
+      "documentsCount": "{{count}} कागजातहरू",
+      "baselineMinutes": "~{{n}} मिनेट",
       "status": {
         "completed": "सम्पन्न",
         "current": "प्रगतिमा",

@@ -346,7 +346,6 @@
     },
     "detail": {
       "backToList": "Back to services",
-      "stagesTitle": "Service steps",
       "getToken": "Get a Token",
       "notFound": "This service could not be found.",
       "error": "Could not load this service. Please try again."
@@ -354,6 +353,9 @@
     "roadmap": {
       "ariaLabel": "Service steps",
       "stepLabel": "Step {{n}}",
+      "stagesCount": "{{count}} stages",
+      "documentsCount": "{{count}} documents",
+      "baselineMinutes": "~{{n}} min",
       "status": {
         "completed": "Completed",
         "current": "In progress",

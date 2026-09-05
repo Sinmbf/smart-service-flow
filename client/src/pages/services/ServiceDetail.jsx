@@ -102,13 +102,14 @@ const ServiceDetail = () => {
               </Card>
             )}
 
-            {/* Stages */}
+            {/* Stages (the ServiceRoadmap renders its own header) */}
             {service.stages && service.stages.length > 0 && (
               <div className="mb-6">
-                <h2 className="font-heading font-semibold text-neutral-900 mb-3">
-                  {t("services.detail.stagesTitle")}
-                </h2>
-                <ServiceRoadmap stages={service.stages} />
+                <ServiceRoadmap
+                  stages={service?.stages ?? []}
+                  serviceNameEn={service?.nameEn}
+                  serviceNameNe={service?.nameNe}
+                />
               </div>
             )}
 
