@@ -10,7 +10,7 @@ import { useState } from "react";
  */
 const RequiredDocumentsList = ({ stage, inline = false }) => {
   const { t, i18n } = useTranslation();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const isNe = i18n.language === "ne";
   const docs = stage?.documents ?? [];
   const count = docs.length;
