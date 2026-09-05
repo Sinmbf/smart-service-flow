@@ -54,7 +54,13 @@ const TokenDisplay = () => {
       try {
         const data = await fetchToken(tokenIdParam);
         if (cancelled) return;
-        setToken({ ...data.token, qrPayload: initialToken?.qrPayload || null });
+        const serverToken = data?.token || {};
+        // Preserve qrPayload from server response (fresh page load), else keep
+        // any from the initial navigate state (generation flow).
+        setToken({
+          ...serverToken,
+          qrPayload: serverToken.qrPayload || initialToken?.qrPayload || null,
+        });
       } catch (err) {
         if (cancelled) return;
         setLoadError(
@@ -181,9 +187,9 @@ const TokenDisplay = () => {
   return (
     <MainLayout>
       {isFreshFromLogin && shownFreshNotice && (
-        <div className="max-w-3xl mx-auto px-4 pt-4">
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800 flex items-start gap-3 shadow-sm" role="status">
-            <QrCode className="h-5 w-5 flex-shrink-0 text-blue-600" />
+        <div className="max-w-3xl mx-auto px-4 pt-4 mb-4">
+          <div className="p-4 bg-blue-50 border-2 border-blue-200 rounded-2xl text-sm text-blue-800 flex items-start gap-3 shadow-md backdrop-blur-sm">
+            <QrCode className="h-6 w-6 flex-shrink-0 text-blue-600 mt-0.5" />
             <div>
               <p className="font-medium">You have an existing active token from your previous session.</p>
               <p className="text-blue-700 mt-0.5">You can keep using it, or cancel it to generate a new one.</p>
