@@ -29,6 +29,14 @@ const TokenGeneration = () => {
     let cancelled = false;
     (async () => {
       try {
+        if (!service?.id) {
+          setError(
+            i18n.language === "ne"
+              ? "सेवा छानिएन। कृपया सेवा चयन गर्नुहोस्।"
+              : "No service selected. Please pick a service."
+          );
+          return;
+        }
         const data = await generateToken({ serviceId: service.id });
         if (cancelled) return;
         navigate("/token/display", {
