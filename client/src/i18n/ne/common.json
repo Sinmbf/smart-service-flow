@@ -264,7 +264,11 @@
       "taxClearanceDesc": "कर क्लियरेन्स प्रमाणपत्र",
       "birthCertificate": "जन्म प्रमाणपत्र",
       "birthCertificateDesc": "जन्म प्रमाणपत्र दर्ता",
-      "continueButton": "जारी राख्नुहोस्"
+      "continueButton": "जारी राख्नुहोस्",
+      "searchPlaceholder": "सेवा खोज्नुहोस्…",
+      "viewDetails": "विवरण हेर्नुहोस्",
+      "empty": "कुनै सेवा फेला परेन।",
+      "loadError": "सेवाहरू लोड गर्न सकिएन। कृपया पुनः प्रयास गर्नुहोस्।"
     },
     "generation": {
       "title": "टोकन उत्पन्न हुँदैछ",
