@@ -78,19 +78,21 @@ router.post("/", requireAuth, async (req, res) => {
           });
           const nextPosition = activeCount + 1;
 
-          // Human-readable token number: must be globally unique. Use the
-          // lifetime count so EXPIRED/COMPLETED/CANCELLED tokens still
-          // consume a number (avoids A001 collisions across days).
-          const lifetimeCount = await tx.token.count({
-            where: {
-              serviceId,
-              currentStageId: entryStage.id,
-            },
+          // Human-readable token number: must be globally unique. The
+          // prefix is the office's first letter + a 2-char hash of the
+          // office id (to disambiguate offices that share a first letter,
+          // e.g. "Department of Transport Management" and "District
+          // Administration Office" both start with D). The sequence
+          // is the office-wide lifetime count.
+          const officeId = service.officeId || "";
+          const prefix = (service.office?.nameEn?.charAt(0) || "X").toUpperCase();
+          const officeTag = officeId.slice(-2).toUpperCase();
+          const sequenceCount = await tx.token.count({
+            where: { tokenNumber: { startsWith: prefix + officeTag } },
           });
-          const nextSequence = lifetimeCount + 1;
-          const prefix = service.office?.nameEn?.charAt(0)?.toUpperCase() ?? "A";
+          const nextSequence = sequenceCount + 1;
           const number = String(nextSequence).padStart(3, "0");
-          const tokenNumber = `${prefix}${number}`;
+          const tokenNumber = `${prefix}${officeTag}${number}`;
 
           const token = await tx.token.create({
             data: {
