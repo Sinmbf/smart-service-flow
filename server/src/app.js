@@ -7,6 +7,7 @@ import meRoutes from "./routes/auth/me.js";
 import logoutRoutes from "./routes/auth/logout.js";
 import queueRoutes from "./routes/queue.js";
 import serviceRoutes from "./routes/services.js";
+import tokenRoutes from "./routes/tokens.js";
 import adminDebugRoutes from "./routes/admin/debug.js";
 const app = express();
 app.use(helmet()); // For security headers
@@ -30,6 +31,8 @@ app.use("/api/auth/logout", logoutRoutes);
 app.use("/api/services", serviceRoutes);
 // Queue routes
 app.use("/api/queue", queueRoutes);
+// Token Flow routes (public, requires auth for mutation; reads public)
+app.use("/api/tokens", tokenRoutes);
 // Admin / debug routes (temporary, removed in Step 19)
 app.use("/api/admin/_debug", adminDebugRoutes);
 export default app;

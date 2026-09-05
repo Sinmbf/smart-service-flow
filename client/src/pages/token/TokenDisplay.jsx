@@ -1,82 +1,97 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import QRCode from "qrcode";
 import MainLayout from "../../layouts/MainLayout";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
+import { fetchToken } from "../../services/tokens";
+
+const STATUS_FALLBACK_LABEL = {
+  GENERATED: "Waiting",
+  CHECKED_IN: "Checked in",
+  SERVING: "Now serving",
+  COMPLETED: "Completed",
+  SKIPPED: "Skipped",
+  EXPIRED: "Expired",
+  CANCELLED: "Cancelled",
+  DEFERRED: "Deferred",
+};
 
 const TokenDisplay = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const tokenData = location.state;
+  const initialToken = location.state;
 
-  // `service` may be a real service object (from /api/services) or, for older
-  // navigations, a string key. Resolve a display name for either shape.
+  // Resolve a display name for the service (real object or legacy string).
   const serviceName = (() => {
-    const s = tokenData?.service;
+    const s = initialToken?.service;
     if (!s) return "";
     if (typeof s === "string") return t(`token.services.${s}`);
     return i18n.language === "ne" ? s.nameNe : s.nameEn;
   })();
 
-  const [currentServing, setCurrentServing] = useState("A001");
+  const [token, setToken] = useState(initialToken || null);
+  const [liveStatus, setLiveStatus] = useState(null);
+  const [qrSvg, setQrSvg] = useState(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const qrCanvasRef = useRef(null);
 
+  // Redirect to /token/services if we have no token at all.
   useEffect(() => {
-    // If no token data, redirect to service selection
-    if (!tokenData) {
-      navigate("/token/services");
-      return;
-    }
+    if (!initialToken) navigate("/token/services", { replace: true });
+  }, [initialToken, navigate]);
 
-    // Simulate updating "currently serving" number every 3 seconds
-    const interval = setInterval(() => {
-      const prefix = currentServing.charAt(0);
-      const num = parseInt(currentServing.slice(1));
-      const newNum = String(num + 1).padStart(3, "0");
-      setCurrentServing(`${prefix}${newNum}`);
-    }, 3000);
+  // Render QR code into an SVG.
+  useEffect(() => {
+    if (!token?.qrPayload) return;
+    QRCode.toString(
+      token.qrPayload,
+      { type: "svg", margin: 1, color: { dark: "#0A3A48", light: "#FFFFFF" }, width: 240 },
+      (err, svg) => {
+        if (!err) setQrSvg(svg);
+      }
+    );
+  }, [token?.qrPayload]);
 
-    return () => clearInterval(interval);
-  }, [tokenData, navigate, currentServing]);
+  // Poll the token endpoint every 8s while we have an id (lightweight).
+  useEffect(() => {
+    if (!token?.id) return;
+    let cancelled = false;
+    const tick = async () => {
+      try {
+        const data = await fetchToken(token.id);
+        if (cancelled) return;
+        if (data?.token?.status) setLiveStatus(data.token.status);
+      } catch {
+        /* ignore — polling is best-effort */
+      }
+    };
+    tick();
+    const interval = setInterval(tick, 8000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [token?.id]);
 
-  if (!tokenData) {
-    return null;
-  }
+  if (!token) return null;
 
-  const handleCancelToken = () => {
-    setShowCancelConfirm(true);
-  };
+  const status = liveStatus || token.status || "GENERATED";
+  const statusKey = STATUS_FALLBACK_LABEL[status] ? status : "GENERATED";
+  const generatedDate = token.generatedAt ? new Date(token.generatedAt) : new Date();
 
-  const confirmCancel = () => {
-    // Navigate back to service selection
-    navigate("/token/services");
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "waiting":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "called":
-        return "bg-primary-100 text-primary-800 border-primary-200";
-      case "serving":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "completed":
-        return "bg-gray-100 text-gray-800 border-gray-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
+  const handleCancelToken = () => setShowCancelConfirm(true);
+  const confirmCancel = () => navigate("/token/services", { replace: true });
 
   return (
     <MainLayout>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-        {/* Main Token Card - Spans 2 columns on desktop */}
+        {/* Main Token Card */}
         <div className="lg:col-span-2 space-y-4">
           <Card className="backdrop-blur-md bg-white/95">
             <div className="space-y-6 py-2">
-              {/* Title */}
               <div className="text-center px-2">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                   {t("token.display.title")}
@@ -86,19 +101,16 @@ const TokenDisplay = () => {
                 </p>
               </div>
 
-              {/* Token Number - Large Display */}
-              <div className="bg-gradient-to-br from-primary-700 to-primary-500 rounded-2xl p-8 md:p-10 mx-2 text-center shadow-lg animate-pulse-slow">
+              <div className="bg-gradient-to-br from-primary-700 to-primary-500 rounded-2xl p-8 md:p-10 mx-2 text-center shadow-lg">
                 <p className="text-white/90 text-xs sm:text-sm font-medium mb-3">
                   {t("token.display.tokenNumber")}
                 </p>
                 <p className="text-white text-5xl sm:text-6xl md:text-7xl font-bold tracking-wider">
-                  {tokenData.tokenNumber}
+                  {token.tokenNumber}
                 </p>
               </div>
 
-              {/* Token Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-2">
-                {/* Service */}
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                   <span className="text-gray-600 font-medium text-xs sm:text-sm block mb-2 break-words">
                     {t("token.display.service")}
@@ -107,71 +119,38 @@ const TokenDisplay = () => {
                     {serviceName}
                   </span>
                 </div>
-
-                {/* Queue Position */}
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                   <span className="text-gray-600 font-medium text-xs sm:text-sm block mb-2 break-words">
                     {t("token.display.queuePosition")}
                   </span>
                   <span className="text-gray-900 font-semibold text-2xl sm:text-3xl break-words">
-                    {tokenData.queuePosition}
+                    {token.position}
                   </span>
                 </div>
-
-                {/* Estimated Wait Time */}
-                <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                  <span className="text-gray-600 font-medium text-xs sm:text-sm block mb-2 break-words">
-                    {t("token.display.estimatedWait")}
-                  </span>
-                  <span className="text-gray-900 font-semibold text-base sm:text-lg break-words">
-                    ~{tokenData.estimatedWait} {t("token.display.minutes")}
-                  </span>
-                </div>
-
-                {/* Status */}
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                   <span className="text-gray-600 font-medium text-xs sm:text-sm block mb-2 break-words">
                     {t("token.display.status")}
                   </span>
-                  <span
-                    className={`inline-block px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border ${getStatusColor(
-                      tokenData.status
-                    )} break-words`}
-                  >
-                    {t(`token.display.${tokenData.status}`)}
+                  <span className="inline-block px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border bg-blue-50 text-blue-800 border-blue-200">
+                    {STATUS_FALLBACK_LABEL[statusKey]}
+                  </span>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                  <span className="text-gray-600 font-medium text-xs sm:text-sm block mb-2 break-words">
+                    {t("token.display.generatedAt", "Generated")}
+                  </span>
+                  <span className="text-gray-900 font-semibold text-sm break-words">
+                    {generatedDate.toLocaleString(i18n.language === "ne" ? "ne-NP" : "en-US")}
                   </span>
                 </div>
               </div>
             </div>
           </Card>
 
-          {/* Notification Notice - Mobile */}
-          <div className="lg:hidden bg-primary-50 border-2 border-primary-200 rounded-xl p-4 mx-2">
-            <div className="flex items-start gap-3">
-              <svg
-                className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700 flex-shrink-0 mt-0.5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <p className="text-xs sm:text-sm text-primary-900 leading-relaxed">
-                {t("token.display.keepThisPage")}
-              </p>
-            </div>
-          </div>
-
-          {/* Cancel Button - Mobile */}
+          {/* Mobile cancel */}
           <div className="lg:hidden px-2">
             {!showCancelConfirm ? (
-              <Button
-                onClick={handleCancelToken}
-                className="w-full bg-red-600 hover:bg-red-700"
-              >
+              <Button onClick={handleCancelToken} className="w-full bg-red-600 hover:bg-red-700">
                 {t("token.display.cancelToken")}
               </Button>
             ) : (
@@ -181,18 +160,10 @@ const TokenDisplay = () => {
                     {t("token.display.confirmCancel")}
                   </p>
                   <div className="flex gap-3">
-                    <Button
-                      onClick={() => setShowCancelConfirm(false)}
-                      variant="secondary"
-                      className="flex-1"
-                    >
+                    <Button onClick={() => setShowCancelConfirm(false)} variant="secondary" className="flex-1">
                       {t("common.cancel")}
                     </Button>
-                    <Button
-                      onClick={confirmCancel}
-                      variant="danger"
-                      className="flex-1"
-                    >
+                    <Button onClick={confirmCancel} variant="danger" className="flex-1">
                       {t("common.submit")}
                     </Button>
                   </div>
@@ -202,56 +173,49 @@ const TokenDisplay = () => {
           </div>
         </div>
 
-        {/* Sidebar - Desktop */}
+        {/* Sidebar */}
         <div className="space-y-4 lg:sticky lg:top-6">
-          {/* Currently Serving Card */}
+          {/* QR code card */}
           <Card className="backdrop-blur-md bg-white/95">
             <div className="text-center space-y-3 py-2">
               <p className="text-gray-600 font-medium text-sm sm:text-base">
-                {t("token.display.currentlyServing")}
+                {t("token.display.qrTitle", "Your QR code")}
               </p>
-              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 mx-2 border-2 border-gray-200">
-                <p className="text-gray-900 text-3xl sm:text-4xl md:text-5xl font-bold animate-pulse-slow">
-                  {currentServing}
+              <div
+                className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 mx-2 border-2 border-gray-200 flex items-center justify-center min-h-[256px]"
+                aria-label="Token QR code"
+                ref={qrCanvasRef}
+                dangerouslySetInnerHTML={{ __html: qrSvg || "" }}
+              />
+              <p className="text-xs text-gray-500">
+                {t("token.display.qrHint", "Show this code at the office for check-in.")}
+              </p>
+            </div>
+          </Card>
+
+          {/* Notice card */}
+          <Card className="bg-primary-50 border-2 border-primary-200">
+            <div className="flex items-start gap-3">
+              <svg className="w-6 h-6 text-primary-700 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <div>
+                <h4 className="font-semibold text-primary-900 mb-1 text-sm">Important</h4>
+                <p className="text-xs text-primary-900 leading-relaxed">
+                  {t("token.display.keepThisPage")}
                 </p>
               </div>
             </div>
           </Card>
 
-          {/* Notification Notice - Desktop */}
-          <div className="hidden lg:block">
-            <Card className="backdrop-blur-md bg-primary-50 border-2 border-primary-200">
-              <div className="flex items-start gap-3">
-                <svg
-                  className="w-6 h-6 text-primary-700 flex-shrink-0 mt-0.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <div>
-                  <h4 className="font-semibold text-primary-900 mb-1 text-sm">
-                    Important
-                  </h4>
-                  <p className="text-xs text-primary-900 leading-relaxed">
-                    {t("token.display.keepThisPage")}
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          {/* Cancel Button - Desktop */}
+          {/* Desktop cancel */}
           <div className="hidden lg:block">
             {!showCancelConfirm ? (
-              <Button
-                onClick={handleCancelToken}
-                className="w-full bg-red-600 hover:bg-red-700"
-              >
+              <Button onClick={handleCancelToken} className="w-full bg-red-600 hover:bg-red-700">
                 {t("token.display.cancelToken")}
               </Button>
             ) : (
@@ -261,18 +225,10 @@ const TokenDisplay = () => {
                     {t("token.display.confirmCancel")}
                   </p>
                   <div className="space-y-2">
-                    <Button
-                      onClick={() => setShowCancelConfirm(false)}
-                      variant="secondary"
-                      className="w-full"
-                    >
+                    <Button onClick={() => setShowCancelConfirm(false)} variant="secondary" className="w-full">
                       {t("common.cancel")}
                     </Button>
-                    <Button
-                      onClick={confirmCancel}
-                      variant="danger"
-                      className="w-full"
-                    >
+                    <Button onClick={confirmCancel} variant="danger" className="w-full">
                       {t("common.submit")}
                     </Button>
                   </div>
@@ -282,21 +238,6 @@ const TokenDisplay = () => {
           </div>
         </div>
       </div>
-
-      {/* Add subtle pulse animation */}
-      <style>{`
-        @keyframes pulse-slow {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.95;
-          }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 3s ease-in-out infinite;
-        }
-      `}</style>
     </MainLayout>
   );
 };

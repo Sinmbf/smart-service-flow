@@ -293,7 +293,10 @@
       "proceedToCounter": "Please proceed to Counter",
       "keepThisPage": "Keep this page open to receive notifications",
       "cancelToken": "Cancel Token",
-      "confirmCancel": "Are you sure you want to cancel your token?"
+      "confirmCancel": "Are you sure you want to cancel your token?",
+      "qrTitle": "Your QR code",
+      "qrHint": "Show this code at the office for check-in.",
+      "generatedAt": "Generated"
     },
     "monitor": {
       "title": "Queue Status",

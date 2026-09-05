@@ -1,56 +1,69 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import MainLayout from "../../layouts/MainLayout";
 import Card from "../../components/ui/Card";
+import { useAuth } from "../../auth/AuthContext";
+import { generateToken } from "../../services/tokens";
 
 const TokenGeneration = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const service = location.state?.service;
 
+  const [error, setError] = useState("");
+
   useEffect(() => {
-    // If no service selected, redirect back to service selection
+    if (authLoading) return;
     if (!service) {
-      navigate("/token/services");
+      navigate("/token/services", { replace: true });
+      return;
+    }
+    if (!isAuthenticated) {
+      navigate("/citizen-login", { replace: true, state: { service } });
       return;
     }
 
-    // Generate token after 2 seconds
-    const timer = setTimeout(() => {
-      // Generate a random token number (format, B023, etc.)
-      const prefix = String.fromCharCode(65 + Math.floor(Math.random() * 26)); // A-Z
-      const number = String(Math.floor(Math.random() * 999) + 1).padStart(3, "0");
-      const tokenNumber = `${prefix}${number}`;
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await generateToken({ serviceId: service.id });
+        if (cancelled) return;
+        navigate("/token/display", {
+          state: {
+            id: data.token.id,
+            tokenNumber: data.token.tokenNumber,
+            position: data.token.position,
+            status: data.token.status,
+            service,
+            qrPayload: data.qrPayload,
+            generatedAt: data.token.generatedAt,
+          },
+          replace: true,
+        });
+      } catch (err) {
+        if (cancelled) return;
+        setError(
+          err.response?.data?.message ||
+            (i18n.language === "ne"
+              ? "टोकन बनाउन सकिएन। कृपया पुनः प्रयास गर्नुहोस्।"
+              : "Failed to generate token. Please try again.")
+        );
+      }
+    })();
 
-      // Calculate queue position (simulated)
-      const queuePosition = Math.floor(Math.random() * 15) + 1;
-
-      // Calculate estimated wait time (5-10 minutes per person ahead)
-      const estimatedWait = queuePosition * (Math.floor(Math.random() * 6) + 5);
-
-      // Navigate to token display with generated data
-      navigate("/token/display", {
-        state: {
-          tokenNumber,
-          service,
-          queuePosition,
-          estimatedWait,
-          status: "waiting",
-          generatedAt: new Date().toISOString(),
-        },
-      });
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [service, navigate]);
+    return () => {
+      cancelled = true;
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [service?.id, isAuthenticated, authLoading, navigate]);
 
   return (
     <MainLayout>
       <Card className="backdrop-blur-md bg-white/95">
         <div className="text-center space-y-6 py-8">
-          {/* Title */}
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
               {t("token.generation.title")}
@@ -60,31 +73,30 @@ const TokenGeneration = () => {
             </p>
           </div>
 
-          {/* Loading Animation */}
-          <div className="flex flex-col items-center justify-center space-y-6">
-            {/* Spinner */}
-            <div className="relative w-24 h-24">
-              <div className="absolute inset-0 border-8 border-gray-200 rounded-full"></div>
-              <div className="absolute inset-0 border-8 border-primary-700 border-t-transparent rounded-full animate-spin"></div>
+          {error ? (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700" role="alert">
+              {error}
+              <div className="mt-3">
+                <button
+                  type="button"
+                  onClick={() => navigate("/token/services")}
+                  className="text-sm font-semibold text-primary-700 hover:underline"
+                >
+                  {t("common.back")}
+                </button>
+              </div>
             </div>
-
-            {/* Generating text */}
-            <p className="text-lg font-medium text-gray-700 animate-pulse">
-              {t("token.generation.generating")}
-            </p>
-
-            {/* Token Icon Animation */}
-            <div className="flex items-center gap-2 animate-bounce">
-              <svg
-                className="w-12 h-12 text-primary-700"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
-                <path d="M7 12h2v5H7zm4-3h2v8h-2zm4-3h2v11h-2z" />
-              </svg>
+          ) : (
+            <div className="flex flex-col items-center justify-center space-y-6">
+              <div className="relative w-24 h-24">
+                <div className="absolute inset-0 border-8 border-gray-200 rounded-full" />
+                <div className="absolute inset-0 border-8 border-primary-700 border-t-transparent rounded-full animate-spin" />
+              </div>
+              <p className="text-lg font-medium text-gray-700 animate-pulse">
+                {t("token.generation.generating")}
+              </p>
             </div>
-          </div>
+          )}
         </div>
       </Card>
     </MainLayout>
