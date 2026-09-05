@@ -45,6 +45,7 @@ const TokenGeneration = () => {
         });
       } catch (err) {
         if (cancelled) return;
+        console.error("[TokenGeneration] error:", err);
         setError(
           err.response?.data?.message ||
             (i18n.language === "ne"
