@@ -244,6 +244,11 @@ router.get("/:id", requireAuth, async (req, res) => {
       return res.status(403).json({ success: false, message: "Not authorized for this token" });
     }
 
+    // Build the QR payload so a fresh page reload can still display the
+    // scannable code (the client can't re-sign the JWT without the secret).
+    const baseUrl = process.env.CLIENT_URL || "http://localhost:5173";
+    const qrPayload = `${baseUrl}/verify/${token.id}?sig=${signToken({ tokenId: token.id, sub: token.userId })}`;
+
     res.status(200).json({
       success: true,
       token: {
@@ -267,6 +272,7 @@ router.get("/:id", requireAuth, async (req, res) => {
         user: token.user,
         generatedAt: token.generatedAt,
         checkedInAt: token.checkedInAt,
+        qrPayload,
         completedAt: token.completedAt,
       },
     });
