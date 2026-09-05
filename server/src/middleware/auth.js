@@ -31,11 +31,24 @@ export async function requireAuth(req, res, next) {
       role: true,
       preferredLanguage: true,
       isActive: true,
+      passwordChangedAt: true,
     },
   });
 
   if (!user || !user.isActive) {
     return res.status(401).json({ success: false, message: "User not found or deactivated" });
+  }
+
+  // Token revocation: if the user changed their password after the token was
+  // issued, the token is no longer valid. Compare the `pwd` claim in the JWT
+  // against the user's current `passwordChangedAt` timestamp.
+  const tokenPwd = typeof payload.pwd === "number" ? payload.pwd : null;
+  const currentPwd = user.passwordChangedAt ? user.passwordChangedAt.getTime() : null;
+  if (tokenPwd !== currentPwd) {
+    return res.status(401).json({
+      success: false,
+      message: "Token invalidated by password change. Please sign in again.",
+    });
   }
 
   req.user = user;

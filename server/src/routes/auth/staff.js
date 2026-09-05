@@ -55,12 +55,14 @@ router.post("/register", async (req, res) => {
   }
 
   const hashed = await bcrypt.hash(password, 10);
+  const now = new Date();
 
   const user = await prisma.user.create({
     data: {
       name,
       email: email.toLowerCase(),
       password: hashed,
+      passwordChangedAt: now,
       employeeId,
       role: Role.STAFF,
     },
@@ -172,11 +174,18 @@ router.post("/verify-otp", async (req, res) => {
     return res.status(401).json({ success: false, message: "User not found" });
   }
 
+  // Update lastLoginAt
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { lastLoginAt: new Date() },
+  });
+
   // Sign a JWT for the staff user
   const token = signToken({
     sub: user.id,
     role: user.role,
     lang: user.preferredLanguage,
+    pwd: user.passwordChangedAt ? user.passwordChangedAt.getTime() : null,
   });
 
   res.status(200).json({

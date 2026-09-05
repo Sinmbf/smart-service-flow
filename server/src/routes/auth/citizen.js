@@ -39,10 +39,11 @@ router.post("/send-otp", async (req, res) => {
 /**
  * POST /api/auth/citizen/verify
  * Verifies the OTP, upserts a Citizen user, and returns a JWT.
- * Body: { phoneNumber: string, otp: string }
+ * On first login (no name yet), `name` must be supplied in the body and is persisted.
+ * Body: { phoneNumber: string, otp: string, name?: string }
  */
 router.post("/verify", async (req, res) => {
-  const { phoneNumber, otp } = req.body;
+  const { phoneNumber, otp, name } = req.body;
 
   if (!phoneNumber || !otp) {
     return res.status(400).json({ success: false, message: "Phone number and OTP are required" });
@@ -58,16 +59,36 @@ router.post("/verify", async (req, res) => {
     return res.status(401).json({ success: false, message: "Invalid OTP" });
   }
 
-  // Upsert the citizen in DB (creates on first login)
-  const user = await prisma.user.upsert({
-    where: { phoneNumber: normalized },
-    update: {},
-    create: {
-      phoneNumber: normalized,
-      role: Role.CITIZEN,
-      preferredLanguage: Language.EN,
-    },
-  });
+  // Find-or-create the citizen
+  const existing = await prisma.user.findUnique({ where: { phoneNumber: normalized } });
+
+  let user;
+  if (existing) {
+    // Returning user — update lastLoginAt. Name is locked once set.
+    user = await prisma.user.update({
+      where: { id: existing.id },
+      data: { lastLoginAt: new Date() },
+    });
+  } else {
+    // First-time login — require a name (2–80 chars, trimmed).
+    const trimmedName = typeof name === "string" ? name.trim() : "";
+    if (trimmedName.length < 2 || trimmedName.length > 80) {
+      return res.status(400).json({
+        success: false,
+        message: "Name is required (2–80 characters) on first login",
+        code: "NAME_REQUIRED",
+      });
+    }
+    user = await prisma.user.create({
+      data: {
+        phoneNumber: normalized,
+        name: trimmedName,
+        role: Role.CITIZEN,
+        preferredLanguage: Language.EN,
+        lastLoginAt: new Date(),
+      },
+    });
+  }
 
   console.log(`[Citizen Auth] Phone: ${user.phoneNumber}, ID: ${user.id}`);
 
@@ -79,6 +100,7 @@ router.post("/verify", async (req, res) => {
     sub: user.id,
     role: user.role,
     lang: user.preferredLanguage,
+    pwd: user.passwordChangedAt ? user.passwordChangedAt.getTime() : null,
   });
 
   res.status(200).json({

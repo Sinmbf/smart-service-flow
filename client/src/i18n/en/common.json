@@ -53,7 +53,11 @@
       "confirmOtp": "Verify and Continue",
       "backToPhone": "← Change phone number",
       "backToLogin": "Back to Login",
-      "backToHome": "Back to Home"
+      "backToHome": "Back to Home",
+      "namePrompt": "Welcome! Please enter your full name to continue.",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "e.g. Ram Tamang",
+      "nameContinue": "Continue"
     },
     "staff": {
       "email": "Work Email",
@@ -145,7 +149,8 @@
       "passwordMinLength": "Password must be at least 8 characters",
       "passwordMismatch": "Passwords do not match",
       "otpInvalid": "Please enter a valid 6-digit code",
-      "termsRequired": "You must agree to the terms and conditions"
+      "termsRequired": "You must agree to the terms and conditions",
+      "nameLength": "Name must be between 2 and 80 characters"
     },
     "errors": {
       "generic": "Something went wrong. Please try again."

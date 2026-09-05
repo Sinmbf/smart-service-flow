@@ -14,6 +14,7 @@ const CitizenOTP = () => {
 
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
+  const [name, setName] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,6 +55,13 @@ const CitizenOTP = () => {
       return;
     }
 
+    // If the server responded with NAME_REQUIRED on the previous attempt,
+    // jump to the name step before retrying.
+    if (errors.api?.code === "NAME_REQUIRED") {
+      setStep("name");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await axios.post("/auth/citizen/verify", {
@@ -76,7 +84,47 @@ const CitizenOTP = () => {
         navigate("/token/services");
       }
     } catch (error) {
-      setErrors({ otp: error.response?.data?.message || t("auth.validation.otpInvalid") });
+      const data = error.response?.data;
+      // First-time login: server tells us a name is required.
+      if (data?.code === "NAME_REQUIRED") {
+        setStep("name");
+        return;
+      }
+      setErrors({ otp: data?.message || t("auth.validation.otpInvalid") });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmitName = async (e) => {
+    e.preventDefault();
+    const trimmed = name.trim();
+    if (trimmed.length < 2 || trimmed.length > 80) {
+      setErrors({ name: t("auth.validation.nameLength") });
+      return;
+    }
+
+    setIsLoading(true);
+    setErrors({});
+    try {
+      const response = await axios.post("/auth/citizen/verify", {
+        phoneNumber: phone.replace(/\s/g, ""),
+        otp,
+        name: trimmed,
+      });
+
+      localStorage.setItem("token", response.data.token);
+      console.log("✅ Citizen authenticated:", response.data.user);
+
+      const pendingService = location.state?.service;
+      if (pendingService) {
+        navigate("/token/generate", { state: { service: pendingService } });
+      } else {
+        navigate("/token/services");
+      }
+    } catch (error) {
+      const data = error.response?.data;
+      setErrors({ api: data?.message || t("auth.errors.generic") });
     } finally {
       setIsLoading(false);
     }
@@ -165,6 +213,43 @@ const CitizenOTP = () => {
             >
               {t("auth.citizen.backToPhone")}
             </button>
+          </form>
+        )}
+
+        {/* Name Entry (first-time citizens only) */}
+        {step === "name" && (
+          <form onSubmit={handleSubmitName} className="space-y-5">
+            <div className="text-center">
+              <p className="text-sm text-neutral-600 mb-2">
+                {t("auth.citizen.namePrompt")}
+              </p>
+            </div>
+
+            {errors.api && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+                {errors.api}
+              </div>
+            )}
+
+            <Input
+              label={t("auth.citizen.nameLabel")}
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              error={errors.name}
+              placeholder={t("auth.citizen.namePlaceholder")}
+              maxLength={80}
+              autoFocus
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              isLoading={isLoading}
+              disabled={isLoading}
+            >
+              {t("auth.citizen.nameContinue")}
+            </Button>
           </form>
         )}
 
