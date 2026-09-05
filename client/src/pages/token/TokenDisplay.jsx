@@ -111,6 +111,20 @@ const TokenDisplay = () => {
     };
   }, [token?.id]);
 
+  // Strip the fresh=1 query param from the URL so a page refresh doesn't
+  // re-show the notice. Must run unconditionally to keep the hook order
+  // stable across renders.
+  useEffect(() => {
+    if (isFreshFromLogin && !shownFreshNotice) {
+      setShownFreshNotice(true);
+      const url = new URL(window.location.href);
+      if (url.searchParams.has("fresh")) {
+        url.searchParams.delete("fresh");
+        window.history.replaceState({}, "", url.toString());
+      }
+    }
+  }, [isFreshFromLogin, shownFreshNotice]);
+
   if (isLoading) {
     return (
       <MainLayout>
@@ -138,20 +152,6 @@ const TokenDisplay = () => {
   }
 
   if (!token) return null;
-
-  // Strip the fresh=1 query param from the URL so a page refresh doesn't
-  // re-show the notice.
-  useEffect(() => {
-    if (isFreshFromLogin && !shownFreshNotice) {
-      setShownFreshNotice(true);
-      // Clean the URL without remounting
-      const url = new URL(window.location.href);
-      if (url.searchParams.has("fresh")) {
-        url.searchParams.delete("fresh");
-        window.history.replaceState({}, "", url.toString());
-      }
-    }
-  }, [isFreshFromLogin, shownFreshNotice]);
 
   const status = liveStatus || token.status || "GENERATED";
   const statusKey = STATUS_FALLBACK_LABEL[status] ? status : "GENERATED";
