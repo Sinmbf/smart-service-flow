@@ -2,7 +2,7 @@
 
 > **Purpose:** Track the project's status against `complete_project_roadmap.md` and `plans/implementation_plan.md`. Updated after every major change so you can resume work in any session.
 
-> **Last updated:** 2026-09-05 (end of session 2 — Step 2 merged)
+> **Last updated:** 2026-09-05 (end of session 3 — Step 2.5 foundation fixes merged)
 
 ---
 
@@ -11,11 +11,14 @@
 **Read this section first, then start coding.**
 
 ### Context snapshot
-- Increment 1 (Foundation) is ~85% done. Step 2 (JWT + bcrypt + auth middleware) is now ✅ merged.
+- Increment 1 (Foundation) is ~90% done. Steps 2 (JWT + bcrypt) and 2.5 (auth foundation fixes) are merged.
 - Next: **Step 3 — Frontend auth state (AuthContext + ProtectedRoute)**.
 - The codebase is **plain JavaScript only** (no TypeScript anywhere).
 - Database is wired up via Prisma 7 + PostgreSQL 18 (db: `smart_service_flow`, locally installed, **no Docker**).
-- New API: `GET /api/auth/me` (Bearer token) returns the current user.
+- Prisma 7 uses `prisma.config.js` for CLI tooling; the runtime still uses `@prisma/adapter-pg` in `db.js`.
+- The `User` table now has `lastLoginAt` and `passwordChangedAt` columns.
+- Citizen first-login now requires a name (2–80 chars); returning users skip the name step.
+- JWT carries a `pwd` claim; `requireAuth` middleware rejects tokens with a stale `pwd` (i.e. password changed after the token was issued).
 
 ### First message to send to the next session
 Open the new session with this exact prompt (copy-paste it):
@@ -94,6 +97,9 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 - **Server-only-port-5000**: if you start a server in the background, it kills the user's foreground server. Always assume the foreground server belongs to the user.
 - The frontend currently persists auth via `localStorage` directly inside `CitizenOTP.jsx`/`Login.jsx`. Step 3 should centralize that into an AuthContext — do not change the storage keys, only the call sites.
 - The seeded staff user has `password = null` in the DB (no bcrypt hash yet). To test staff login, register a new staff account first (the existing seed user can only be used for citizen OTP).
+- Prisma 7 CLI requires `server/prisma.config.js` (already in place) — do NOT move `url` back into `schema.prisma`; the Prisma 7 design intentionally removes it.
+- The citizen `/verify` endpoint now returns `code: "NAME_REQUIRED"` on first login if no `name` is in the body. The frontend `CitizenOTP.jsx` handles this by switching to a name-collection step. Preserve this handshake when refactoring auth.
+- The seeded citizen `Siddhartha Shakya (+9779841234567)` already has a name in the DB, so existing accounts skip the name step. New phone numbers will hit the name step.
 
 ---
 
@@ -216,6 +222,7 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | `feature/db` | `feat(db): add Prisma schema, migration, and seed` | ✅ Merged (Step 1) |
 | `feature/remove-typescript` | `fix(client): restore navigate state object in TokenGeneration` | ✅ Merged to main (Step 1.5) |
 | `feature/auth-jwt` | `feat(auth): replace base64 with JWT, add bcrypt password hashing` | ✅ Merged to main (Step 2) |
+| `feature/auth-foundation-fixes` | `feat(auth-foundation): add lastLoginAt, passwordChangedAt columns + first-login name prompt` | ✅ Merged to main (Step 2.5) |
 | `feature/auth-context` | — | 🔜 **Next** (Step 3) |
 
 ### Session 2 housekeeping (commited before starting Step 2)
@@ -242,11 +249,11 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 |---|---|---|
 | GET | `/api/health` | Liveness check |
 | POST | `/api/auth/citizen/send-otp` | Sends OTP to phone (logs to console + `server/otp.log`) |
-| POST | `/api/auth/citizen/verify` | Verifies OTP, upserts Citizen user, returns JWT |
-| POST | `/api/auth/staff/register` | Register staff (bcrypt-hashed password) |
+| POST | `/api/auth/citizen/verify` | Verifies OTP, upserts Citizen user (requires `name` on first login — returns `code: "NAME_REQUIRED"` if missing), returns JWT |
+| POST | `/api/auth/staff/register` | Register staff (bcrypt-hashed password; sets `passwordChangedAt`) |
 | POST | `/api/auth/staff/login` | Email + password → 2FA OTP |
-| POST | `/api/auth/staff/verify-otp` | 2FA OTP → JWT |
-| GET | `/api/auth/me` | Returns the current user (Bearer token required) |
+| POST | `/api/auth/staff/verify-otp` | 2FA OTP → JWT (includes `pwd` claim) |
+| GET | `/api/auth/me` | Returns the current user (Bearer token required; rejects tokens with stale `pwd` claim) |
 | GET | `/api/queue/status` | All services with current token counts (DB-driven) |
 | GET | `/api/queue/services` | Service list (id, nameEn, nameNe) |
 | GET | `/api/queue/:serviceId` | Single service queue status |
