@@ -127,7 +127,7 @@ const ServiceSelection = () => {
                         }
                       `}
                     >
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-start gap-4">
                         {/* Icon */}
                         <div
                           className={`
