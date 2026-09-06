@@ -87,7 +87,7 @@ router.post("/check-in", requireAuth, requireRole("STAFF", "ADMIN"), async (req,
     // Check for expiry (no-show): if the token was generated >15 minutes ago,
     // mark as EXPIRED (the cleanup sweeper does this, but guard here too).
     const minutesOld = (Date.now() - new Date(token.generatedAt).getTime()) / 60000;
-    if (minutesOld > 15) {
+    if (minutesOld > 3) {
       await prisma.token.update({
         where: { id: token.id },
         data: { status: "EXPIRED" },
