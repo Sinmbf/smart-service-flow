@@ -327,12 +327,12 @@ const Home = () => {
           </div>
 
           {/* Bento grid — first card spans 2 columns on md+ */}
-          <div className={`grid gap-4 sm:gap-5 ${user?.role === "STAFF" ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-3"}`}>
-            {/* Primary — Get Token, large (hidden for staff) */}
+          <div className={`grid gap-4 sm:gap-5 ${user?.role === "STAFF" ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"}`}>
+            {/* Primary — Get Token (hidden staff; span 2 on md when shown with 4 cards) */}
             {user?.role !== "STAFF" && (
             <Link
               to="/token/services"
-              className="group md:col-span-1 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-[#08343f] hover:from-[#0f4c5c] hover:to-[#08343f] p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-lg shadow-primary-900/20 ring-1 ring-white/10 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+              className="group md:col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-[#08343f] hover:from-[#0f4c5c] hover:to-[#08343f] p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-lg shadow-primary-900/20 ring-1 ring-white/10 flex flex-col justify-between transition-all"
               style={{ color: "#ffffff" }}
             >
               <div className="relative">
