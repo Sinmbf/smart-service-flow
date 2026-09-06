@@ -18,7 +18,7 @@
 - **Step 7 merged:** `RequiredDocumentsList` + `OfficeInfoBlock` reusable components; `GET /api/services/:id/stages/:stageId/documents` endpoint for deep-linking.
 - **Post-Step-5 fix:** `/token/services` now uses real `/api/services` data (not the hardcoded mock list).
 - **Post-Step-6 hotfixes:** service tile icons (main + office footer) pinned to top with `items-start`.
-- Next: **Step 8 — Increment 3.1–3.3: Token data model + generation + QR**.
+- Next: **Step 9 — Increment 3.4–3.6: Check-in + no-show + cancel (Token QR done 2026-09-06)**.
 - The codebase is **plain JavaScript only** (no TypeScript anywhere).
 - Database is wired up via Prisma 7 + PostgreSQL 18 (db: `smart_service_flow`, locally installed, **no Docker**).
 - Prisma 7 uses `prisma.config.js` for CLI tooling; the runtime still uses `@prisma/adapter-pg` in `db.js`.
@@ -29,7 +29,7 @@
 
 Open the new session with this exact prompt (copy-paste it):
 
-> "Read `PROGRESS.md` and continue from where it left off. Start with Step 8 (Token data model + POST /api/tokens + QR rendering)."
+> "Read `PROGRESS.md` — Step 8 (Token QR) done; continue with Step 9 (Check-in / no-show / cancel)."
 
 ### Step 1 — Set up the environment (in your own terminals)
 
