@@ -164,6 +164,7 @@ model Token {
   completedAt     DateTime?
   cancelledAt     DateTime?
   notes           String?
+  qrPayload       String?     // base64 QR content
 
   durations       ServiceDurationHistory[]
   priorityRequests PriorityRequest[]

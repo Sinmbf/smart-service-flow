@@ -103,6 +103,7 @@ router.post("/", requireAuth, async (req, res) => {
               position: nextPosition,
               status: "GENERATED",
               generatedAt: new Date(),
+              qrPayload: Buffer.from(`${tokenNumber}:${serviceId}`).toString("base64"),
             },
             include: { service: true, currentStage: true },
           });

@@ -11,6 +11,7 @@
 **Read this section first, then start coding.**
 
 ### Context snapshot
+
 - **Increment 1 (Foundation) is closed.** All 4 sub-steps (db, JWT, AuthContext, logout/lang) are merged.
 - **Step 5 merged:** `/api/services` list + detail; `/services` and `/services/:id` pages; `ServiceCard`.
 - **Step 6 merged:** `ServiceRoadmap` component embedded in `ServiceDetail`; status states (completed/current/upcoming); collapsible documents; visual polish; `currentStageOrder` prop ready for Step 14.
@@ -25,10 +26,13 @@
 - The language switcher persists to `PUT /api/auth/me/language` when authed.
 
 ### First message to send to the next session
+
 Open the new session with this exact prompt (copy-paste it):
+
 > "Read `PROGRESS.md` and continue from where it left off. Start with Step 8 (Token data model + POST /api/tokens + QR rendering)."
 
 ### Step 1 — Set up the environment (in your own terminals)
+
 ```powershell
 # Terminal 1 — start PostgreSQL if not already running
 # (Windows Service: it should already be up; verify with `psql -U postgres -c "SELECT 1;"`)
@@ -51,6 +55,7 @@ npm run dev
 ```
 
 ### Step 2 — Confirm the project is healthy before coding
+
 ```powershell
 # Server liveness
 curl http://localhost:5000/api/health
@@ -72,6 +77,7 @@ curl -i http://localhost:5000/api/auth/me
 If any of these fail, fix the environment first before proceeding.
 
 ### Step 3 — Create the feature branch and start Step 3
+
 ```powershell
 cd C:\Users\LOQ\OneDrive\Documents\GitHub\Master-web-development-AI-Era\PERN\smart-service-flow
 git checkout main
@@ -82,6 +88,7 @@ git checkout -b feature/auth-context
 Then send the next-session prompt to start coding. The full task list for Step 3 is in `plans/implementation_plan.md` under **"STEP 3 — Increment 1.5: Frontend auth state + protected routes"**.
 
 ### Step 4 — When Step 3 is done
+
 1. Commit on `feature/auth-context`.
 2. Update `PROGRESS.md`: set Step 3 to ✅ Done, advance the cursor, add a row to the **Branch & Commit Log**, and note any new gotchas.
 3. Merge to `main`:
@@ -93,6 +100,7 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 4. Continue to **Step 4** (logout + language persistence endpoint).
 
 ### Things to tell the next session explicitly
+
 - The project is **plain JavaScript only** (no TS, no JSDoc, no `.d.ts`).
 - **Do not put the server in the background** — keep it foreground in Terminal 2 so OTPs appear live.
 - **Do not touch the seed** unless explicitly told to. The seeded users/services are stable.
@@ -109,17 +117,17 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 
 ## Current Position
 
-| Field | Value |
-|---|---|
-| Active branch | `main` |
-| Current step | **Step 9 — Check-in + no-show + cancel (✅ MERGED)** |
-| Next step | **Step 10 — Stage-specific queues + staff operations** |
-| Increment | 1 (Foundation) — 85% done |
-| Server runs on | `http://localhost:5000` |
-| Client runs on | `http://localhost:5173+` (Vite auto-picks next free port) |
-| Database | PostgreSQL 18, db `smart_service_flow` (locally installed, **no Docker**) |
-| Server status at handoff | **stopped** (port 5000 free) — you start it in your own terminal |
-| Seeded data | 2 offices, 3 services, 14 stages, 10 required documents, 4 users (3 demo + 1 you created via the citizen OTP flow) |
+| Field                    | Value                                                                                                              |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| Active branch            | `main`                                                                                                             |
+| Current step             | **Step 9 — Check-in + no-show + cancel (✅ MERGED)**                                                               |
+| Next step                | **Step 10 — Stage-specific queues + staff operations**                                                             |
+| Increment                | 1 (Foundation) — 85% done                                                                                          |
+| Server runs on           | `http://localhost:5000`                                                                                            |
+| Client runs on           | `http://localhost:5173+` (Vite auto-picks next free port)                                                          |
+| Database                 | PostgreSQL 18, db `smart_service_flow` (locally installed, **no Docker**)                                          |
+| Server status at handoff | **stopped** (port 5000 free) — you start it in your own terminal                                                   |
+| Seeded data              | 2 offices, 3 services, 14 stages, 10 required documents, 4 users (3 demo + 1 you created via the citizen OTP flow) |
 
 ---
 
@@ -127,164 +135,166 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 
 ### Increment 1 — Project Foundation
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
-| 1.1 Repo & dev setup | — | ✅ Done | monorepo, client/ + server/, .gitignore, scripts |
-| 1.2 Frontend foundation | — | ✅ Done | React 19 + Vite + Tailwind v4 + i18next + Lucide + PWA |
-| 1.3 Backend foundation | — | ✅ Done | Express 5 (ESM, plain JS) + Helmet + CORS, /api routes |
-| **1.4 Database foundation** | **Step 1** | ✅ **Done** | Prisma 7.10 + PostgreSQL 18 + seed |
-| **1.5 Authentication (server)** | **Step 2** | ✅ **Done** | JWT + bcrypt + `requireAuth`/`requireRole` middleware + `GET /api/auth/me` |
-| **1.5 Frontend auth state** | **Step 3** | ✅ **Done** | AuthContext + ProtectedRoute + stub `/dashboard` and `/staff/dashboard` + smart redirect + auth pill in MainLayout |
-| 1.5 Logout + lang | Step 4 | ✅ **Done** | `POST /api/auth/logout` (stateless) + `PUT /api/auth/me/language` + `LanguageSwitcher` server persistence |
-| 1.6 Bilingual | — | ✅ Done | EN + NE, LanguageSwitcher, localStorage; server-side persistence via `me/language` now active |
+| Phase                           | Step       | Status      | Notes                                                                                                              |
+| ------------------------------- | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| 1.1 Repo & dev setup            | —          | ✅ Done     | monorepo, client/ + server/, .gitignore, scripts                                                                   |
+| 1.2 Frontend foundation         | —          | ✅ Done     | React 19 + Vite + Tailwind v4 + i18next + Lucide + PWA                                                             |
+| 1.3 Backend foundation          | —          | ✅ Done     | Express 5 (ESM, plain JS) + Helmet + CORS, /api routes                                                             |
+| **1.4 Database foundation**     | **Step 1** | ✅ **Done** | Prisma 7.10 + PostgreSQL 18 + seed                                                                                 |
+| **1.5 Authentication (server)** | **Step 2** | ✅ **Done** | JWT + bcrypt + `requireAuth`/`requireRole` middleware + `GET /api/auth/me`                                         |
+| **1.5 Frontend auth state**     | **Step 3** | ✅ **Done** | AuthContext + ProtectedRoute + stub `/dashboard` and `/staff/dashboard` + smart redirect + auth pill in MainLayout |
+| 1.5 Logout + lang               | Step 4     | ✅ **Done** | `POST /api/auth/logout` (stateless) + `PUT /api/auth/me/language` + `LanguageSwitcher` server persistence          |
+| 1.6 Bilingual                   | —          | ✅ Done     | EN + NE, LanguageSwitcher, localStorage; server-side persistence via `me/language` now active                      |
 
 ### Increment 2 — Service Information & Citizen Guidance
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
-| 2.1 Service info | Step 5 | ✅ **Done** | `GET /api/services` (+search/pagination), `GET /api/services/:id`; ServiceList + ServiceDetail + ServiceCard; routes `/services`, `/services/:id` |
-| 2.2 Service roadmap | Step 6 | ✅ **Done** | `ServiceRoadmap` component embedded in `ServiceDetail`; status states; collapsible docs; visual polish; EN/NE; `currentStageOrder` prop ready |
-| 2.3 Required docs | Step 7 | ✅ **Done** | `RequiredDocumentsList` reusable component; inline for ≤2, collapsible for 3+; per-stage EN/NE |
-| 2.4 Office guidance | Step 7 | ✅ **Done** | `OfficeInfoBlock` reusable component; location + hours with icons |
+| Phase               | Step   | Status      | Notes                                                                                                                                             |
+| ------------------- | ------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2.1 Service info    | Step 5 | ✅ **Done** | `GET /api/services` (+search/pagination), `GET /api/services/:id`; ServiceList + ServiceDetail + ServiceCard; routes `/services`, `/services/:id` |
+| 2.2 Service roadmap | Step 6 | ✅ **Done** | `ServiceRoadmap` component embedded in `ServiceDetail`; status states; collapsible docs; visual polish; EN/NE; `currentStageOrder` prop ready     |
+| 2.3 Required docs   | Step 7 | ✅ **Done** | `RequiredDocumentsList` reusable component; inline for ≤2, collapsible for 3+; per-stage EN/NE                                                    |
+| 2.4 Office guidance | Step 7 | ✅ **Done** | `OfficeInfoBlock` reusable component; location + hours with icons                                                                                 |
 
 ### Increment 3 — Digital Token & Check-in
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
-| 3.1–3.3 Token + QR | Step 8 | ✅ **Done** | POST /api/tokens (atomic position reservation); GET /api/tokens/:id; GET /api/tokens?mine=true; client-side QR rendering (qrcode pkg); URL-based /token/display/:id; dashboard shows active tokens |
-| 3.1–3.3 (single-active) | Step 8.5 | ✅ **Done** | Server 409 on duplicate active token; useActiveToken hook; home CTA swaps; ServiceSelection banner + cancel |
-| 3.4–3.6 Check-in, no-show, cancel | Step 9 | ✅ **Done** | `POST /api/staff/tokens/check-in` (tokenId/tokenNumber/phone); 15-min no-show sweeper; citizen cancel via `/api/tokens/:id/cancel` (from 8.5); `CheckIn` page |
+| Phase                             | Step     | Status      | Notes                                                                                                                                                                                              |
+| --------------------------------- | -------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 3.1–3.3 Token + QR                | Step 8   | ✅ **Done** | POST /api/tokens (atomic position reservation); GET /api/tokens/:id; GET /api/tokens?mine=true; client-side QR rendering (qrcode pkg); URL-based /token/display/:id; dashboard shows active tokens |
+| 3.1–3.3 (single-active)           | Step 8.5 | ✅ **Done** | Server 409 on duplicate active token; useActiveToken hook; home CTA swaps; ServiceSelection banner + cancel                                                                                        |
+| 3.4–3.6 Check-in, no-show, cancel | Step 9   | ✅ **Done** | `POST /api/staff/tokens/check-in` (tokenId/tokenNumber/phone); 15-min no-show sweeper; citizen cancel via `/api/tokens/:id/cancel` (from 8.5); `CheckIn` page                                      |
 
 ### Increment 4 — Multi-Stage Service Flow
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
+| Phase                            | Step    | Status     | Notes                               |
+| -------------------------------- | ------- | ---------- | ----------------------------------- |
 | 4.1–4.3 Stage queues + staff ops | Step 10 | 🔜 Pending | call/skip/recall/complete per token |
-| 4.4 Multiple counters | Step 11 | 🔜 Pending | Counter model, assign/release |
-| 4.5 Stage progress | Step 12 | 🔜 Pending | Citizen progress view |
+| 4.4 Multiple counters            | Step 11 | 🔜 Pending | Counter model, assign/release       |
+| 4.5 Stage progress               | Step 12 | 🔜 Pending | Citizen progress view               |
 
 ### Increment 5 — Dynamic Waiting-Time Engine
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
+| Phase          | Step    | Status     | Notes                                          |
+| -------------- | ------- | ---------- | ---------------------------------------------- |
 | 5.1–5.5 Engine | Step 13 | 🔜 Pending | ServiceDurationHistory + estimator (no AI yet) |
 
 ### Increment 6 — Priority & Deferred
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
+| Phase                    | Step    | Status     | Notes                                               |
+| ------------------------ | ------- | ---------- | --------------------------------------------------- |
 | 6.1–6.4 Priority + audit | Step 14 | 🔜 Pending | PriorityRequest model, audit log, deferred handling |
 
 ### Increment 10 — Staff & Administration
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
-| Staff dashboard | Step 15 | 🔜 Pending | Quick UI for current stage/queue |
-| Admin CRUD | Step 19 | 🔜 Pending | Office/service/stage/document/counter/staff mgmt |
+| Phase           | Step    | Status     | Notes                                            |
+| --------------- | ------- | ---------- | ------------------------------------------------ |
+| Staff dashboard | Step 15 | 🔜 Pending | Quick UI for current stage/queue                 |
+| Admin CRUD      | Step 19 | 🔜 Pending | Office/service/stage/document/counter/staff mgmt |
 
 ### Increment 7 — Real-time Communication
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
+| Phase       | Step    | Status     | Notes                           |
+| ----------- | ------- | ---------- | ------------------------------- |
 | 7 Socket.IO | Step 16 | 🔜 Pending | Mount socket, emit queue events |
 
 ### Increment 8 — AI Service-Duration Prediction
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
+| Phase                   | Step    | Status     | Notes                        |
+| ----------------------- | ------- | ---------- | ---------------------------- |
 | 8.1–8.4 FastAPI service | Step 17 | 🔜 Pending | Python service + integration |
 
 ### Increment 9 — Notifications
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
+| Phase                  | Step    | Status     | Notes                       |
+| ---------------------- | ------- | ---------- | --------------------------- |
 | 9 In-app notifications | Step 18 | 🔜 Pending | Notification model, bell UI |
 
 ### Increment 11 — Analytics & Reports
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
+| Phase        | Step    | Status     | Notes                    |
+| ------------ | ------- | ---------- | ------------------------ |
 | 11 Analytics | Step 20 | 🔜 Pending | Summary endpoint, charts |
 
 ### Increment 12 — PWA & Polish
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
+| Phase         | Step    | Status     | Notes                          |
+| ------------- | ------- | ---------- | ------------------------------ |
 | 12 PWA polish | Step 21 | 🔜 Pending | manifest, service worker, a11y |
 
 ### Increment 13 — Testing
 
-| Phase | Step | Status | Notes |
-|---|---|---|---|
+| Phase    | Step    | Status     | Notes                           |
+| -------- | ------- | ---------- | ------------------------------- |
 | 13 Tests | Step 22 | 🔜 Pending | Vitest + supertest + Playwright |
 
 ---
 
 ## Branch & Commit Log
 
-| Branch | Last commit | Status |
-|---|---|---|
-| `feature/db` | `feat(db): add Prisma schema, migration, and seed` | ✅ Merged (Step 1) |
-| `feature/remove-typescript` | `fix(client): restore navigate state object in TokenGeneration` | ✅ Merged to main (Step 1.5) |
-| `feature/auth-jwt` | `feat(auth): replace base64 with JWT, add bcrypt password hashing` | ✅ Merged to main (Step 2) |
+| Branch                          | Last commit                                                                                   | Status                       |
+| ------------------------------- | --------------------------------------------------------------------------------------------- | ---------------------------- |
+| `feature/db`                    | `feat(db): add Prisma schema, migration, and seed`                                            | ✅ Merged (Step 1)           |
+| `feature/remove-typescript`     | `fix(client): restore navigate state object in TokenGeneration`                               | ✅ Merged to main (Step 1.5) |
+| `feature/auth-jwt`              | `feat(auth): replace base64 with JWT, add bcrypt password hashing`                            | ✅ Merged to main (Step 2)   |
 | `feature/auth-foundation-fixes` | `feat(auth-foundation): add lastLoginAt, passwordChangedAt columns + first-login name prompt` | ✅ Merged to main (Step 2.5) |
-| `feature/auth-context` | `feat(auth): AuthContext + ProtectedRoute + stub dashboards + smart redirect` | ✅ Merged to main (Step 3) |
-| `feature/logout-lang` | — | 🔜 **Next** (Step 4) |
+| `feature/auth-context`          | `feat(auth): AuthContext + ProtectedRoute + stub dashboards + smart redirect`                 | ✅ Merged to main (Step 3)   |
+| `feature/logout-lang`           | —                                                                                             | 🔜 **Next** (Step 4)         |
 
 ### Post-Step-2.5 hotfix
 
-| Commit | What | Why |
-|---|---|---|
+| Commit                                                                                            | What                                                                                                                                                                                               | Why                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `fix(auth): regenerate Prisma 7 client + add generate to dev/postinstall; add migration commands` | Server `dev` and `start` now run `prisma generate` automatically; added `postinstall: prisma generate`; `db:migrate` no longer forces `--name init`; added `db:migrate:create` for new migrations. | After adding new columns to the User table in Step 2.5, the running server still held the old Prisma client in memory, causing `PrismaClientValidationError: Unknown argument 'lastLoginAt'` on `/api/auth/citizen/verify`. Auto-generating on `dev` start and `postinstall` prevents the same trap for future schema changes and for fresh clones. |
 
 ### Server-side quality-of-life commits
 
 ### Session 2 housekeeping (commited before starting Step 2)
 
-| Commit | What | Why |
-|---|---|---|
+| Commit                                                                                              | What                                                                                                                                                                                                                                                                                                                                                                                                                                          | Why                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `chore(cleanup): remove unused client files; add populated Footer with i18n links; add ScrollToTop` | Removed `client/src/App.css`, `client/src/components/Test.jsx`, `client/dist/`, `server/otp.log`, `server/.agents`, `server/.claude`, `server/.cursor`, `server/.devin`. Populated `Footer.jsx` with brand + Services + Legal columns; Footer "Services" links use `<Link>` to `/token/services` and `/token/monitor`; Legal links stay as anchor placeholders with TODO. Added `ScrollToTop` component so route changes reset scroll to top. | Trim dead code, fill the empty Footer to match the design system, fix the SPA scroll-reset issue reported when clicking footer links. |
 
 ### Server-side quality-of-life commits
 
-| Commit | What | Why |
-|---|---|---|
-| `feat(server): log successful DB connection on startup` | Added `src/dbCheck.js`; `server.js` logs `✅ Connected to PostgreSQL (Xms) — N offices, N services, N users` on boot. | Make the DB connection status visible at startup, not silently failing on the first request. |
-| `feat(server): log OTPs to stdout and server/otp.log` | `deliverOTPToConsole` writes both a multi-line box to stdout (the original behaviour) AND a one-liner to `server/otp.log`. `server/otp.log` is gitignored. | When the foreground terminal is closed or the server runs in an IDE, OTPs were lost. The file is the safety net. |
-| `fix(server): restore multi-line OTP box on stdout + keep one-liner in otp.log` | Switched back from `process.stdout.write` to `console.log` for the box; kept the file append. | `console.log` is what makes the multi-line box render correctly in a TTY. The file still gets the one-liner. |
-| `fix(client): import i18n JSON as namespace to match Vite's named-export transform` | Changed `client/src/i18n/index.js` from `import en from ...` to `import * as en from ...` and wrapped resources in `en: { translation: en }`. | Vite turns JSON into named exports (one per top-level key), so the default export was `undefined`, which broke all translations — pages were showing raw keys like `common.appName`. |
-| `fix(client): restore framer-motion variants and object property keys stripped during TS->JS` | Repaired `Home.jsx`, `Monitor.jsx`, `Button.jsx` (icon prop), `TokenGeneration.jsx` (navigate state object). | The regex strip script over-aggressively removed `key:` pairs in object literals. |
+| Commit                                                                                        | What                                                                                                                                                       | Why                                                                                                                                                                                  |
+| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `feat(server): log successful DB connection on startup`                                       | Added `src/dbCheck.js`; `server.js` logs `✅ Connected to PostgreSQL (Xms) — N offices, N services, N users` on boot.                                      | Make the DB connection status visible at startup, not silently failing on the first request.                                                                                         |
+| `feat(server): log OTPs to stdout and server/otp.log`                                         | `deliverOTPToConsole` writes both a multi-line box to stdout (the original behaviour) AND a one-liner to `server/otp.log`. `server/otp.log` is gitignored. | When the foreground terminal is closed or the server runs in an IDE, OTPs were lost. The file is the safety net.                                                                     |
+| `fix(server): restore multi-line OTP box on stdout + keep one-liner in otp.log`               | Switched back from `process.stdout.write` to `console.log` for the box; kept the file append.                                                              | `console.log` is what makes the multi-line box render correctly in a TTY. The file still gets the one-liner.                                                                         |
+| `fix(client): import i18n JSON as namespace to match Vite's named-export transform`           | Changed `client/src/i18n/index.js` from `import en from ...` to `import * as en from ...` and wrapped resources in `en: { translation: en }`.              | Vite turns JSON into named exports (one per top-level key), so the default export was `undefined`, which broke all translations — pages were showing raw keys like `common.appName`. |
+| `fix(client): restore framer-motion variants and object property keys stripped during TS->JS` | Repaired `Home.jsx`, `Monitor.jsx`, `Button.jsx` (icon prop), `TokenGeneration.jsx` (navigate state object).                                               | The regex strip script over-aggressively removed `key:` pairs in object literals.                                                                                                    |
 
 ---
 
 ## Current API Routes (working)
 
-| Method | Path | Purpose |
-|---|---|---|
-| GET | `/api/health` | Liveness check |
-| POST | `/api/auth/citizen/send-otp` | Sends OTP to phone (logs to console + `server/otp.log`) |
-| POST | `/api/auth/citizen/verify` | Verifies OTP, upserts Citizen user (requires `name` on first login — returns `code: "NAME_REQUIRED"` if missing), returns JWT |
-| POST | `/api/auth/staff/register` | Register staff (bcrypt-hashed password; sets `passwordChangedAt`) |
-| POST | `/api/auth/staff/login` | Email + password → 2FA OTP |
-| POST | `/api/auth/staff/verify-otp` | 2FA OTP → JWT (includes `pwd` claim) |
-| GET | `/api/auth/me` | Returns the current user (Bearer token required; rejects tokens with stale `pwd` claim) |
-| GET | `/api/queue/status` | All services with current token counts (DB-driven) |
-| GET | `/api/queue/services` | Service list (id, nameEn, nameNe) |
-| GET | `/api/queue/:serviceId` | Single service queue status |
-| GET | `/api/admin/_debug/seed-check` | Row counts per table (dev only — will be removed in Step 19) |
-| GET | `/api/admin/_debug/services` | Services with office name (dev only) |
+| Method | Path                           | Purpose                                                                                                                       |
+| ------ | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/api/health`                  | Liveness check                                                                                                                |
+| POST   | `/api/auth/citizen/send-otp`   | Sends OTP to phone (logs to console + `server/otp.log`)                                                                       |
+| POST   | `/api/auth/citizen/verify`     | Verifies OTP, upserts Citizen user (requires `name` on first login — returns `code: "NAME_REQUIRED"` if missing), returns JWT |
+| POST   | `/api/auth/staff/register`     | Register staff (bcrypt-hashed password; sets `passwordChangedAt`)                                                             |
+| POST   | `/api/auth/staff/login`        | Email + password → 2FA OTP                                                                                                    |
+| POST   | `/api/auth/staff/verify-otp`   | 2FA OTP → JWT (includes `pwd` claim)                                                                                          |
+| GET    | `/api/auth/me`                 | Returns the current user (Bearer token required; rejects tokens with stale `pwd` claim)                                       |
+| GET    | `/api/queue/status`            | All services with current token counts (DB-driven)                                                                            |
+| GET    | `/api/queue/services`          | Service list (id, nameEn, nameNe)                                                                                             |
+| GET    | `/api/queue/:serviceId`        | Single service queue status                                                                                                   |
+| GET    | `/api/admin/_debug/seed-check` | Row counts per table (dev only — will be removed in Step 19)                                                                  |
+| GET    | `/api/admin/_debug/services`   | Services with office name (dev only)                                                                                          |
 
 ---
 
 ## Environment
 
 **PostgreSQL**
+
 - Local install (no Docker)
 - Database: `smart_service_flow`
 - Connection string in `server/.env`: `postgresql://postgres:sinmbf12345@localhost:5432/smartservice` — Prisma maps the `smartservice` slug to the actual `smart_service_flow` database name
 - Verification: `curl http://localhost:5000/api/admin/_debug/seed-check` (only works when server is running)
 
 **Server (port 5000)**
+
 - Dev: `cd server && npm run dev` (uses `node --watch`)
 - Seed: `cd server && npm run db:seed` (runs `node prisma/seed.js`)
 - Health: `curl http://localhost:5000/api/health`
@@ -292,10 +302,12 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 - OTP log: `server/otp.log` (auto-created, gitignored)
 
 **Client (port 5173+)**
+
 - Dev: `cd client && npm run dev`
 - Build: `npm run build` (Vite, no tsc)
 
 **Demo credentials (seeded)**
+
 - Citizen: `+9779841234567` (Siddhartha Shakya) — uses OTP flow
 - Staff: `staff@dotm.gov.np` (Ramesh Sharma) — uses email + 2FA OTP (password: not seeded; register a new one)
 - Admin: `admin@smartservice.gov.np`
@@ -361,3 +373,5 @@ curl -X POST http://localhost:5000/api/auth/citizen/send-otp \
 9. **Merge to `main`** when green.
 
 **Today's stopping point:** all of Increment 1 except JWT/bcrypt (Step 2) is in place. The next session should pick up with Step 2 immediately.
+
+# Previous session: claude --resume 71ba86f2-bc63-499b-8b7e-a64689a2c4c7
