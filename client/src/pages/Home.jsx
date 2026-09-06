@@ -332,7 +332,7 @@ const Home = () => {
             {user?.role !== "STAFF" && (
             <Link
               to="/token/services"
-              className="group md:col-span-1 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-[#08343f] hover:from-[#0f4c5c] hover:to-[#08343f] p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-lg shadow-primary-900/20 ring-1 ring-white/10 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+              className="group md:col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-[#08343f] hover:from-[#0f4c5c] hover:to-[#08343f] p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-lg shadow-primary-900/20 ring-1 ring-white/10 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
               style={{ color: "#ffffff" }}
             >
               <div className="relative">
