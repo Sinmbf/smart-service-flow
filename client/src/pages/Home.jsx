@@ -327,7 +327,7 @@ const Home = () => {
           </div>
 
           {/* Bento grid — first card spans 2 columns on md+ */}
-          <div className={`grid gap-4 sm:gap-5 ${user?.role === "STAFF" ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-2"}`}>
+          <div className={`grid gap-4 sm:gap-5 ${user?.role === "STAFF" ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-3 lg:grid-cols-3"}`}>
             {/* Primary — Get Token, normal */}
             {user?.role !== "STAFF" && (
             <Link
