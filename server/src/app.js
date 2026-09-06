@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
@@ -17,6 +18,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
 app.get("/api/health", (_req, res) => {
     res.status(200).json({
         success: true,
