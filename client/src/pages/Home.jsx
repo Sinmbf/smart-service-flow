@@ -422,89 +422,27 @@ const Home = () => {
               </div>
             </Link>
 
-            {/* QR — small accent card */}
+            {/* QR — small accent card (logged-in only, same structure as other cards) */}
+            {user && (
             <Link
               to="/token/scanner"
               className="group md:col-span-2 lg:col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-xl shadow-neutral-900/30 ring-1 ring-white/5 flex flex-col justify-between transition-all"
               style={{ color: "#ffffff" }}
             >
-              <div className="flex items-start gap-5 sm:gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center shadow-inner">
-                    <QrCode className="h-7 w-7 sm:h-9 sm:w-9" style={{ color: "#ffffff" }} />
+              <div>
+                <div className="flex items-center gap-3 mb-5 sm:mb-6">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/15 flex items-center justify-center">
+                    <QrCode className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: "#ffffff" }} />
                   </div>
+                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">{t("home.actions.counterDisplay")}</span>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <span
-                    className="text-xs font-bold uppercase tracking-[0.2em] block"
-                    style={{ color: "rgba(255,255,255,0.7)" }}
-                  >
-                    {t("home.actions.counterDisplay")}
-                  </span>
-                  <h3
-                    className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight mt-2"
-                    style={{ color: "#ffffff" }}
-                  >
-                    {t("home.displayQrCode")}
-                  </h3>
-                  <p
-                    className="mt-2 text-sm sm:text-base leading-relaxed"
-                    style={{ color: "rgba(255,255,255,0.85)" }}
-                  >
-                    {t("home.displayQrCodeDesc")}
-                  </p>
-                </div>
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight" style={{ color: "#ffffff" }}>{t("home.displayQrCode")}</h3>
+                <p className="mt-2 sm:mt-3 text-sm sm:text-base max-w-md text-white/90">{t("home.displayQrCodeDesc")}</p>
               </div>
-              <div
-                className="flex items-center gap-2 text-sm font-semibold mt-auto pt-6"
-                style={{ color: "#ffffff" }}
-              >
+              <div className="flex items-center gap-2 text-sm font-semibold mt-5 sm:mt-6" style={{ color: "#ffffff" }}>
                 <span>{t("home.openLabel")}</span>
                 <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </div>
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================
-          QR — minimal inline section
-          ============================================ */}
-      <section className="relative bg-white py-16 sm:py-20 lg:py-32">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:px-12 text-center">
-          <p className="text-xs font-bold text-primary-700 uppercase tracking-[0.2em] mb-4">
-            {t("home.walkIn")}
-          </p>
-          <h2 className="font-heading font-bold text-neutral-900 tracking-[-0.03em] leading-[1.05] text-4xl sm:text-5xl lg:text-6xl max-w-3xl mx-auto">
-            {t("home.qrHeadline")}
-          </h2>
-          <p className="mt-6 text-lg text-neutral-600 max-w-xl mx-auto">
-            {t("home.qrInstructions")}
-          </p>
-
-          <Card className="mt-12 max-w-sm mx-auto border border-dashed border-neutral-300 shadow-none">
-            <div className="p-4">
-              <div className="bg-white border border-neutral-200 rounded-2xl p-6">
-                <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-                    typeof window !== "undefined"
-                      ? window.location.origin + "/token/services"
-                      : ""
-                  )}&format=png`}
-                  alt="QR code for queue services"
-                  className="w-48 h-48 object-contain mx-auto"
-                  loading="lazy"
-                />
-              </div>
-              <p className="mt-6 text-sm text-neutral-500">
-                {t("home.qrScan")}
-              </p>
-            </div>
-          </Card>
-        </div>
-      </section>
-    </MainLayout>
-  );
-};
-
-export default Home;
+            )
+          }
