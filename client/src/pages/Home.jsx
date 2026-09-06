@@ -332,7 +332,7 @@ const Home = () => {
             {user?.role !== "STAFF" && (
             <Link
               to="/token/services"
-              className="group md:col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-[#08343f] hover:from-[#0f4c5c] hover:to-[#08343f] p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-lg shadow-primary-900/20 ring-1 ring-white/10 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+              className="group md:col-span-1 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-[#08343f] hover:from-[#0f4c5c] hover:to-[#08343f] p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-lg shadow-primary-900/20 ring-1 ring-white/10 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
               style={{ color: "#ffffff" }}
             >
               <div className="relative">
@@ -425,7 +425,7 @@ const Home = () => {
             {/* QR — small accent card */}
             <Link
               to="/token/scanner"
-              className="group md:col-span-2 lg:col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-xl shadow-neutral-900/30 ring-1 ring-white/5 flex flex-col justify-between transition-all"
+              className="group md:col-span-1 relative overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-xl shadow-neutral-900/30 ring-1 ring-white/5 flex flex-col justify-between transition-all"
               style={{ color: "#ffffff" }}
             >
               <div className="flex items-start gap-5 sm:gap-6">
