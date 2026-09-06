@@ -375,3 +375,8 @@ curl -X POST http://localhost:5000/api/auth/citizen/send-otp \
 **Today's stopping point:** all of Increment 1 except JWT/bcrypt (Step 2) is in place. The next session should pick up with Step 2 immediately.
 
 # Previous session: claude --resume 71ba86f2-bc63-499b-8b7e-a64689a2c4c7
+
+## Branch & Commit Log (Increment 3 — Step 8)
+- feature/step-8-token-qr (3.1 schema/migrate; 3.2 endpoint; 3.3 QR) → merged --no-ff to main 2026-09-06
+- Step 8: Token QR ✅ Done
+- Next: Step 9 / 3.4–3.6 (Check-in, no-show, cancel)
