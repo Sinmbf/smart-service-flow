@@ -422,17 +422,7 @@ const Home = () => {
               </div>
             </Link>
 
-{user?.role === "STAFF" ? (            {/* QR — staff card, same structure */}
-            <Link
-              to="/token/scanner"
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-xl shadow-neutral-900/30 ring-1 ring-white/5 flex flex-col justify-between transition-all"
-              style={{ color: "#ffffff" }}
-            >
-              <div>
-                <div className="flex items-center gap-3 mb-5 sm:mb-6">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/15 flex items-center justify-center">
-                    <QrCode className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: "#ffffff" }} />
-        ) : (            {/* QR — small accent card (citizen / no-login) */}
+            {/* QR — small accent card */}
             <Link
               to="/token/scanner"
               className="group md:col-span-2 lg:col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-xl shadow-neutral-900/30 ring-1 ring-white/5 flex flex-col justify-between transition-all"
@@ -445,22 +435,30 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] block" style={{ color: "rgba(255,255,255,0.7)" }}>{t("home.actions.counterDisplay")}</span>
-                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight mt-2" style={{ color: "#ffffff" }}>{t("home.displayQrCode")}</h3>
-                  <p className="mt-2 text-sm max-w-lg" style={{ color: "rgba(255,255,255,0.85)" }}>{t("home.displayQrCodeDesc")}</p>
+                  <span
+                    className="text-xs font-bold uppercase tracking-[0.2em] block"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    {t("home.actions.counterDisplay")}
+                  </span>
+                  <h3
+                    className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight mt-2"
+                    style={{ color: "#ffffff" }}
+                  >
+                    {t("home.displayQrCode")}
+                  </h3>
+                  <p
+                    className="mt-2 text-sm sm:text-base leading-relaxed"
+                    style={{ color: "rgba(255,255,255,0.85)" }}
+                  >
+                    {t("home.displayQrCodeDesc")}
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: "#ffffff" }}>
-                <span>{t("home.openLabel")}</span>
-                <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </div>
-            </Link>)}          </div>
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">{t("home.actions.counterDisplay")}</span>
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{t("home.displayQrCode")}</h3>
-                <p className="mt-2 text-sm text-white/90">{t("home.displayQrCodeDesc")}</p>
-              </div>
-              <div className="flex items-center gap-2 text-sm font-semibold mt-5 sm:mt-6 text-neutral-900">
+              <div
+                className="flex items-center gap-2 text-sm font-semibold mt-auto pt-6"
+                style={{ color: "#ffffff" }}
+              >
                 <span>{t("home.openLabel")}</span>
                 <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </div>
