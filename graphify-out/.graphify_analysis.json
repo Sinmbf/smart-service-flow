@@ -1,0 +1,464 @@
+{
+  "communities": {
+    "0": [
+      "client_src_auth_authcontext",
+      "client_src_auth_authcontext_authcontext",
+      "client_src_auth_authcontext_token_key",
+      "client_src_auth_authcontext_useauth",
+      "client_src_components_footer",
+      "client_src_components_footer_footer",
+      "client_src_components_languageswitcher",
+      "client_src_components_languageswitcher_languageswitcher",
+      "client_src_components_protectedroute",
+      "client_src_components_protectedroute_protectedroute",
+      "client_src_components_ui_card",
+      "client_src_hooks_useactivetoken",
+      "client_src_hooks_useactivetoken_useactivetoken",
+      "client_src_layouts_mainlayout",
+      "client_src_layouts_mainlayout_mainlayout",
+      "client_src_pages_auth_citizenotp_citizenotp",
+      "client_src_pages_auth_forgotpassword_forgotpassword",
+      "client_src_pages_auth_login_login",
+      "client_src_pages_auth_register_register",
+      "client_src_pages_auth_resetpassword_resetpassword",
+      "client_src_pages_auth_staffregister_staffregister",
+      "client_src_pages_auth_verifyphone_verifyphone",
+      "client_src_pages_dashboard",
+      "client_src_pages_dashboard_dashboard",
+      "client_src_pages_dashboard_status_label",
+      "client_src_pages_home",
+      "client_src_pages_home_home",
+      "client_src_pages_staffdashboard",
+      "client_src_pages_staffdashboard_staffdashboard",
+      "client_src_pages_token_index",
+      "client_src_pages_token_monitor_monitor",
+      "client_src_pages_token_qrscanner",
+      "client_src_pages_token_qrscanner_generateqrmatrix",
+      "client_src_pages_token_qrscanner_matrixtosvg",
+      "client_src_pages_token_qrscanner_qrscanner",
+      "client_src_pages_token_serviceselection",
+      "client_src_pages_token_serviceselection_serviceselection",
+      "client_src_pages_token_tokendisplay",
+      "client_src_pages_token_tokendisplay_status_fallback_label",
+      "client_src_pages_token_tokendisplay_tokendisplay",
+      "client_src_pages_token_tokengeneration",
+      "client_src_pages_token_tokengeneration_tokengeneration",
+      "client_src_routes_approutes",
+      "client_src_routes_approutes_scrolltotop",
+      "client_src_routes_approutes_smartredirect",
+      "client_src_services_tokens",
+      "client_src_services_tokens_canceltoken",
+      "client_src_services_tokens_fetchmyactivetokens",
+      "client_src_services_tokens_fetchtoken",
+      "client_src_services_tokens_generatetoken"
+    ],
+    "1": [
+      "server_src_app",
+      "server_src_db",
+      "server_src_db_adapter",
+      "server_src_db_prisma",
+      "server_src_middleware_auth",
+      "server_src_middleware_auth_requireauth",
+      "server_src_middleware_auth_requirerole",
+      "server_src_routes_admin_debug",
+      "server_src_routes_admin_debug_router",
+      "server_src_routes_auth_citizen",
+      "server_src_routes_auth_citizen_rationale_35",
+      "server_src_routes_auth_citizen_router",
+      "server_src_routes_auth_logout",
+      "server_src_routes_auth_logout_router",
+      "server_src_routes_auth_me",
+      "server_src_routes_auth_me_router",
+      "server_src_routes_auth_staff",
+      "server_src_routes_auth_staff_router",
+      "server_src_routes_queue",
+      "server_src_routes_queue_router",
+      "server_src_routes_services",
+      "server_src_routes_services_router",
+      "server_src_routes_staff_tokens",
+      "server_src_routes_staff_tokens_router",
+      "server_src_routes_tokens",
+      "server_src_routes_tokens_router",
+      "server_src_services_auth_jwt",
+      "server_src_services_auth_jwt_signtoken",
+      "server_src_services_auth_jwt_verifytoken",
+      "server_src_services_auth_otp",
+      "server_src_services_auth_otp_deliverotptoconsole",
+      "server_src_services_auth_otp_generateotp",
+      "server_src_services_auth_otpstore",
+      "server_src_services_auth_otpstore_deleteotp",
+      "server_src_services_auth_otpstore_getotpstore",
+      "server_src_services_auth_otpstore_isotpexpired",
+      "server_src_services_auth_otpstore_otpstore",
+      "server_src_services_auth_otpstore_storeotp",
+      "server_src_services_auth_otpstore_verifyotp"
+    ],
+    "2": [
+      "client_package",
+      "client_package_devdependencies",
+      "client_package_devdependencies_eslint",
+      "client_package_devdependencies_eslint_js",
+      "client_package_devdependencies_eslint_plugin_react_hooks",
+      "client_package_devdependencies_eslint_plugin_react_refresh",
+      "client_package_devdependencies_globals",
+      "client_package_devdependencies_vite",
+      "client_package_devdependencies_vite_plugin_pwa",
+      "client_package_devdependencies_vitejs_plugin_react",
+      "client_package_name",
+      "client_package_private",
+      "client_package_scripts",
+      "client_package_scripts_build",
+      "client_package_scripts_dev",
+      "client_package_scripts_lint",
+      "client_package_scripts_preview",
+      "client_package_type",
+      "client_package_version",
+      "eslint",
+      "eslint_js",
+      "eslint_plugin_react_hooks",
+      "eslint_plugin_react_refresh",
+      "globals",
+      "vite",
+      "vite_plugin_pwa",
+      "vitejs_plugin_react"
+    ],
+    "3": [
+      "client_src_components_ui_button",
+      "client_src_components_ui_button_button",
+      "client_src_components_ui_card_card",
+      "client_src_components_ui_index",
+      "client_src_components_ui_input",
+      "client_src_components_ui_input_input",
+      "client_src_components_ui_passwordinput",
+      "client_src_components_ui_passwordinput_passwordinput",
+      "client_src_layouts_authlayout",
+      "client_src_layouts_authlayout_authlayout",
+      "client_src_pages_auth_citizenotp",
+      "client_src_pages_auth_forgotpassword",
+      "client_src_pages_auth_index",
+      "client_src_pages_auth_login",
+      "client_src_pages_auth_register",
+      "client_src_pages_auth_resetpassword",
+      "client_src_pages_auth_staffregister",
+      "client_src_pages_auth_verifyphone",
+      "client_src_pages_staff_checkin",
+      "client_src_pages_staff_checkin_checkin",
+      "client_src_pages_token_monitor",
+      "client_src_services_api",
+      "client_src_services_api_api",
+      "client_src_services_health",
+      "client_src_services_health_checkhealth",
+      "client_src_services_staff",
+      "client_src_services_staff_checkintoken"
+    ],
+    "4": [
+      "axios",
+      "client_package_dependencies",
+      "client_package_dependencies_axios",
+      "client_package_dependencies_framer_motion",
+      "client_package_dependencies_i18next",
+      "client_package_dependencies_lucide_react",
+      "client_package_dependencies_qrcode",
+      "client_package_dependencies_react",
+      "client_package_dependencies_react_dom",
+      "client_package_dependencies_react_i18next",
+      "client_package_dependencies_react_router_dom",
+      "client_package_dependencies_tailwindcss",
+      "client_package_dependencies_tailwindcss_vite",
+      "client_package_dependencies_tanstack_react_query",
+      "framer_motion",
+      "i18next",
+      "lucide_react",
+      "qrcode",
+      "react",
+      "react_dom",
+      "react_i18next",
+      "react_router_dom",
+      "tailwindcss",
+      "tailwindcss_vite",
+      "tanstack_react_query"
+    ],
+    "5": [
+      "bcrypt",
+      "cors",
+      "dotenv",
+      "express",
+      "helmet",
+      "jsonwebtoken",
+      "pg",
+      "prisma",
+      "prisma_adapter_pg",
+      "prisma_client",
+      "server_package_dependencies",
+      "server_package_dependencies_bcrypt",
+      "server_package_dependencies_cors",
+      "server_package_dependencies_dotenv",
+      "server_package_dependencies_express",
+      "server_package_dependencies_helmet",
+      "server_package_dependencies_jsonwebtoken",
+      "server_package_dependencies_pg",
+      "server_package_dependencies_prisma",
+      "server_package_dependencies_prisma_adapter_pg",
+      "server_package_dependencies_prisma_client"
+    ],
+    "6": [
+      "client_src_components_officeinfoblock",
+      "client_src_components_officeinfoblock_officeinfoblock",
+      "client_src_components_requireddocumentslist",
+      "client_src_components_requireddocumentslist_requireddocumentslist",
+      "client_src_components_servicecard",
+      "client_src_components_servicecard_servicecard",
+      "client_src_components_serviceroadmap",
+      "client_src_components_serviceroadmap_serviceroadmap",
+      "client_src_components_serviceroadmap_status_styles",
+      "client_src_components_serviceroadmap_statusicon",
+      "client_src_components_ui_skeleton",
+      "client_src_components_ui_skeleton_skeleton",
+      "client_src_pages_services_servicedetail",
+      "client_src_pages_services_servicedetail_servicedetail",
+      "client_src_pages_services_servicelist",
+      "client_src_pages_services_servicelist_servicelist",
+      "client_src_services_services",
+      "client_src_services_services_fetchservicebyid",
+      "client_src_services_services_fetchservices"
+    ],
+    "7": [
+      "server_package",
+      "server_package_author",
+      "server_package_description",
+      "server_package_keywords",
+      "server_package_license",
+      "server_package_main",
+      "server_package_name",
+      "server_package_scripts",
+      "server_package_scripts_db_migrate",
+      "server_package_scripts_db_migrate_create",
+      "server_package_scripts_db_push",
+      "server_package_scripts_db_seed",
+      "server_package_scripts_dev",
+      "server_package_scripts_postinstall",
+      "server_package_scripts_start",
+      "server_package_scripts_test",
+      "server_package_type",
+      "server_package_version"
+    ],
+    "8": [
+      "server_src_app_app",
+      "server_src_dbcheck",
+      "server_src_dbcheck_checkdatabaseconnection",
+      "server_src_server",
+      "server_src_server_shutdown",
+      "server_src_server_start",
+      "server_src_services_queue_timeout",
+      "server_src_services_queue_timeout_getintervalms",
+      "server_src_services_queue_timeout_setintervalms",
+      "server_src_services_queue_timeout_startnoshowsweeper",
+      "server_src_services_queue_timeout_stopnoshowsweeper",
+      "server_src_services_queue_timeout_sweepnoshows"
+    ],
+    "9": [
+      "package",
+      "package_author",
+      "package_description",
+      "package_keywords",
+      "package_license",
+      "package_main",
+      "package_name",
+      "package_scripts",
+      "package_scripts_test",
+      "package_type",
+      "package_version"
+    ],
+    "10": [
+      "client_src_app",
+      "client_src_app_app",
+      "client_src_auth_authcontext_authprovider",
+      "client_src_i18n_index",
+      "client_src_i18n_index_savedlanguage",
+      "client_src_main",
+      "client_src_routes_approutes_approutes"
+    ],
+    "11": [
+      "server_prisma_seed",
+      "server_prisma_seed_adapter",
+      "server_prisma_seed_main",
+      "server_prisma_seed_prisma"
+    ],
+    "12": [
+      "client_eslint_config"
+    ],
+    "13": [
+      "client_src_vite_env"
+    ],
+    "14": [
+      "client_vite_config"
+    ],
+    "15": [
+      "server_prisma_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.1110204081632653,
+    "1": 0.1241565452091768,
+    "2": 0.07407407407407407,
+    "3": 0.23646723646723647,
+    "4": 0.08,
+    "5": 0.09523809523809523,
+    "6": 0.18128654970760233,
+    "7": 0.1111111111111111,
+    "8": 0.2727272727272727,
+    "9": 0.18181818181818182,
+    "10": 0.3333333333333333,
+    "11": 0.5,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0
+  },
+  "gods": [
+    {
+      "id": "client_src_auth_authcontext_useauth",
+      "label": "useAuth()",
+      "degree": 25
+    },
+    {
+      "id": "client_src_components_ui_card_card",
+      "label": "Card()",
+      "degree": 18
+    },
+    {
+      "id": "client_src_layouts_mainlayout_mainlayout",
+      "label": "MainLayout()",
+      "degree": 13
+    },
+    {
+      "id": "client_src_components_ui_button_button",
+      "label": "Button()",
+      "degree": 12
+    },
+    {
+      "id": "server_src_db_prisma",
+      "label": "prisma",
+      "degree": 12
+    },
+    {
+      "id": "client_src_services_api_api",
+      "label": "api",
+      "degree": 11
+    },
+    {
+      "id": "client_src_hooks_useactivetoken_useactivetoken",
+      "label": "useActiveToken()",
+      "degree": 9
+    },
+    {
+      "id": "server_package_scripts",
+      "label": "scripts",
+      "degree": 9
+    },
+    {
+      "id": "client_src_layouts_authlayout_authlayout",
+      "label": "AuthLayout()",
+      "degree": 8
+    },
+    {
+      "id": "client_src_services_tokens_fetchmyactivetokens",
+      "label": "fetchMyActiveTokens()",
+      "degree": 7
+    }
+  ],
+  "surprises": [
+    {
+      "source": "SmartRedirect()",
+      "target": "useAuth()",
+      "source_files": [
+        "client/src/routes/AppRoutes.jsx",
+        "client/src/auth/AuthContext.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "peripheral node `SmartRedirect()` unexpectedly reaches hub `useAuth()`"
+    },
+    {
+      "source": "ServiceSelection()",
+      "target": "fetchServices()",
+      "source_files": [
+        "client/src/pages/token/ServiceSelection.jsx",
+        "client/src/services/services.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "LanguageSwitcher()",
+      "target": "useAuth()",
+      "source_files": [
+        "client/src/components/LanguageSwitcher.jsx",
+        "client/src/auth/AuthContext.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "ProtectedRoute()",
+      "target": "useAuth()",
+      "source_files": [
+        "client/src/components/ProtectedRoute.jsx",
+        "client/src/auth/AuthContext.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "useActiveToken()",
+      "target": "useAuth()",
+      "source_files": [
+        "client/src/hooks/useActiveToken.js",
+        "client/src/auth/AuthContext.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `dependencies` connect `dependencies` to `devDependencies`?",
+      "why": "High betweenness centrality (0.026) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `dependencies` connect `dependencies` to `server/package.json`?",
+      "why": "High betweenness centrality (0.016) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `AuthContext`, `TOKEN_KEY`, `STATUS_LABEL` to the rest of the system?",
+      "why": "73 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `AppRoutes.jsx` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.1110204081632653 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `app.js` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.1241565452091768 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `devDependencies` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07407407407407407 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `dependencies` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

@@ -4,9 +4,14 @@ import { motion } from "framer-motion";
 import { Users, Zap, Lock, ArrowRight, Check, QrCode, Activity, ShieldCheck, Clock, Sparkles, ChevronRight, ArrowUpRight } from "lucide-react";
 import MainLayout from "../layouts/MainLayout";
 import Card from "../components/ui/Card";
+import { useAuth } from "../auth/AuthContext";
+import { useActiveToken } from "../hooks/useActiveToken";
 
 const Home = () => {
   const { t } = useTranslation();
+  const { isAuthenticated, user } = useAuth();
+  const { activeToken } = useActiveToken();
+  const ctaHref = user?.role === "STAFF" ? "/staff/dashboard" : (activeToken ? `/token/display/${activeToken.id}` : "/token/services");
 
   return (
     <MainLayout>
@@ -70,11 +75,13 @@ const Home = () => {
               {/* Single direct CTA — no email field */}
               <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 justify-center lg:justify-start">
                 <Link
-                  to="/token/services"
+                  to={ctaHref}
                   className="inline-flex items-center justify-center gap-2 min-h-[56px] px-8 bg-primary-700 hover:bg-primary-800 text-white font-semibold rounded-2xl shadow-sm hover:shadow-md transition-all group touch-manipulation"
                   style={{ color: "#ffffff" }}
                 >
-                  <span>{t("home.hero.getToken")}</span>
+                  <span>
+                    {user?.role === "STAFF" ? "View Dashboard" : (activeToken ? t("home.hero.viewMyToken", "View my Token") : t("home.hero.getToken"))}
+                  </span>
                   <ArrowUpRight className="h-5 w-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
                 <Link
@@ -320,11 +327,12 @@ const Home = () => {
           </div>
 
           {/* Bento grid — first card spans 2 columns on md+ */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
-            {/* Primary — Get Token, large */}
+          <div className={`grid gap-4 sm:gap-5 ${user?.role === "STAFF" ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-3"}`}>
+            {/* Primary — Get Token, large (hidden for staff) */}
+            {user?.role !== "STAFF" && (
             <Link
               to="/token/services"
-              className="group md:col-span-2 relative overflow-hidden rounded-3xl bg-primary-700 hover:bg-primary-800 p-6 sm:p-8 lg:p-10 min-h-[240px] sm:min-h-[280px] flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
+              className="group md:col-span-1 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-[#08343f] hover:from-[#0f4c5c] hover:to-[#08343f] p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-lg shadow-primary-900/20 ring-1 ring-white/10 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
               style={{ color: "#ffffff" }}
             >
               <div className="relative">
@@ -358,11 +366,12 @@ const Home = () => {
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
+            )}
 
             {/* View Live Queue */}
             <Link
               to="/token/monitor"
-              className="group relative overflow-hidden rounded-3xl bg-white border border-neutral-200 hover:border-neutral-300 p-6 sm:p-8 min-h-[240px] sm:min-h-[280px] flex flex-col justify-between transition-all hover:shadow-md"
+              className="group relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-sm border border-neutral-200/80 hover:border-neutral-300 hover:shadow-xl hover:shadow-neutral-200/60 p-6 sm:p-8 min-h-[260px] sm:min-h-[300px] flex flex-col justify-between transition-all hover:shadow-md"
             >
               <div>
                 <div className="flex items-center gap-3 mb-5 sm:mb-6">
@@ -389,7 +398,7 @@ const Home = () => {
             {/* Staff Login */}
             <Link
               to="/login"
-              className="group relative overflow-hidden rounded-3xl bg-white border border-neutral-200 hover:border-neutral-300 p-6 sm:p-8 min-h-[240px] sm:min-h-[280px] flex flex-col justify-between transition-all hover:shadow-md"
+              className="group relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-sm border border-neutral-200/80 hover:border-neutral-300 hover:shadow-xl hover:shadow-neutral-200/60 p-6 sm:p-8 min-h-[260px] sm:min-h-[300px] flex flex-col justify-between transition-all hover:shadow-md"
             >
               <div>
                 <div className="flex items-center gap-3 mb-5 sm:mb-6">
@@ -416,36 +425,38 @@ const Home = () => {
             {/* QR — small accent card */}
             <Link
               to="/token/scanner"
-              className="group md:col-span-2 relative overflow-hidden rounded-3xl bg-neutral-900 hover:bg-neutral-800 p-6 sm:p-8 lg:p-10 min-h-[240px] sm:min-h-[280px] flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6 transition-all"
+              className="group md:col-span-1 relative overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-xl shadow-neutral-900/30 ring-1 ring-white/5 flex flex-col justify-between transition-all"
               style={{ color: "#ffffff" }}
             >
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center">
-                  <QrCode className="h-8 w-8 sm:h-10 sm:w-10" style={{ color: "#ffffff" }} />
+              <div className="flex items-start gap-5 sm:gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center shadow-inner">
+                    <QrCode className="h-7 w-7 sm:h-9 sm:w-9" style={{ color: "#ffffff" }} />
+                  </div>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span
+                    className="text-xs font-bold uppercase tracking-[0.2em] block"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    {t("home.actions.counterDisplay")}
+                  </span>
+                  <h3
+                    className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight mt-2"
+                    style={{ color: "#ffffff" }}
+                  >
+                    {t("home.displayQrCode")}
+                  </h3>
+                  <p
+                    className="mt-2 text-sm sm:text-base leading-relaxed"
+                    style={{ color: "rgba(255,255,255,0.85)" }}
+                  >
+                    {t("home.displayQrCodeDesc")}
+                  </p>
                 </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <span
-                  className="text-xs font-bold uppercase tracking-[0.2em]"
-                  style={{ color: "rgba(255,255,255,0.7)" }}
-                >
-                  {t("home.actions.counterDisplay")}
-                </span>
-                <h3
-                  className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight mt-2"
-                  style={{ color: "#ffffff" }}
-                >
-                  {t("home.displayQrCode")}
-                </h3>
-                <p
-                  className="mt-2 text-sm max-w-lg"
-                  style={{ color: "rgba(255,255,255,0.85)" }}
-                >
-                  {t("home.displayQrCodeDesc")}
-                </p>
-              </div>
               <div
-                className="flex items-center gap-2 text-sm font-semibold"
+                className="flex items-center gap-2 text-sm font-semibold mt-auto pt-6"
                 style={{ color: "#ffffff" }}
               >
                 <span>{t("home.openLabel")}</span>

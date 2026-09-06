@@ -61,9 +61,9 @@ const StaffRegister = () => {
     try {
       const response = await axios.post("/auth/staff/register", {
         name: formData.name,
-        email,
-        password,
-        employeeId,
+        email: formData.email,
+        password: formData.password,
+        employeeId: formData.employeeId,
       });
 
       setServerMessage(response.data.message);
@@ -115,7 +115,7 @@ const StaffRegister = () => {
             error={errors.name}
             autoComplete="name"
             placeholder="Ram Tamang"
-            icon={<UserIcon className="h-5 w-5" />}
+            icon={<User className="h-5 w-5" />}
           />
 
           <Input

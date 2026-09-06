@@ -6,14 +6,16 @@ import { Mail, ArrowRight } from "lucide-react";
 import axios from "../../services/api";
 import AuthLayout from "../../layouts/AuthLayout";
 import { Button, Input, PasswordInput, Card } from "../../components/ui";
+import { useAuth } from "../../auth/AuthContext";
 
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    rememberMe,
+    rememberMe: false,
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +54,7 @@ const Login = () => {
     try {
       await axios.post("/auth/staff/login", {
         email: formData.email,
-        password,
+        password: formData.password,
       });
 
       setPendingEmail(formData.email);
@@ -82,8 +84,8 @@ const Login = () => {
         otp,
       });
 
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      // Hand off to AuthContext instead of raw localStorage
+      login(response.data.token, response.data.user);
 
       console.log("✅ Staff authenticated:", response.data.user);
       navigate("/token/scanner");

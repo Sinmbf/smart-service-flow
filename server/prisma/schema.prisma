@@ -61,6 +61,8 @@ model User {
   role              Role     @default(CITIZEN)
   preferredLanguage Language @default(EN)
   isActive          Boolean  @default(true)
+  lastLoginAt       DateTime?
+  passwordChangedAt DateTime? // bump on every password change; embeds in JWT to invalidate stale sessions
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -148,7 +150,7 @@ model Token {
   id              String      @id @default(cuid())
   tokenNumber     String      @unique // e.g. "A001" — human-readable
   userId          String
-  user            User        @relation(fields: [userId], references: [id])
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   serviceId       String
   service         Service     @relation(fields: [serviceId], references: [id])
   currentStageId  String
@@ -162,6 +164,7 @@ model Token {
   completedAt     DateTime?
   cancelledAt     DateTime?
   notes           String?
+  qrPayload       String?     // base64 QR content
 
   durations       ServiceDurationHistory[]
   priorityRequests PriorityRequest[]
