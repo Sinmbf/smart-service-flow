@@ -1,7 +1,20 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import { Users, Zap, Lock, ArrowRight, Check, QrCode, Activity, ShieldCheck, Clock, Sparkles, ChevronRight, ArrowUpRight } from "lucide-react";
+import {
+  Users,
+  Zap,
+  Lock,
+  ArrowRight,
+  Check,
+  QrCode,
+  Activity,
+  ShieldCheck,
+  Clock,
+  Sparkles,
+  ChevronRight,
+  ArrowUpRight,
+} from "lucide-react";
 import MainLayout from "../layouts/MainLayout";
 import Card from "../components/ui/Card";
 import { useAuth } from "../auth/AuthContext";
@@ -11,7 +24,12 @@ const Home = () => {
   const { t } = useTranslation();
   const { isAuthenticated, user } = useAuth();
   const { activeToken } = useActiveToken();
-  const ctaHref = user?.role === "STAFF" ? "/staff/dashboard" : (activeToken ? `/token/display/${activeToken.id}` : "/token/services");
+  const ctaHref =
+    user?.role === "STAFF"
+      ? "/staff/dashboard"
+      : activeToken
+        ? `/token/display/${activeToken.id}`
+        : "/token/services";
 
   return (
     <MainLayout>
@@ -32,15 +50,16 @@ const Home = () => {
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-40 lg:hidden"
           style={{
-            background:
-              "linear-gradient(180deg, #EAF4F5 0%, transparent 100%)",
+            background: "linear-gradient(180deg, #EAF4F5 0%, transparent 100%)",
           }}
           aria-hidden="true"
         />
         {/* Floating blur orbs */}
         <div
           className="pointer-events-none absolute top-32 right-32 w-72 h-72 rounded-full opacity-20 blur-3xl hidden lg:block"
-          style={{ background: "radial-gradient(circle, #0F4C5C 0%, transparent 70%)" }}
+          style={{
+            background: "radial-gradient(circle, #0F4C5C 0%, transparent 70%)",
+          }}
           aria-hidden="true"
         />
 
@@ -62,7 +81,9 @@ const Home = () => {
               {/* Massive editorial headline */}
               <h1 className="mt-6 sm:mt-8 font-heading font-bold text-neutral-900 tracking-[-0.04em] leading-[0.95] text-[2.5rem] sm:text-6xl lg:text-[5.5rem] xl:text-[6.5rem]">
                 <span className="block">{t("common.queue")}</span>
-                <span className="block text-primary-700 italic">{t("common.onlinePeriod")}</span>
+                <span className="block text-primary-700 italic">
+                  {t("common.onlinePeriod")}
+                </span>
                 <span className="block text-neutral-900 text-2xl sm:text-4xl lg:text-5xl mt-2 lg:mt-4 font-semibold tracking-tight">
                   {t("common.visitWhenReady")}
                 </span>
@@ -80,7 +101,11 @@ const Home = () => {
                   style={{ color: "#ffffff" }}
                 >
                   <span>
-                    {user?.role === "STAFF" ? "View Dashboard" : (activeToken ? t("home.hero.viewMyToken", "View my Token") : t("home.hero.getToken"))}
+                    {user?.role === "STAFF"
+                      ? "View Dashboard"
+                      : activeToken
+                        ? t("home.hero.viewMyToken", "View my Token")
+                        : t("home.hero.getToken")}
                   </span>
                   <ArrowUpRight className="h-5 w-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
@@ -101,7 +126,10 @@ const Home = () => {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-300 to-emerald-600 border-2 border-white"></div>
                 </div>
                 <p className="text-left">
-                  <span className="font-semibold text-neutral-900">12,400+</span> {t("home.hero.tokensIssued")}
+                  <span className="font-semibold text-neutral-900">
+                    12,400+
+                  </span>{" "}
+                  {t("home.hero.tokensIssued")}
                 </p>
               </div>
             </div>
@@ -113,7 +141,8 @@ const Home = () => {
                 <div
                   className="absolute -top-4 -left-4 sm:-top-6 sm:-left-8 w-32 h-40 sm:w-44 sm:h-56 rounded-3xl shadow-2xl rotate-[-6deg] hidden sm:block"
                   style={{
-                    background: "linear-gradient(160deg, #0F4C5C 0%, #1F6F7A 100%)",
+                    background:
+                      "linear-gradient(160deg, #0F4C5C 0%, #1F6F7A 100%)",
                   }}
                   aria-hidden="true"
                 >
@@ -122,11 +151,17 @@ const Home = () => {
                       <p className="text-[10px] font-semibold text-primary-200 uppercase tracking-widest">
                         {t("home.hero.counter")}
                       </p>
-                      <p className="text-base sm:text-lg font-bold mt-2">{t("home.hero.counter")} 04</p>
+                      <p className="text-base sm:text-lg font-bold mt-2">
+                        {t("home.hero.counter")} 04
+                      </p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-primary-200 uppercase">{t("home.hero.nowServing")}</p>
-                      <p className="text-2xl sm:text-3xl font-bold tracking-tight">A024</p>
+                      <p className="text-[10px] text-primary-200 uppercase">
+                        {t("home.hero.nowServing")}
+                      </p>
+                      <p className="text-2xl sm:text-3xl font-bold tracking-tight">
+                        A024
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -142,12 +177,16 @@ const Home = () => {
                         <p className="text-sm font-bold text-neutral-900 truncate">
                           {t("home.hero.cardIssuer")}
                         </p>
-                        <p className="text-xs text-neutral-500 truncate">citizen@gov.example</p>
+                        <p className="text-xs text-neutral-500 truncate">
+                          citizen@gov.example
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 flex-shrink-0">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                      <span className="text-xs font-semibold text-emerald-700">{t("home.hero.active")}</span>
+                      <span className="text-xs font-semibold text-emerald-700">
+                        {t("home.hero.active")}
+                      </span>
                     </div>
                   </div>
 
@@ -172,7 +211,10 @@ const Home = () => {
                           {t("home.hero.cardService1")}
                         </span>
                       </div>
-                      <Check className="h-4 w-4 text-neutral-900 flex-shrink-0" strokeWidth={3} />
+                      <Check
+                        className="h-4 w-4 text-neutral-900 flex-shrink-0"
+                        strokeWidth={3}
+                      />
                     </div>
                     <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-neutral-200">
                       <div className="flex items-center gap-2.5 min-w-0">
@@ -246,8 +288,8 @@ const Home = () => {
                 hidden: { opacity: 0 },
                 visible: {
                   opacity: 1,
-                  transition: { staggerChildren: 0.1 }
-                }
+                  transition: { staggerChildren: 0.1 },
+                },
               }}
             >
               {[
@@ -276,7 +318,7 @@ const Home = () => {
                     key={i}
                     variants={{
                       hidden: { opacity: 0 },
-                      visible: { opacity: 1 }
+                      visible: { opacity: 1 },
                     }}
                     className="group relative bg-white border border-neutral-200 hover:border-neutral-300 rounded-3xl p-5 sm:p-7 lg:p-8 transition-all hover:shadow-md"
                   >
@@ -327,45 +369,46 @@ const Home = () => {
           </div>
 
           {/* Bento grid — first card spans 2 columns on md+ */}
-          <div className={`grid gap-4 sm:gap-5 ${user?.role === "STAFF" ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-3 lg:grid-cols-3"}`}>
+          <div
+            className={`grid gap-4 sm:gap-5 ${user?.role === "STAFF" ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-3 lg:grid-cols-3"}`}
+          >
             {/* Primary — Get Token, normal */}
             {user?.role !== "STAFF" && (
-            <Link
-              to="/token/services"
-              className="group md:col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-[#08343f] hover:from-[#0f4c5c] hover:to-[#08343f] p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-lg shadow-primary-900/20 ring-1 ring-white/10 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
-              style={{ color: "#ffffff" }}
-            >
-              <div className="relative">
-                <div className="flex items-center gap-3 mb-5 sm:mb-6">
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/15 flex items-center justify-center">
-                    <Users className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: "#ffffff" }} />
-                  </div>
-                  <span
-                    className="text-xs font-bold uppercase tracking-[0.2em] text-white/80"
-                  >
-                    {t("home.citizenLabel")}
-                  </span>
-                </div>
-                <h3
-                  className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight"
-                  style={{ color: "#ffffff" }}
-                >
-                  {t("home.getQueueToken")}
-                </h3>
-                <p
-                  className="mt-2 sm:mt-3 text-sm sm:text-base max-w-md text-white/90"
-                >
-                  {t("home.getQueueTokenDesc")}
-                </p>
-              </div>
-              <div
-                className="relative flex items-center gap-2 text-sm font-semibold mt-5 sm:mt-6"
+              <Link
+                to="/token/services"
+                className="group md:col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-[#08343f] hover:from-[#0f4c5c] hover:to-[#08343f] p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-lg shadow-primary-900/20 ring-1 ring-white/10 flex flex-col justify-between shadow-sm hover:shadow-md transition-all"
                 style={{ color: "#ffffff" }}
               >
-                <span>{t("home.startQueue")}</span>
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-5 sm:mb-6">
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/15 flex items-center justify-center">
+                      <Users
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        style={{ color: "#ffffff" }}
+                      />
+                    </div>
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">
+                      {t("home.citizenLabel")}
+                    </span>
+                  </div>
+                  <h3
+                    className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight"
+                    style={{ color: "#ffffff" }}
+                  >
+                    {t("home.getQueueToken")}
+                  </h3>
+                  <p className="mt-2 sm:mt-3 text-sm sm:text-base max-w-md text-white/90">
+                    {t("home.getQueueTokenDesc")}
+                  </p>
+                </div>
+                <div
+                  className="relative flex items-center gap-2 text-sm font-semibold mt-5 sm:mt-6"
+                  style={{ color: "#ffffff" }}
+                >
+                  <span>{t("home.startQueue")}</span>
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
             )}
 
             {/* View Live Queue */}
@@ -425,13 +468,16 @@ const Home = () => {
             {/* QR — small accent card */}
             <Link
               to="/token/scanner"
-              className="group ${user?.role==='STAFF'?"md:col-span-1":"md:col-span-2 lg:col-span-2"} relative overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-xl shadow-neutral-900/30 ring-1 ring-white/5 flex flex-col justify-between transition-all"
+              className={`group ${user?.role === "STAFF" ? "md:col-span-1" : "md:col-span-2 lg:col-span-2"} relative overflow-hidden rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 p-6 sm:p-8 lg:p-10 min-h-[260px] sm:min-h-[300px] shadow-xl shadow-neutral-900/30 ring-1 ring-white/5 flex flex-col justify-between transition-all`}
               style={{ color: "#ffffff" }}
             >
               <div className="flex items-start gap-5 sm:gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center shadow-inner">
-                    <QrCode className="h-7 w-7 sm:h-9 sm:w-9" style={{ color: "#ffffff" }} />
+                    <QrCode
+                      className="h-7 w-7 sm:h-9 sm:w-9"
+                      style={{ color: "#ffffff" }}
+                    />
                   </div>
                 </div>
                 <div className="min-w-0 flex-1">
@@ -489,7 +535,7 @@ const Home = () => {
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
                     typeof window !== "undefined"
                       ? window.location.origin + "/token/services"
-                      : ""
+                      : "",
                   )}&format=png`}
                   alt="QR code for queue services"
                   className="w-48 h-48 object-contain mx-auto"
