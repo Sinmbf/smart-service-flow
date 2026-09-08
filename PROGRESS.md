@@ -2,7 +2,22 @@
 
 > **Purpose:** Track the project's status against `complete_project_roadmap.md` and `plans/implementation_plan.md`. Updated after every major change so you can resume work in any session.
 
-> **Last updated:** 2026-09-05 (end of session 5 — Step 4 merged; Increment 1 closed)
+> **Last updated:** 2026-09-08 (session — post-commit 8c3953a; all branches cleaned; codebase audited)
+
+---
+
+## Actual Progress vs Roadmap (post-audit 2026-09-08)
+
+- **Increment 1 (DB + Auth + JWT):** CODE PRESENT (`server/src/db.js`, Prisma schema, seed, `auth/` routes, `AuthContext.jsx`). `PROGRESS.md` claims done; verified.
+- **Steps 2–7 (Service info / Roadmap / Components):** CODE PRESENT (`ServiceRoadmap.jsx`, `ServiceDetail.jsx`, `RequiredDocumentsList.jsx`, `/api/services` endpoints). Verified.
+- **Step 8 (Token QR / Generation):** FULLY PRESENT (`client/src/pages/token/TokenGeneration.jsx`, `Monitor.jsx`, `QRScanner.jsx`, `TokenDisplay.jsx`, `server/src/routes/tokens.js`, `useActiveToken.js`, `queryKeys.jsx`). Verified.
+- **Step 9 (Check-in / No-show / Cancel):** PARTIALLY PRESENT — `client/src/pages/staff/CheckIn.jsx` exists; dedicated token cancel/no-show page not in `pages/token/`; server cancel endpoint needs verification.
+- **Branch state:** Only `main` exists (local + remote). Previous feature branches (`step-2-jwt-auth`, `step-9-checkin`, `step-8-token-qr`, etc.) deleted 2026-09-08.
+- **Graph update:** `graphify update .` NOT YET RUN (did after branch cleanup).
+- **Discrepancies noted:** `PROGRESS.md` claims "plain JS" — true; mentions TypeScript context in CLAUDE.md but code is `.jsx`. Token auth still base64 per CLAUDE.md (not full JWT in production). DB is real (PostgreSQL + Prisma) but `server/src/routes/queue.js` may still have legacy in-memory fallbacks.
+
+### Next
+**Continue Step 9:** complete check-in/no-show/cancel UI + endpoints; verify `routes/tokens.js` covers cancel/no-show; update `PROGRESS.md` after Step 9 close; run `graphify update .`.
 
 ---
 

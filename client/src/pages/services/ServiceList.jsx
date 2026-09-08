@@ -20,7 +20,10 @@ const ServiceList = () => {
       setIsLoading(true);
       setError("");
       try {
-        const data = await fetchServices({ search: search.trim(), lang: i18n.language });
+        const data = await fetchServices({
+          search: search.trim(),
+          lang: i18n.language,
+        });
         if (!cancelled) setServices(data.services || []);
       } catch {
         if (!cancelled) setError(t("services.list.error"));
@@ -59,7 +62,10 @@ const ServiceList = () => {
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mb-6" role="alert">
+          <div
+            className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mb-6"
+            role="alert"
+          >
             {error}
           </div>
         )}
