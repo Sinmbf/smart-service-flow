@@ -137,6 +137,7 @@ const Monitor = () => {
               return (
                 <motion.div
                   key={s.id}
+                  className={statusColor}
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
