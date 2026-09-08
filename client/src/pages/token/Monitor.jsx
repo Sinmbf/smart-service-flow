@@ -133,6 +133,7 @@ const Monitor = () => {
           >
             {services.map((s) => {
               const load = getLoadColor(s.waiting);
+              const statusColor = getStatusColor(s.status); // ponytail: apply status color
               return (
                 <motion.div
                   key={s.id}
