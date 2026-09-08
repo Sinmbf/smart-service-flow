@@ -60,3 +60,4 @@ export function stopNoShowSweeper() {
 }
 
 export { setIntervalMs, getIntervalMs, sweepNoShows };
+// ponytail: no-show grace sweep per policy
