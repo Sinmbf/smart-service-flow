@@ -107,3 +107,6 @@ router.get("/:serviceId", async (req, res) => {
 });
 
 export default router;
+// POST assign/release plain JS
+import { assign, release, counters } from '../services/counter.js';
+// POST /api/queue/:service/counter - assign/release

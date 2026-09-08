@@ -220,3 +220,5 @@ const Monitor = () => {
 
 export default Monitor;
 
+<div>Counter JSX</div>
+<div>Counter: {counters.get(service)}</div>
