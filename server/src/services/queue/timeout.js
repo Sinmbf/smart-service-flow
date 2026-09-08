@@ -19,7 +19,7 @@ function getIntervalMs() {
 
 async function sweepNoShows({ now = new Date() } = {}) {
   // Configurable grace per file policy (counter-level check-in); default 3m
-  const minutes = Number(process.env.NO_SHOW_MINUTES || 3);
+  const minutes = Number(process.env.NO_SHOW_MINUTES || 3); // ponytail: real grace sweep
   if (!Number.isFinite(minutes) || minutes <= 0) return 0;
 
   const cutoff = new Date(now.getTime() - minutes * 60_000);
