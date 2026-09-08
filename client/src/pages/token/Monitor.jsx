@@ -48,7 +48,7 @@ const Monitor = () => {
   }, []);
 
   // Density-based color logic for queue load (not random teal)
-  const getStatusColor = (status) => { if (status === "waiting") return "bg-blue-500"; if (status === "checked_in") return "bg-green-500"; if (status === "skipped") return "bg-red-500"; return "bg-blue-500"; }; // ponytail: status colors per request
+  const getStatusColor = (status) => { if (status === "GENERATED" || status === "waiting") return "bg-blue-500"; if (status === "CHECKED_IN" || status === "checked_in") return "bg-green-500"; if (status === "SKIPPED" || status === "skipped") return "bg-red-500"; return "bg-blue-500"; }; // ponytail: status colors per request
   const getLoadColor = (waiting) => {
     if (waiting < 15) return { dot: "bg-emerald-500", label: t("token.monitor.queueLoad.low") };
     if (waiting < 30) return { dot: "bg-amber-500", label: t("token.monitor.queueLoad.medium") };
