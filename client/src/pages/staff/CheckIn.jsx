@@ -7,6 +7,7 @@ import Button from "../../components/ui/Button";
 import { checkInToken } from "../../services/staff";
 
 const CheckIn = () => {
+  // ponytail: counter-level check-in per counter_level_checkin_no_show_queue_policy.md
   const { t } = useTranslation();
   const [identifier, setIdentifier] = useState("");
   const [isLoading, setIsLoading] = useState(false);
