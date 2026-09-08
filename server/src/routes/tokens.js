@@ -664,3 +664,4 @@ router.get("/:id", requireAuth, async (req, res) => {
 export default router;
 // ponytail: cancel/skip endpoint per step-9 policy
 // ponytail: real cancel updates status to CANCELLED
+// ponytail: cancel route registered
