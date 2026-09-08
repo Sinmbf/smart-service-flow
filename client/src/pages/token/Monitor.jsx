@@ -19,7 +19,7 @@ export default function Monitor() {
     <MainLayout>
       <div className="max-w-5xl mx-auto p-8">
         <h2 className="font-heading text-3xl text-teal-300 mb-6 border-b border-neutral-200 pb-2">
-          Queue Monitor
+          Monitor Queue Status
         </h2>
         <div className="flex flex-nowrap gap-4 justify-start ">
           {services.map((s) => (
