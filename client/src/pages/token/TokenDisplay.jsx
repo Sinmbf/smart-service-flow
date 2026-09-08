@@ -161,6 +161,7 @@ const TokenDisplay = () => {
   if (!token) return null;
 
   const status = liveStatus || token.status || "GENERATED";
+  const statusColor = (status === "GENERATED" || status === "waiting") ? "bg-blue-500" : (status === "CHECKED_IN" || status === "checked_in") ? "bg-green-500" : (status === "SKIPPED" || status === "skipped") ? "bg-red-500" : "bg-blue-500"; // ponytail: token card color
   const statusKey = STATUS_FALLBACK_LABEL[status] ? status : "GENERATED";
   const generatedDate = token.generatedAt ? new Date(token.generatedAt) : new Date();
 
@@ -241,7 +242,7 @@ const TokenDisplay = () => {
                   <span className="text-gray-600 font-medium text-xs sm:text-sm block mb-2 break-words">
                     {t("token.display.status")}
                   </span>
-                  <span className="inline-block px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border bg-blue-50 text-blue-800 border-blue-200">
+                  <span className={`inline-block px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border ${statusColor.replace('bg-', 'bg-').replace('500', '50')} ${statusColor.replace('bg-', 'text-').replace('500', '800')} border-blue-200`}>
                     {STATUS_FALLBACK_LABEL[statusKey]}
                   </span>
                 </div>
