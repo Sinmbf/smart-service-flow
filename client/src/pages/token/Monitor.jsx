@@ -8,6 +8,10 @@ import { Skeleton } from "../../components/ui";
 import axios from "../../services/api";
 
 const Monitor = () => {
+  useEffect(() => {
+    const i = setInterval(() => fetch('/api/queue/status').then(r=>r.json()), 30000);
+    return () => clearInterval(i);
+  }, []);
   // ponytail: auto-refresh every 30s so skipped tokens show without manual refresh
   // ponytail: turn approaching msg per policy
   const { t } = useTranslation();
@@ -212,3 +216,4 @@ const Monitor = () => {
 };
 
 export default Monitor;
+
