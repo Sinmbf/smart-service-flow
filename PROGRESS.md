@@ -33,7 +33,7 @@
 - **Step 7 merged:** `RequiredDocumentsList` + `OfficeInfoBlock` reusable components; `GET /api/services/:id/stages/:stageId/documents` endpoint for deep-linking.
 - **Post-Step-5 fix:** `/token/services` now uses real `/api/services` data (not the hardcoded mock list).
 - **Post-Step-6 hotfixes:** service tile icons (main + office footer) pinned to top with `items-start`.
-- Next: **Step 2 (JWT/bcrypt/middleware) merged 2026-09-06; then Step 9 — Increment 3.4–3.6: Check-in + no-show + cancel (Token QR done 2026-09-06)**.
+- Next: Step 9 COMPLETE (2026-09-09) — check-in, cancel, no-show sweep, Monitor poll
 - The codebase is **plain JavaScript only** (no TypeScript anywhere).
 - Database is wired up via Prisma 7 + PostgreSQL 18 (db: `smart_service_flow`, locally installed, **no Docker**).
 - Prisma 7 uses `prisma.config.js` for CLI tooling; the runtime still uses `@prisma/adapter-pg` in `db.js`.
@@ -394,7 +394,7 @@ curl -X POST http://localhost:5000/api/auth/citizen/send-otp \
 ## Branch & Commit Log (Increment 3 — Step 8)
 - feature/step-8-token-qr (3.1 schema/migrate; 3.2 endpoint; 3.3 QR) → merged --no-ff to main 2026-09-06
 - Step 8: Token QR ✅ Done
-- Next: Step 9 / 3.4–3.6 (Check-in, no-show, cancel)
+- Next: Step 9 COMPLETE (2026-09-09) — check-in, cancel, no-show sweep, Monitor poll
 
 ## Branch & Commit Log (JWT — Step 2)
 - feature/step-2-jwt-auth (cookie-parser, cookie auth, JWT verified) → merged --no-ff to main 2026-09-06
