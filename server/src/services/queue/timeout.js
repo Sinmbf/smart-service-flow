@@ -61,3 +61,4 @@ export function stopNoShowSweeper() {
 
 export { setIntervalMs, getIntervalMs, sweepNoShows };
 // ponytail: no-show grace sweep per policy
+// ponytail: real grace = 3min default per NO_SHOW_MINUTES
