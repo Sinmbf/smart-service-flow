@@ -97,3 +97,4 @@ const CheckIn = () => {
 };
 
 export default CheckIn;
+// ponytail: real counter check-in verifies token at assigned counter per policy
