@@ -36,9 +36,7 @@ export default function Monitor() {
                 <span className="text-sm font-bold uppercase tracking-[0.2em] text-neutral-500">
                   Currently serving:{" "}
                 </span>
-                <div className="text-6xl">
-                  {s.currentToken != null ? s.currentToken : 0}
-                </div>
+                <div className="text-6xl">{s.currentToken ?? 0}</div>
               </div>
               <div
                 className="flex gap-6 text-sm text
