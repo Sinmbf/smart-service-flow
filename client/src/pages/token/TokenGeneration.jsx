@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import MainLayout from "../../layouts/MainLayout";
@@ -11,42 +11,72 @@ const TokenGeneration = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { activeToken, isLoading: activeLoading } = useActiveToken();
+  const { activeToken, isLoading: activeTokenLoading } = useActiveToken();
+
   const service = location.state?.service;
 
   const [error, setError] = useState("");
 
+  // Prevent duplicate token-generation requests.
+  // React StrictMode can execute effects twice in development.
+  const generationStartedRef = useRef(false);
+
   useEffect(() => {
-    if (authLoading) return;
-    if (activeToken && !isLoading) {
-      navigate(`/token/display/${activeToken.id}`, { replace: true });
-      return;
-    }
-    if (!service) {
-      navigate("/token/services", { replace: true });
-      return;
-    }
-    if (!isAuthenticated) {
-      navigate("/citizen-login", { replace: true, state: { service } });
+    // Wait until authentication and active-token checks are complete.
+    if (authLoading || activeTokenLoading) {
       return;
     }
 
+    // Make sure a service was selected.
+    if (!service?.id) {
+      setError(
+        i18n.language === "ne"
+          ? "सेवा छानिएन। कृपया सेवा चयन गर्नुहोस्।"
+          : "No service selected. Please pick a service.",
+      );
+      return;
+    }
+
+    // Redirect unauthenticated users.
+    if (!isAuthenticated) {
+      navigate("/citizen-login", {
+        replace: true,
+        state: { service },
+      });
+      return;
+    }
+
+    // If the citizen already has an active token,
+    // do not generate another one.
+    if (activeToken) {
+      navigate(`/token/display/${activeToken.id}`, {
+        replace: true,
+      });
+      return;
+    }
+
+    // Prevent duplicate requests caused by React StrictMode.
+    if (generationStartedRef.current) {
+      return;
+    }
+
+    generationStartedRef.current = true;
+
     let cancelled = false;
-    (async () => {
+
+    const createToken = async () => {
       try {
-        if (!service?.id) {
-          setError(
-            i18n.language === "ne"
-              ? "सेवा छानिएन। कृपया सेवा चयन गर्नुहोस्।"
-              : "No service selected. Please pick a service."
-          );
+        const data = await generateToken({
+          serviceId: service.id,
+        });
+
+        // Stop if the component has already unmounted.
+        if (cancelled) {
           return;
         }
-        const data = await generateToken({ serviceId: service.id });
-        if (cancelled) return;
-        // Use URL-based navigation so the user can refresh, share, or
-        // come back to their token later from the dashboard.
+
         navigate(`/token/display/${data.token.id}`, {
           state: {
             id: data.token.id,
@@ -60,27 +90,45 @@ const TokenGeneration = () => {
           replace: true,
         });
       } catch (err) {
-        if (cancelled) return;
-        console.error("[TokenGeneration] error:", err);
-        // 409 with activeToken — server says we already have one. Route there.
-        if (err.response?.status === 409 && err.response?.data?.activeToken) {
-          navigate(`/token/display/${err.response.data.activeToken.id}`, { replace: true });
+        if (cancelled) {
           return;
         }
+
+        // Backend returns 409 when an active token already exists.
+        // Open that token instead of displaying an error.
+        if (
+          err.response?.status === 409 &&
+          err.response?.data?.activeToken?.id
+        ) {
+          navigate(`/token/display/${err.response.data.activeToken.id}`, {
+            replace: true,
+          });
+          return;
+        }
+
         setError(
           err.response?.data?.message ||
             (i18n.language === "ne"
               ? "टोकन बनाउन सकिएन। कृपया पुनः प्रयास गर्नुहोस्।"
-              : "Failed to generate token. Please try again.")
+              : "Failed to generate token. Please try again."),
         );
       }
-    })();
+    };
+
+    createToken();
 
     return () => {
       cancelled = true;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [service?.id, isAuthenticated, authLoading, navigate]);
+  }, [
+    service,
+    isAuthenticated,
+    authLoading,
+    activeToken,
+    activeTokenLoading,
+    navigate,
+    i18n.language,
+  ]);
 
   return (
     <MainLayout>
@@ -90,14 +138,19 @@ const TokenGeneration = () => {
             <h2 className="text-2xl font-bold text-gray-900">
               {t("token.generation.title")}
             </h2>
+
             <p className="text-gray-600 mt-2">
               {t("token.generation.subtitle")}
             </p>
           </div>
 
           {error ? (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700" role="alert">
+            <div
+              className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700"
+              role="alert"
+            >
               {error}
+
               <div className="mt-3">
                 <button
                   type="button"
@@ -112,8 +165,10 @@ const TokenGeneration = () => {
             <div className="flex flex-col items-center justify-center space-y-6">
               <div className="relative w-24 h-24">
                 <div className="absolute inset-0 border-8 border-gray-200 rounded-full" />
+
                 <div className="absolute inset-0 border-8 border-primary-700 border-t-transparent rounded-full animate-spin" />
               </div>
+
               <p className="text-lg font-medium text-gray-700 animate-pulse">
                 {t("token.generation.generating")}
               </p>

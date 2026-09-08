@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Building2, ArrowRight, Info, Search, QrCode, AlertTriangle } from "lucide-react";
+import {
+  Building2,
+  ArrowRight,
+  Info,
+  Search,
+  QrCode,
+  AlertTriangle,
+} from "lucide-react";
 import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
@@ -45,7 +52,8 @@ const ServiceSelection = () => {
 
   const filtered = search.trim()
     ? services.filter((s) => {
-        const haystack = `${s.nameEn} ${s.nameNe} ${s.category || ""}`.toLowerCase();
+        const haystack =
+          `${s.nameEn} ${s.nameNe} ${s.category || ""}`.toLowerCase();
         return haystack.includes(search.trim().toLowerCase());
       })
     : services;
@@ -75,8 +83,18 @@ const ServiceSelection = () => {
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800 flex items-start gap-3">
             <AlertTriangle className="h-5 w-5 flex-shrink-0" />
             <div>
-              <p className="font-medium">{t("token.services.activeTokenExists", "You already have an active token")}</p>
-              <p className="mt-1 text-amber-700">{t("token.services.cancelFirst", "Please cancel or complete it before generating a new one.")}</p>
+              <p className="font-medium">
+                {t(
+                  "token.services.activeTokenExists",
+                  "You already have an active token",
+                )}
+              </p>
+              <p className="mt-1 text-amber-700">
+                {t(
+                  "token.services.cancelFirst",
+                  "Please cancel or complete it before generating a new one.",
+                )}
+              </p>
               <div className="mt-3 flex gap-2">
                 <Link
                   to={`/token/display/${activeToken.id}`}
@@ -129,7 +147,10 @@ const ServiceSelection = () => {
 
             {listError && (
               <div className="px-2">
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700" role="alert">
+                <div
+                  className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700"
+                  role="alert"
+                >
                   {listError}
                 </div>
               </div>
@@ -139,7 +160,10 @@ const ServiceSelection = () => {
             {listLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 px-2">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-28 rounded-xl bg-neutral-100 animate-pulse" />
+                  <div
+                    key={i}
+                    className="h-28 rounded-xl bg-neutral-100 animate-pulse"
+                  />
                 ))}
               </div>
             ) : (
@@ -183,12 +207,18 @@ const ServiceSelection = () => {
                             {isNe ? service.nameNe : service.nameEn}
                           </h3>
                           <p className="text-xs sm:text-sm text-gray-600 mt-0.5 line-clamp-2">
-                            {isNe ? service.descriptionNe : service.descriptionEn}
+                            {isNe
+                              ? service.descriptionNe
+                              : service.descriptionEn}
                           </p>
                           {service.office && (
                             <p className="text-xs text-gray-500 mt-1 flex items-start gap-1">
                               <Building2 className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                              <span>{isNe ? service.office.nameNe : service.office.nameEn}</span>
+                              <span>
+                                {isNe
+                                  ? service.office.nameNe
+                                  : service.office.nameEn}
+                              </span>
                             </p>
                           )}
                         </div>
@@ -236,7 +266,9 @@ const ServiceSelection = () => {
                 className="w-full md:w-auto md:min-w-64 md:mx-auto md:block"
               >
                 {t("token.services.continueButton")}
-                {selectedService && <ArrowRight className="h-4 w-4 inline ml-1" />}
+                {selectedService && (
+                  <ArrowRight className="h-4 w-4 inline ml-1" />
+                )}
               </Button>
             </div>
           </div>

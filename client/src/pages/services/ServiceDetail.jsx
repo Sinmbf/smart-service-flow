@@ -31,7 +31,11 @@ const ServiceDetail = () => {
         if (!cancelled) setService(data.service);
       } catch (err) {
         if (!cancelled) {
-          setError(err.response?.status === 404 ? t("services.detail.notFound") : t("services.detail.error"));
+          setError(
+            err.response?.status === 404
+              ? t("services.detail.notFound")
+              : t("services.detail.error"),
+          );
         }
       } finally {
         if (!cancelled) setIsLoading(false);
@@ -62,7 +66,10 @@ const ServiceDetail = () => {
             <Skeleton className="h-40 w-full" />
           </div>
         ) : error ? (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700" role="alert">
+          <div
+            className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700"
+            role="alert"
+          >
             {error}
           </div>
         ) : service ? (
@@ -103,7 +110,10 @@ const ServiceDetail = () => {
             )}
 
             {/* CTA */}
-            <Button onClick={() => navigate("/token/services")} className="w-full sm:w-auto">
+            <Button
+              onClick={() => navigate("/token/services")}
+              className="w-full sm:w-auto"
+            >
               {t("services.detail.getToken")}
             </Button>
           </>

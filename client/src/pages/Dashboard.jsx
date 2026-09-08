@@ -38,7 +38,8 @@ const Dashboard = () => {
         const data = await fetchMyActiveTokens();
         if (!cancelled) setTokens(data.tokens || []);
       } catch (err) {
-        if (!cancelled) setError(err.response?.data?.message || "Could not load tokens");
+        if (!cancelled)
+          setError(err.response?.data?.message || "Could not load tokens");
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -68,7 +69,10 @@ const Dashboard = () => {
               <Skeleton className="h-20 w-full rounded-2xl" />
             </div>
           ) : error ? (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-start gap-2" role="alert">
+            <div
+              className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-start gap-2"
+              role="alert"
+            >
               <AlertCircle className="h-5 w-5 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -121,7 +125,7 @@ const Dashboard = () => {
                             <span>
                               {t("dashboard.generatedAtLabel", "Generated")}{" "}
                               {new Date(tok.generatedAt).toLocaleString(
-                                isNe ? "ne-NP" : "en-US"
+                                isNe ? "ne-NP" : "en-US",
                               )}
                             </span>
                           </div>
