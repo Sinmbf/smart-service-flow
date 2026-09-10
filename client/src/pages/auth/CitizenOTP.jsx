@@ -195,9 +195,6 @@ const CitizenOTP = () => {
               <p className="text-sm text-neutral-600 mb-2">
                 {t("auth.citizen.otpInstruction")}
               </p>
-              <p className="text-xs text-neutral-600">
-                {t("auth.citizen.otpConsoleNote")}
-              </p>
             </div>
 
             <Input

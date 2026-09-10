@@ -8,7 +8,7 @@ import { checkInToken } from "../../services/staff";
 
 const CheckIn = () => {
   // ponytail: counter-level check-in per counter_level_checkin_no_show_queue_policy.md
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [identifier, setIdentifier] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -24,7 +24,7 @@ const CheckIn = () => {
       const data = await checkInToken(identifier.trim());
       setResult(data.token);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to check in");
+      setError(err.response?.data?.message || t("staff.checkIn.failed", "Failed to check in"));
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +82,7 @@ const CheckIn = () => {
                   {result.tokenNumber} — {result.user?.name || "Citizen"}
                 </p>
                 <p className="text-sm text-green-800">
-                  {result.service?.nameEn} · {t("staff.checkIn.checkedIn", "Checked in")}
+                  {(i18n.language === "ne" ? result.service?.nameNe : result.service?.nameEn) || ""} · {t("staff.checkIn.checkedIn", "Checked in")}
                 </p>
                 <p className="text-xs text-green-700 mt-1">
                   {t("staff.checkIn.checkedInAt", "Checked in at")} {new Date(result.checkedInAt).toLocaleString()}

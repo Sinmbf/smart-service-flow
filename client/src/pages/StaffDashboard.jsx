@@ -21,8 +21,8 @@ const StaffDashboard = () => {
         <Card className="mt-6 p-6">
           <div className="space-y-3">
             <a href="/staff/check-in" className="block p-3 bg-white border border-neutral-200 rounded-xl hover:border-primary-300 hover:shadow-sm transition">
-              <h3 className="font-heading font-semibold text-neutral-900">Check-In</h3>
-              <p className="text-xs text-neutral-500">Look up a token by number, QR, or phone</p>
+              <h3 className="font-heading font-semibold text-neutral-900">{t("staff.dashboard.checkIn", "Check-In")}</h3>
+              <p className="text-xs text-neutral-500">{t("staff.dashboard.checkInDesc", "Look up a token by number, QR, or phone")}</p>
             </a>
           </div>
         </Card>

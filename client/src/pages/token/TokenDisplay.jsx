@@ -299,7 +299,7 @@ const TokenDisplay = () => {
               </p>
               <div
                 className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 mx-2 border-2 border-gray-200 flex items-center justify-center min-h-[256px]"
-                aria-label="Token QR code"
+                aria-label={t("token.display.qrTitle", "Your QR code")}
                 ref={qrCanvasRef}
                 dangerouslySetInnerHTML={{ __html: qrSvg || "" }}
               />

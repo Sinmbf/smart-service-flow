@@ -59,7 +59,7 @@ const Login = () => {
 
       setPendingEmail(formData.email);
       setOtpStep(true);
-      setServerMessage(t("auth.staff.otpSentToConsole"));
+      setServerMessage("");
     } catch (error) {
       setErrors({ api: error.response?.data?.message || t("auth.errors.generic") });
     } finally {
@@ -185,11 +185,7 @@ const Login = () => {
               <p className="text-base text-neutral-700">
                 {t("auth.staff.enterOtp")}
               </p>
-              <p className="text-sm text-neutral-600 mt-2">
-                {t("auth.staff.otpConsoleNote")}
-              </p>
             </div>
-
             <Input
               label={t("auth.staff.otpCode")}
               type="text"

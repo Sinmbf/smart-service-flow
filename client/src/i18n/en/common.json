@@ -73,7 +73,10 @@
       "otpCode": "6-digit Code",
       "verifying": "Verifying...",
       "verifyButton": "Verify and Sign In",
-      "backToLogin": "Back to Sign In"
+      "backToLogin": "Back to Sign In",
+      "checkIn": {
+        "failed": "Failed to check in"
+      }
     },
     "staffRegister": {
       "title": "Staff Registration",
@@ -177,7 +180,12 @@
       "nowServing": "Now Serving",
       "active": "Active",
       "viewMyToken": "View my Token",
-      "getToken": "Get a Token"
+      "qrHeadline": "Scan. Join. Wait anywhere.",
+      "qrSub": "Walk-in Access",
+      "qrScan": "Point your camera at the code",
+      "qrTitle": "Your QR code",
+      "qrHint": "Show this code at the office for check-in.",
+      "downloadQr": "Download QR Code"
     },
     "trust": {
       "gov": "Government",
@@ -245,11 +253,17 @@
       "lastUpdated": "Last updated",
       "refresh": "Refresh",
       "currentlyServing": "Now Serving",
-      "inQueue": "In Queue",
+      "inQueue": "In Queue:",
       "people": "people",
       "estimatedWait": "Est. Wait",
       "getToken": "Get Your Token",
-      "noQueueData": "No queue data available"
+      "noQueueData": "No queue data available",
+      "live": "Live",
+      "queueLoad": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      }
     },
     "services": {
       "title": "Select Service",
@@ -302,23 +316,10 @@
       "qrHint": "Show this code at the office for check-in.",
       "generatedAt": "Generated"
     },
-    "monitor": {
-      "title": "Queue Status",
-      "subtitle": "Live queue updates for all services",
-      "lastUpdated": "Last updated",
-      "refresh": "Refresh",
-      "currentlyServing": "Now Serving",
-      "inQueue": "In Queue",
-      "people": "people",
-      "estimatedWait": "Est. Wait",
-      "getToken": "Get Your Token",
-      "noQueueData": "No queue data available",
-      "live": "Live",
-      "queueLoad": {
-        "low": "Low",
-        "medium": "Medium",
-        "high": "High"
-      }
+    "cancel": {
+      "title": "Cancel Token",
+      "confirm": "Confirm Cancel",
+      "done": "Cancelled."
     }
   },
   "footer": {
@@ -337,10 +338,22 @@
     "activeTokens": "My active tokens",
     "noActiveTokens": "You don't have any active tokens right now.",
     "getTokenCta": "Get a Token",
-    "generatedAtLabel": "Generated"
+    "generatedAtLabel": "Generated",
+    "tokenStatus": {
+      "generated": "Waiting",
+      "checkedIn": "Checked in",
+      "serving": "Now serving:",
+      "completed": "Completed",
+      "skipped": "Skipped",
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "deferred": "Deferred"
+    }
   },
   "staff": {
     "dashboard": {
+      "checkIn": "Check-In",
+      "checkInDesc": "Look up a token by number, QR, or phone",
       "welcome": "Staff Console — {{name}}",
       "subtitle": "Manage queues, call tokens, and update stage progress from here.",
       "comingSoon": "Step 4+ (Increment 10) will replace this stub with the real staff console."
@@ -383,5 +396,9 @@
       "none": "No documents required for this step.",
       "countLabel": "{{count}} required documents"
     }
+  },
+  "password": {
+    "hide": "Hide password",
+    "show": "Show password"
   }
 }

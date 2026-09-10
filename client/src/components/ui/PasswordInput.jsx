@@ -1,10 +1,12 @@
 
+import { useTranslation } from "react-i18next";
 import { forwardRef, useState } from "react";
 import { Eye, EyeOff, Lock } from "lucide-react";
 
 const PasswordInput = forwardRef(
   ({ label, error, helperText, className = "", id, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
+  const { t } = useTranslation();
     const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
 
     return (
@@ -38,7 +40,7 @@ const PasswordInput = forwardRef(
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-900 transition-colors min-h-[44px] min-w-[44px] p-2"
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? t("password.hide", "Hide password") : t("password.show", "Show password")}
           >
             {showPassword ? (
               <EyeOff className="h-5 w-5" />
