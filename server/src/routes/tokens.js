@@ -5,7 +5,7 @@ import { signToken } from "../services/auth/jwt.js";
 
 const router = Router();
 
-const ACTIVE_STATUSES = ["GENERATED", "CHECKED_IN", "SERVING"];
+const ACTIVE_STATUSES = ["WAITING", "CALLED", "CHECKED_IN", "SERVING"];
 const TERMINAL_STATUSES = ["COMPLETED", "CANCELLED", "SKIPPED", "EXPIRED"];
 
 const MAX_TRANSACTION_RETRIES = 5;
@@ -232,8 +232,9 @@ router.post("/", requireAuth, async (req, res) => {
                 serviceId,
                 currentStageId: entryStage.id,
                 position: nextPosition,
-                status: "GENERATED",
+                status: "WAITING",
                 generatedAt,
+                stageEnteredAt: generatedAt,
                 qrPayload: Buffer.from(`${tokenNumber}:${serviceId}`).toString(
                   "base64",
                 ),
@@ -350,6 +351,12 @@ router.post("/", requireAuth, async (req, res) => {
     // ---------------------------------------------------------
     // 6. Build signed QR verification URL
     // ---------------------------------------------------------
+    const activeCounters = await prisma.counter.count({ where: { stageId: token.currentStageId, isActive: true } });
+    const activeBusy = await prisma.token.count({ where: { currentStageId: token.currentStageId, status: { in: ["CALLED", "CHECKED_IN", "SERVING"] } } });
+    const waitingAhead = token.status === "WAITING" ? await prisma.token.count({ where: { currentStageId: token.currentStageId, status: "WAITING", position: { lt: token.position } } }) : 0;
+    const baselineMinutes = Math.max(1, token.currentStage?.baselineMinutes || 10);
+    const estimatedWaitMinutes = token.status === "CALLED" || token.status === "CHECKED_IN" || token.status === "SERVING" ? 0 : Math.max(0, Math.ceil((waitingAhead + activeBusy) / Math.max(1, activeCounters)) * baselineMinutes);
+
     const baseUrl = process.env.CLIENT_URL || "http://localhost:5173";
 
     const signature = signToken({
@@ -458,6 +465,7 @@ router.get("/", requireAuth, async (req, res) => {
             id: true,
             nameEn: true,
             nameNe: true,
+            _count: { select: { stages: true } },
           },
         },
         currentStage: {
@@ -624,12 +632,70 @@ router.get("/:id", requireAuth, async (req, res) => {
 
     const qrPayload = `${baseUrl}/verify/${token.id}?sig=${signature}`;
 
+    // Recalculate ETA on every token-detail request so the citizen sees
+    // current queue information rather than the value from token creation.
+    const activeCounters = token.currentStage
+      ? await prisma.counter.count({
+          where: {
+            stageId: token.currentStage.id,
+            isActive: true,
+          },
+        })
+      : 0;
+
+    const activeBusy = token.currentStage
+      ? await prisma.token.count({
+          where: {
+            currentStageId: token.currentStage.id,
+            status: { in: ["CALLED", "CHECKED_IN", "SERVING"] },
+          },
+        })
+      : 0;
+
+    const waitingAhead =
+      token.status === "WAITING" && token.currentStage
+        ? await prisma.token.count({
+            where: {
+              currentStageId: token.currentStage.id,
+              status: "WAITING",
+              OR: [
+                { stageEnteredAt: { lt: token.stageEnteredAt } },
+                { stageEnteredAt: token.stageEnteredAt, id: { lt: token.id } },
+              ],
+            },
+          })
+        : 0;
+
+    const currentQueuePosition =
+      token.status === "WAITING"
+        ? waitingAhead + 1
+        : token.position;
+
+    const baselineMinutes = Math.max(
+      1,
+      token.currentStage?.baselineMinutes || 10,
+    );
+
+    const estimatedWaitMinutes =
+      token.status === "CALLED" ||
+      token.status === "CHECKED_IN" ||
+      token.status === "SERVING"
+        ? 0
+        : token.currentStage
+          ? Math.max(
+              0,
+              Math.ceil(
+                (waitingAhead + activeBusy) / Math.max(1, activeCounters),
+              ) * baselineMinutes,
+            )
+          : 0;
+
     return res.status(200).json({
       success: true,
       token: {
         id: token.id,
         tokenNumber: token.tokenNumber,
-        position: token.position,
+        position: currentQueuePosition,
         status: token.status,
         service: {
           id: token.service.id,
@@ -647,6 +713,10 @@ router.get("/:id", requireAuth, async (req, res) => {
         user: token.user,
         generatedAt: token.generatedAt,
         checkedInAt: token.checkedInAt,
+        estimatedWaitMinutes,
+        waitingAhead,
+        activeCounters,
+        baselineMinutes,
         qrPayload,
         completedAt: token.completedAt,
       },

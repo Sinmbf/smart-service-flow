@@ -25,7 +25,8 @@ enum Language {
 }
 
 enum TokenStatus {
-  GENERATED
+  WAITING
+  CALLED
   CHECKED_IN
   SERVING
   COMPLETED
@@ -63,6 +64,8 @@ model User {
   isActive          Boolean  @default(true)
   lastLoginAt       DateTime?
   passwordChangedAt DateTime? // bump on every password change; embeds in JWT to invalidate stale sessions
+  officeId           String?
+  office             GovernmentOffice? @relation(fields: [officeId], references: [id], onDelete: SetNull)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -72,6 +75,7 @@ model User {
   auditLogs         AuditLog[]        @relation("AuditActor")
 
   @@index([role])
+  @@index([officeId])
 }
 
 // ---------- Office / Service / Stage / Document ----------
@@ -87,6 +91,7 @@ model GovernmentOffice {
   updatedAt DateTime @updatedAt
 
   services  Service[]
+  staffUsers User[]
 }
 
 model Service {
@@ -156,8 +161,11 @@ model Token {
   currentStageId  String
   currentStage    ServiceStage @relation("CurrentStage", fields: [currentStageId], references: [id])
   position        Int         // queue position reserved at generation time
-  status          TokenStatus @default(GENERATED)
-  generatedAt     DateTime    @default(now())
+  status          TokenStatus @default(WAITING)
+  generatedAt     DateTime    @default(now()) // when the token was first created (never changes)
+  stageEnteredAt  DateTime    @default(now()) // when the token entered its current stage
+  turnApproachingNotifiedAt DateTime?
+  calledAt        DateTime?
   checkedInAt     DateTime?
   serviceStartedAt DateTime?
   serviceCompletedAt DateTime?

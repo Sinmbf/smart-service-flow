@@ -32,6 +32,8 @@ export async function requireAuth(req, res, next) {
       preferredLanguage: true,
       isActive: true,
       passwordChangedAt: true,
+      officeId: true,
+      office: { select: { id: true, nameEn: true, nameNe: true, location: true } },
     },
   });
 

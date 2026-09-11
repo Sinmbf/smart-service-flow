@@ -2,7 +2,7 @@
 
 > **Purpose:** Track the project's status against `complete_project_roadmap.md` and `plans/implementation_plan.md`. Updated after every major change so you can resume work in any session.
 
-> **Last updated:** 2026-09-08 (session — post-commit 8c3953a; all branches cleaned; codebase audited)
+> **Last updated:** 2026-09-11 (session — Step 10 code written from a static review environment; NOT run against a live server/DB — see verification checklist under Increment 4 before trusting it)
 
 ---
 
@@ -135,8 +135,8 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 | Field                    | Value                                                                                                              |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------ |
 | Active branch            | `main`                                                                                                             |
-| Current step             | **Step 9 — Check-in + no-show + cancel (✅ MERGED)**                                                               |
-| Next step                | **Step 10 — Stage-specific queues + staff operations**                                                             |
+| Current step             | **Step 10 — Stage-specific queues + staff operations (🟡 code written, not yet run against a live DB)**             |
+| Next step                | **Verify Step 10 end-to-end, then Step 11 — Multiple counters**                                                    |
 | Increment                | 1 (Foundation) — 85% done                                                                                          |
 | Server runs on           | `http://localhost:5000`                                                                                            |
 | Client runs on           | `http://localhost:5173+` (Vite auto-picks next free port)                                                          |
@@ -182,9 +182,41 @@ Then send the next-session prompt to start coding. The full task list for Step 3
 
 | Phase                            | Step    | Status     | Notes                               |
 | -------------------------------- | ------- | ---------- | ----------------------------------- |
-| 4.1–4.3 Stage queues + staff ops | Step 10 | 🔜 Pending | call/skip/recall/complete per token |
-| 4.4 Multiple counters            | Step 11 | 🔜 Pending | Counter model, assign/release       |
-| 4.5 Stage progress               | Step 12 | 🔜 Pending | Citizen progress view               |
+| 4.1–4.3 Stage queues + staff ops | Step 10 | 🟡 Written, not yet run/tested | See detail below |
+| 4.4 Multiple counters            | Step 11 | 🔶 Pending | Counter model, assign/release       |
+| 4.5 Stage progress               | Step 12 | 🔶 Pending | Citizen progress view               |
+
+#### Step 10 detail (2026-09-11 session — written against `counter_level_checkin_no_show_queue_policy.md`)
+
+- `GET /api/staff/queues/:stageId` (new `server/src/routes/staff/queue.js`) returns `{ stage, queue: { serving, checkedIn, waiting, recentlySkipped } }` for a stage.
+- Added to `server/src/routes/staff/tokens.js`: `POST /:id/call` (CHECKED_IN → SERVING), `/:id/skip` (GENERATED|CHECKED_IN → SKIPPED), `/:id/recall` (SKIPPED → GENERATED, requeued at the back, capped at `MAX_RECALLS = 1` via an `AuditLog` count — no schema change needed), `/:id/complete` (SERVING → next stage's GENERATED queue, or → COMPLETED on the final stage; also writes a `ServiceDurationHistory` row for the future Step 13 estimator).
+- Every action writes an `AuditLog` row (`TOKEN_CALLED` / `TOKEN_SKIPPED` / `TOKEN_RECALLED` / `STAGE_COMPLETED` / `TOKEN_COMPLETED`) — staff identity + audit trail come from `AuditLog`, so no Prisma migration was required.
+- New client page `client/src/pages/staff/QueueBoard.jsx` at route `/staff/queues/:stageId`, polling every 5s; `StaffDashboard` now lists each service's stages as quick links into their queue boards. API client functions added to `client/src/services/staff.js`.
+- i18n: `staff.queue.*` and `staff.dashboard.queueBoards/loadingQueues/noQueues` added to both `en/common.json` and `ne/common.json`.
+- **Status honestly: written, not verified.** No DB/network access in the environment this was written in, so nothing below has actually been run:
+  - [ ] Not run against a live server process (`npm run dev` never started against this code)
+  - [ ] Not run against a live Postgres DB — zero real queries executed
+  - [ ] Not opened in a browser — QueueBoard.jsx has only been read, not rendered
+  - [ ] API request/response shapes not confirmed at runtime (only checked by reading the route + client code side by side)
+  - [x] Backend files passed `node --check` (syntax only, not logic)
+  - [x] JSX files manually re-read for balanced tags/braces (no automated JSX parser available in that environment)
+
+#### Step 10 verification checklist for next session
+
+Run these in order against a real server + DB before marking Step 10 ✅ Done:
+
+1. `cd server && npm run dev` — confirm no import/route errors on boot (watch for the new `staff/queue.js` router failing to load).
+2. As a citizen: generate a token (`POST /api/tokens`) for a multi-stage service, note its `id` and `currentStageId`.
+3. As staff: `POST /api/staff/tokens/check-in` with that token — confirm status becomes `CHECKED_IN`.
+4. `GET /api/staff/queues/:stageId` — confirm the token shows up under `queue.checkedIn`.
+5. `POST /api/staff/tokens/:id/call` — confirm `SERVING`, and that `GET /api/staff/queues/:stageId` now lists it under `queue.serving`.
+6. `POST /api/staff/tokens/:id/complete` — if the service has a next stage, confirm `currentStageId` changed and status reset to `GENERATED`; repeat call/complete through the last stage and confirm final status is `COMPLETED`.
+7. Skip/recall path: generate a second token, leave it `GENERATED`, call `POST /api/staff/tokens/:id/skip` — confirm `SKIPPED` and it appears in `queue.recentlySkipped`. Call `POST /api/staff/tokens/:id/recall` once — confirm it returns to `GENERATED` with a new (higher) `position`. Call `/recall` again — confirm it's rejected with `RECALL_LIMIT_REACHED`.
+8. Confirm a `ServiceDurationHistory` row was created on `/complete` (`SELECT * FROM "ServiceDurationHistory" ORDER BY "completedAt" DESC LIMIT 1;`) and that `AuditLog` has rows for each action taken above.
+9. In the browser: log in as staff, open `/staff/dashboard`, confirm the stage quick-links render, click into `/staff/queues/:stageId`, and click through Call → Complete on a real token to confirm the UI updates (polling picks up the change within ~5s).
+10. Only after all of the above pass: flip Step 10's status to ✅ Done in this file and move on to Step 11 (Multiple Counters).
+
+- Known gap even once verified: only one token can be SERVING per stage under this model (no per-counter assignment yet) — that's exactly what Step 11 (Multiple Counters) adds next.
 
 ### Increment 5 — Dynamic Waiting-Time Engine
 

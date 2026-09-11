@@ -1,9 +1,11 @@
 
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import Footer from "../components/Footer";
 import { useAuth } from "../auth/AuthContext";
+import { fetchNotifications } from "../services/tokens";
 
 const MainLayout = ({ children, showHeader = true }) => {
   const { t } = useTranslation();
@@ -16,6 +18,24 @@ const MainLayout = ({ children, showHeader = true }) => {
   const isMonitor = location.pathname === "/token/monitor";
   const isServices = location.pathname === "/token/services";
   const isScanner = location.pathname === "/token/scanner";
+  const isCitizen = isAuthenticated && (user?.role || "").toUpperCase() === "CITIZEN";
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (!isCitizen) return undefined;
+    let cancelled = false;
+    const loadUnread = async () => {
+      try {
+        const data = await fetchNotifications({ read: "unread", limit: 1 });
+        if (!cancelled) setUnreadCount(data.unreadCount || 0);
+      } catch {
+        // Notification badge is best-effort.
+      }
+    };
+    loadUnread();
+    const id = window.setInterval(loadUnread, 5000);
+    return () => { cancelled = true; window.clearInterval(id); };
+  }, [isCitizen]);
 
   return (
     <div className="min-h-screen bg-neutral-100 flex flex-col">
@@ -116,6 +136,25 @@ const MainLayout = ({ children, showHeader = true }) => {
                     </span>
                   </Link>
                 </nav>
+              )}
+
+              {isCitizen && (
+                <Link
+                  to="/notifications"
+                  aria-label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ""}`}
+                  className="relative inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-md text-neutral-700 hover:bg-neutral-100"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z" />
+                    <path d="M10 21h4" />
+                  </svg>
+                  {unreadCount > 0 && (
+                    <>
+                      <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-red-600" />
+                      <span className="absolute right-1 top-1 h-4 w-4 rounded-full bg-red-500/30 animate-ping" aria-hidden="true" />
+                    </>
+                  )}
+                </Link>
               )}
 
               {/* Authed user pill — shows when logged in. Links to the

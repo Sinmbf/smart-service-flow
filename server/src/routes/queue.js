@@ -3,17 +3,19 @@ import { prisma } from "../db.js";
 
 const router = Router();
 
-const WAITING_STATUS = "GENERATED";
-const SERVING_STATUS = "CHECKED_IN";
+const WAITING_STATUS = "WAITING";
+const CALLED_STATUS = "CALLED";
+const CHECKED_IN_STATUS = "CHECKED_IN";
+const SERVING_STATUS = "SERVING";
 
 /**
  * Build queue information from a service's active tokens.
  *
- * GENERATED:
- *   Citizen has generated a token and is waiting.
+ * WAITING:
+ *   Citizen has reserved a queue position.
  *
- * CHECKED_IN:
- *   Citizen has checked in and is currently being served.
+ * SERVING:
+ *   Citizen has checked in at the counter and service is active.
  */
 function buildQueueStatus(service) {
   const tokens = service.tokens ?? [];
@@ -22,27 +24,28 @@ function buildQueueStatus(service) {
     (token) => token.status === WAITING_STATUS,
   );
 
+  const calledTokens = tokens.filter(
+    (token) => token.status === CALLED_STATUS,
+  );
+
+  const checkedInTokens = tokens.filter(
+    (token) => token.status === CHECKED_IN_STATUS,
+  );
+
   const servingTokens = tokens.filter(
     (token) => token.status === SERVING_STATUS,
   );
 
-  /*
-   * In the current system, CHECKED_IN represents a token being served.
-   *
-   * If multiple counters are introduced later, there may be multiple
-   * CHECKED_IN tokens. For now we display the first one by queue position.
-   */
-  const currentToken = servingTokens[0] ?? null;
+  /* Multiple counters may be serving simultaneously. */
+  const servingTokenNumbers = servingTokens.map((token) => token.tokenNumber);
+  const calledTokenNumbers = calledTokens.map((token) => token.tokenNumber);
 
   /*
    * Position represents the token's position in the queue.
    * We use the highest position among active tokens as the last
    * currently active queue position.
    */
-  const lastNumber =
-    tokens.length > 0
-      ? Math.max(...tokens.map((token) => token.position ?? 0))
-      : 0;
+  const lastNumber = waitingTokens.length;
 
   return {
     id: service.id,
@@ -51,13 +54,19 @@ function buildQueueStatus(service) {
     // Number of citizens currently waiting.
     waiting: waitingTokens.length,
 
-    // Number of currently checked-in/serving tokens.
+    // Number of citizens currently called and waiting to check in.
+    called: calledTokens.length,
+    calledTokenNumbers,
+
+    // Number of citizens physically checked in or actively being served.
+    checkedIn: checkedInTokens.length,
     currentNumber: servingTokens.length,
 
-    // Actual token currently being served.
-    currentToken: currentToken?.tokenNumber ?? null,
+    // All tokens currently being served.
+    currentToken: servingTokenNumbers[0] ?? null,
+    servingTokenNumbers,
 
-    // Last active queue position.
+    // Queue positions are local to this service stage.
     lastNumber,
 
     // Current simple waiting-time estimate.
@@ -81,19 +90,19 @@ router.get("/status", async (_req, res) => {
         tokens: {
           where: {
             status: {
-              in: [WAITING_STATUS, SERVING_STATUS],
+              in: [WAITING_STATUS, CALLED_STATUS, CHECKED_IN_STATUS, SERVING_STATUS],
             },
           },
 
-          orderBy: {
-            position: "asc",
-          },
+          orderBy: [{ stageEnteredAt: "asc" }, { generatedAt: "asc" }, { id: "asc" }],
 
           select: {
             id: true,
             tokenNumber: true,
             position: true,
             status: true,
+            stageEnteredAt: true,
+            generatedAt: true,
           },
         },
       },
@@ -182,19 +191,19 @@ router.get("/:serviceId", async (req, res) => {
         tokens: {
           where: {
             status: {
-              in: [WAITING_STATUS, SERVING_STATUS],
+              in: [WAITING_STATUS, CALLED_STATUS, CHECKED_IN_STATUS, SERVING_STATUS],
             },
           },
 
-          orderBy: {
-            position: "asc",
-          },
+          orderBy: [{ stageEnteredAt: "asc" }, { generatedAt: "asc" }, { id: "asc" }],
 
           select: {
             id: true,
             tokenNumber: true,
             position: true,
             status: true,
+            stageEnteredAt: true,
+            generatedAt: true,
           },
         },
       },

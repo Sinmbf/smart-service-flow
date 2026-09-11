@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Mail, User, Users, Briefcase, ArrowRight } from "lucide-react";
@@ -16,10 +15,24 @@ const StaffRegister = () => {
     password: "",
     confirmPassword: "",
     employeeId: "",
+    officeId: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [serverMessage, setServerMessage] = useState("");
+  const [offices, setOffices] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/services", { params: { pageSize: 100 } })
+      .then((r) => {
+        const by = new Map(
+          (r.data.services || []).map((s) => [s.office.id, s.office]),
+        );
+        setOffices([...by.values()]);
+      })
+      .catch(() => {});
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -33,6 +46,9 @@ const StaffRegister = () => {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = t("auth.validation.emailInvalid");
     }
+
+    if (!formData.officeId)
+      newErrors.officeId = "Government office is required";
 
     if (!formData.password) {
       newErrors.password = t("auth.validation.required");
@@ -64,6 +80,7 @@ const StaffRegister = () => {
         email: formData.email,
         password: formData.password,
         employeeId: formData.employeeId,
+        officeId: formData.officeId,
       });
 
       setServerMessage(response.data.message);
@@ -72,7 +89,9 @@ const StaffRegister = () => {
         navigate("/login");
       }, 2000);
     } catch (error) {
-      setErrors({ api: error.response?.data?.message || t("auth.errors.generic") });
+      setErrors({
+        api: error.response?.data?.message || t("auth.errors.generic"),
+      });
     } finally {
       setIsLoading(false);
     }
@@ -122,7 +141,9 @@ const StaffRegister = () => {
             label={t("auth.staffRegister.email")}
             type="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             error={errors.email}
             autoComplete="email"
             placeholder="staff@government.gov"
@@ -133,15 +154,42 @@ const StaffRegister = () => {
             label={t("auth.staffRegister.employeeId")}
             type="text"
             value={formData.employeeId}
-            onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, employeeId: e.target.value })
+            }
             placeholder="EMP-2026-XXX"
             icon={<Briefcase className="h-5 w-5" />}
           />
 
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">
+              Government Office
+            </label>
+            <select
+              value={formData.officeId}
+              onChange={(e) =>
+                setFormData({ ...formData, officeId: e.target.value })
+              }
+              className="w-full px-3 py-2.5 border border-neutral-300 rounded-lg"
+            >
+              <option value="">Select government office</option>
+              {offices.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.nameEn}
+                </option>
+              ))}
+            </select>
+            {errors.officeId && (
+              <p className="text-xs text-red-600 mt-1">{errors.officeId}</p>
+            )}
+          </div>
+
           <PasswordInput
             label={t("auth.staffRegister.password")}
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
             error={errors.password}
             autoComplete="new-password"
             placeholder="••••••••"
@@ -150,7 +198,9 @@ const StaffRegister = () => {
           <PasswordInput
             label={t("auth.staffRegister.confirmPassword")}
             value={formData.confirmPassword}
-            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, confirmPassword: e.target.value })
+            }
             error={errors.confirmPassword}
             autoComplete="new-password"
             placeholder="••••••••"
@@ -163,7 +213,9 @@ const StaffRegister = () => {
             disabled={isLoading}
             icon={!isLoading && <ArrowRight className="h-5 w-5" />}
           >
-            {isLoading ? t("auth.staffRegister.creating") : t("auth.staffRegister.createButton")}
+            {isLoading
+              ? t("auth.staffRegister.creating")
+              : t("auth.staffRegister.createButton")}
           </Button>
         </form>
 

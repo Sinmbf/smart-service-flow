@@ -314,7 +314,11 @@
       "confirmCancel": "Are you sure you want to cancel your token?",
       "qrTitle": "Your QR code",
       "qrHint": "Show this code at the office for check-in.",
-      "generatedAt": "Generated"
+      "generatedAt": "Generated",
+      "currentStage": "Current step",
+      "stageOfTotal": "Step {{current}} of {{total}}",
+      "viewMoreDetails": "View more details",
+      "hideDetails": "Hide details"
     },
     "cancel": {
       "title": "Cancel Token",
@@ -348,15 +352,46 @@
       "expired": "Expired",
       "cancelled": "Cancelled",
       "deferred": "Deferred"
-    }
+    },
+    "stageProgress": "Step {{current}} of {{total}}",
+    "advancedToNextStage": "Previous step complete — now waiting for this step"
   },
   "staff": {
     "dashboard": {
       "checkIn": "Check-In",
-      "checkInDesc": "Look up a token by number, QR, or phone",
+      "checkInDesc": "Scan a QR or look up by phone",
       "welcome": "Staff Console — {{name}}",
       "subtitle": "Manage queues, call tokens, and update stage progress from here.",
-      "comingSoon": "Step 4+ (Increment 10) will replace this stub with the real staff console."
+      "comingSoon": "Step 4+ (Increment 10) will replace this stub with the real staff console.",
+      "queueBoards": "Queue Boards",
+      "loadingQueues": "Loading queues...",
+      "noQueues": "No stages found.",
+      "serving": "serving",
+      "waiting": "waiting",
+      "longestWait": "Longest wait",
+      "min": "min",
+      "summaryFailed": "Could not load the queue overview.",
+      "subtitleWaiting": "{{count}} citizens waiting across all queues",
+      "subtitleClear": "No one waiting right now.",
+      "filterActive": "Active",
+      "filterAll": "All",
+      "noActiveQueues": "No queues have anyone waiting, called, or being served right now.",
+      "showAllQueues": "Show all queues",
+      "filterLabel": "Filter queue boards"
+    },
+    "queue": {
+      "title": "Queue Board",
+      "back": "Back to dashboard",
+      "loading": "Loading queue...",
+      "empty": "None",
+      "serving": "Serving",
+      "waiting": "Waiting",
+      "skipped": "Recently skipped",
+      "skip": "Skip",
+      "recall": "Recall",
+      "complete": "Complete",
+      "checkIn": "Check In & Start Service",
+      "called": "Called — proceed to counter"
     }
   },
   "services": {

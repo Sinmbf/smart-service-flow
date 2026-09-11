@@ -2,6 +2,7 @@ import "dotenv/config";
 import app from "./app.js";
 import { checkDatabaseConnection } from "./dbCheck.js";
 import { startNoShowSweeper, stopNoShowSweeper } from "./services/queue/timeout.js";
+import { startQueueAutomation, stopQueueAutomation } from "./services/queue/autoCall.js";
 
 const PORT = process.env.PORT || 5000;
 
@@ -16,6 +17,7 @@ async function start() {
   }
 
   startNoShowSweeper();
+  startQueueAutomation();
 
   app.listen(PORT, () => {
     console.log("─────────────────────────────────────────────");
@@ -26,6 +28,7 @@ async function start() {
 
 function shutdown() {
   stopNoShowSweeper();
+  stopQueueAutomation();
   process.exit(0);
 }
 process.on("SIGINT", shutdown);

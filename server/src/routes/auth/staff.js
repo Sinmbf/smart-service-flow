@@ -19,7 +19,7 @@ const router = Router();
  * Body: { name, email, password, employeeId? }
  */
 router.post("/register", async (req, res) => {
-  const { name, email, password, employeeId } = req.body;
+  const { name, email, password, employeeId, officeId } = req.body;
 
   if (!name || !email || !password) {
     return res
@@ -65,6 +65,15 @@ router.post("/register", async (req, res) => {
     }
   }
 
+  if (!officeId) {
+    return res.status(400).json({ success: false, message: "Government office is required" });
+  }
+
+  const office = await prisma.governmentOffice.findUnique({ where: { id: officeId, isActive: true } });
+  if (!office) {
+    return res.status(400).json({ success: false, message: "Invalid government office" });
+  }
+
   const hashed = await bcrypt.hash(password, 10);
   const now = new Date();
 
@@ -78,6 +87,7 @@ router.post("/register", async (req, res) => {
         passwordChangedAt: now,
         employeeId,
         role: Role.STAFF,
+        officeId,
       },
     });
   } catch (err) {
@@ -107,6 +117,8 @@ router.post("/register", async (req, res) => {
       email: user.email,
       employeeId: user.employeeId,
       role: user.role,
+      officeId: user.officeId,
+      office: office ? { id: office.id, nameEn: office.nameEn, nameNe: office.nameNe } : null,
     },
   });
 });
@@ -226,6 +238,8 @@ router.post("/verify-otp", async (req, res) => {
       email: user.email,
       employeeId: user.employeeId,
       role: user.role,
+      officeId: user.officeId,
+      office: user.officeId ? await prisma.governmentOffice.findUnique({ where: { id: user.officeId }, select: { id: true, nameEn: true, nameNe: true, location: true } }) : null,
       type: "staff",
     },
   });

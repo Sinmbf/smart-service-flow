@@ -10,6 +10,8 @@ import queueRoutes from "./routes/queue.js";
 import serviceRoutes from "./routes/services.js";
 import tokenRoutes from "./routes/tokens.js";
 import staffTokenRoutes from "./routes/staff/tokens.js";
+import staffQueueRoutes from "./routes/staff/queue.js";
+import notificationRoutes from "./routes/notifications.js";
 import adminDebugRoutes from "./routes/admin/debug.js";
 const app = express();
 app.use(helmet()); // For security headers
@@ -36,8 +38,11 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/queue", queueRoutes);
 // Token Flow routes (public, requires auth for mutation; reads public)
 app.use("/api/tokens", tokenRoutes);
-// Staff check-in (STAFF/ADMIN only)
+// Staff check-in + call/skip/recall/complete (STAFF/ADMIN only)
 app.use("/api/staff/tokens", staffTokenRoutes);
+// Staff per-stage queue board (STAFF/ADMIN only)
+app.use("/api/staff/queues", staffQueueRoutes);
+app.use("/api/notifications", notificationRoutes);
 // Admin / debug routes (temporary, removed in Step 19)
 app.use("/api/admin/_debug", adminDebugRoutes);
 export default app;

@@ -8,6 +8,8 @@ import ServiceList from "../pages/services/ServiceList";
 import ServiceDetail from "../pages/services/ServiceDetail";
 import { QRScanner, ServiceSelection, TokenGeneration, TokenDisplay, Monitor } from "../pages/token";
 import CheckIn from "../pages/staff/CheckIn";
+import QueueBoard from "../pages/staff/QueueBoard";
+import Notifications from "../pages/Notifications";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { useAuth } from "../auth/AuthContext";
 
@@ -73,6 +75,15 @@ function AppRoutes() {
 
         {/* Protected dashboards */}
         <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute roles={["CITIZEN"]}>
+              <Notifications />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
           path="/dashboard"
           element={
             <ProtectedRoute roles={["CITIZEN"]}>
@@ -93,6 +104,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute roles={["STAFF", "ADMIN"]}>
               <CheckIn />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/queues/:stageId"
+          element={
+            <ProtectedRoute roles={["STAFF", "ADMIN"]}>
+              <QueueBoard />
             </ProtectedRoute>
           }
         />

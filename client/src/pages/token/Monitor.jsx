@@ -103,30 +103,47 @@ export default function Monitor() {
                   </span>
                 </div>
 
-                {/* Current serving token */}
+                {/* Current serving tokens */}
                 <div className="mb-5">
                   <span className="text-sm font-bold uppercase tracking-[0.2em] text-neutral-500">
-                    {t("token.monitor.currentlyServing", "Currently serving:")}
+                    {t("token.monitor.nowServing", "Now serving:")}
                   </span>
 
-                  <div className="text-6xl font-heading font-light text-primary-700 leading-none mt-2">
-                    {service.currentToken ?? "—"}
+                  <div className="mt-2 flex flex-wrap gap-3">
+                    {(service.servingTokenNumbers || (service.currentToken ? [service.currentToken] : [])).length > 0 ? (
+                      (service.servingTokenNumbers || [service.currentToken]).map((tokenNumber) => (
+                        <div
+                          key={tokenNumber}
+                          className="text-5xl font-heading font-light text-primary-700 leading-none"
+                        >
+                          {tokenNumber}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-5xl font-heading font-light text-neutral-300 leading-none">
+                        —
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Queue statistics */}
-                <div className="flex gap-6 text-sm text-neutral-500">
-                  <span>
-                    {t("token.monitor.inQueue", "Waiting:")}{" "}
-                    <b className="text-neutral-800">{service.waiting ?? 0}</b>
-                  </span>
+                <div className="space-y-2 text-sm text-neutral-600">
+                  <div className="flex justify-between gap-4">
+                    <span>{t("token.monitor.inQueue", "In queue:")}</span>
+                    <b className="text-neutral-900">{service.waiting ?? 0}</b>
+                  </div>
 
-                  <span>
-                    {t("token.monitor.currentlyServing", "Serving:")}{" "}
-                    <b className="text-neutral-800">
-                      {service.currentNumber ?? 0}
-                    </b>
-                  </span>
+                  <div className="flex justify-between gap-4">
+                    <span>{t("token.monitor.proceedToCounter", "Proceed to counter:")}</span>
+                    <b className="text-amber-700">{service.called ?? 0}</b>
+                  </div>
+
+                  {service.calledTokenNumbers?.length > 0 && (
+                    <div className="text-xs text-amber-700 pt-1">
+                      {service.calledTokenNumbers.join(", ")}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

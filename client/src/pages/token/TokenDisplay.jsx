@@ -2,14 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import QRCode from "qrcode";
-import { QrCode } from "lucide-react";
+import { QrCode, ChevronDown, ChevronUp } from "lucide-react";
 import MainLayout from "../../layouts/MainLayout";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
-import { fetchToken, cancelToken } from "../../services/tokens";
+import ServiceRoadmap from "../../components/ServiceRoadmap";
+import { Skeleton } from "../../components/ui/Skeleton";
+import { fetchToken, cancelToken, fetchNotifications, markNotificationRead } from "../../services/tokens";
+import { fetchServiceById } from "../../services/services";
 
 const STATUS_FALLBACK_LABEL = {
-  GENERATED: "Waiting",
+  WAITING: "Waiting",
+  CALLED: "Your turn — proceed to counter",
   CHECKED_IN: "Checked in",
   SERVING: "Now serving",
   COMPLETED: "Completed",
@@ -33,10 +37,16 @@ const TokenDisplay = () => {
   const [isLoading, setIsLoading] = useState(!initialToken);
   const [loadError, setLoadError] = useState("");
   const [liveStatus, setLiveStatus] = useState(null);
+  const [liveCurrentStage, setLiveCurrentStage] = useState(null);
   const [qrSvg, setQrSvg] = useState(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState("");
+  const [serviceDetail, setServiceDetail] = useState(null);
+  const [isServiceLoading, setIsServiceLoading] = useState(true);
+  const [showRoadmap, setShowRoadmap] = useState(false);
+  const [latestNotification, setLatestNotification] = useState(null);
+  const seenNotificationIds = useRef(new Set());
   const qrCanvasRef = useRef(null);
 
   // If no state was passed (e.g. page reload or deep link), fetch the token
@@ -98,6 +108,9 @@ const TokenDisplay = () => {
   }, [token?.qrPayload]);
 
   // Poll the token endpoint every 8s while we have an id (lightweight).
+  // Also tracks currentStage so the roadmap below highlights the new
+  // stage automatically once staff advance the token, without the
+  // citizen needing to reload the page.
   useEffect(() => {
     if (!token?.id) return;
     let cancelled = false;
@@ -106,6 +119,8 @@ const TokenDisplay = () => {
         const data = await fetchToken(token.id);
         if (cancelled) return;
         if (data?.token?.status) setLiveStatus(data.token.status);
+        if (data?.token?.currentStage) setLiveCurrentStage(data.token.currentStage);
+        if (data?.token?.estimatedWaitMinutes != null) setToken(prev => ({ ...prev, estimatedWaitMinutes: data.token.estimatedWaitMinutes, waitingAhead: data.token.waitingAhead, activeCounters: data.token.activeCounters, baselineMinutes: data.token.baselineMinutes }));
       } catch {
         /* ignore — polling is best-effort */
       }
@@ -117,6 +132,55 @@ const TokenDisplay = () => {
       clearInterval(interval);
     };
   }, [token?.id]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const pollNotifications = async () => {
+      try {
+        const data = await fetchNotifications();
+        if (cancelled) return;
+        const fresh = (data?.notifications || []).filter((n) => !seenNotificationIds.current.has(n.id));
+        if (!fresh.length) return;
+        const newest = fresh[0];
+        fresh.forEach((n) => seenNotificationIds.current.add(n.id));
+        setLatestNotification(newest);
+        if (window.Notification?.permission === "granted") {
+          new window.Notification(newest.titleEn, { body: newest.messageEn });
+        } else if (window.Notification?.permission === "default") {
+          window.Notification.requestPermission().catch(() => {});
+        }
+        markNotificationRead(newest.id).catch(() => {});
+      } catch {
+        /* best-effort */
+      }
+    };
+    pollNotifications();
+    const id = setInterval(pollNotifications, 5000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
+
+  // Load the full service definition (all stages + their required
+  // documents) so we can render the citizen's progress through it,
+  // highlighting whichever stage they're currently at.
+  useEffect(() => {
+    const serviceId = token?.service?.id || token?.serviceId;
+    if (!serviceId) return;
+    let cancelled = false;
+    (async () => {
+      setIsServiceLoading(true);
+      try {
+        const data = await fetchServiceById(serviceId);
+        if (!cancelled) setServiceDetail(data.service || null);
+      } catch {
+        if (!cancelled) setServiceDetail(null);
+      } finally {
+        if (!cancelled) setIsServiceLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [token?.service?.id, token?.serviceId]);
 
   // Strip the fresh=1 query param from the URL so a page refresh doesn't
   // re-show the notice. Must run unconditionally to keep the hook order
@@ -135,6 +199,14 @@ const TokenDisplay = () => {
   if (isLoading) {
     return (
       <MainLayout>
+      {latestNotification && (
+        <div className="max-w-3xl mx-auto px-4 pt-4">
+          <div className="p-4 bg-blue-50 border-2 border-blue-200 rounded-2xl text-blue-900 shadow-sm">
+            <p className="font-semibold">{latestNotification.titleEn}</p>
+            <p className="text-sm mt-1">{latestNotification.messageEn}</p>
+          </div>
+        </div>
+      )}
         <div className="max-w-2xl mx-auto py-12 text-center">
           <div className="inline-block w-12 h-12 border-4 border-neutral-200 border-t-primary-700 rounded-full animate-spin" />
           <p className="mt-3 text-sm text-neutral-600">Loading your token…</p>
@@ -160,10 +232,25 @@ const TokenDisplay = () => {
 
   if (!token) return null;
 
-  const status = liveStatus || token.status || "GENERATED";
-  const statusColor = (status === "GENERATED" || status === "waiting") ? "bg-blue-500" : (status === "CHECKED_IN" || status === "checked_in") ? "bg-green-500" : (status === "SKIPPED" || status === "skipped") ? "bg-red-500" : "bg-blue-500"; // ponytail: token card color
-  const statusKey = STATUS_FALLBACK_LABEL[status] ? status : "GENERATED";
+  const status = liveStatus || token.status || "WAITING";
+  const statusColor = (status === "WAITING" || status === "CALLED") ? "bg-blue-500" : (status === "CHECKED_IN") ? "bg-green-500" : (status === "SKIPPED" || status === "EXPIRED") ? "bg-red-500" : "bg-blue-500";
+  const statusKey = STATUS_FALLBACK_LABEL[status] ? status : "WAITING";
   const generatedDate = token.generatedAt ? new Date(token.generatedAt) : new Date();
+
+  // Which stage to highlight in the roadmap below. Once the token is
+  // fully COMPLETED, mark every stage as done (stageOrder past the end)
+  // rather than leaving the last stage stuck showing as "current".
+  const currentStage = liveCurrentStage || token.currentStage;
+  const totalStages = serviceDetail?.stages?.length || 0;
+  const currentStageOrder =
+    status === "COMPLETED"
+      ? totalStages + 1
+      : currentStage?.stageOrder;
+  const currentStageName = currentStage
+    ? i18n.language === "ne"
+      ? currentStage.nameNe
+      : currentStage.nameEn
+    : "";
 
   const handleCancelToken = () => {
     setShowCancelConfirm(true);
@@ -238,6 +325,15 @@ const TokenDisplay = () => {
                     {token.position}
                   </span>
                 </div>
+                <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                  <span className="text-blue-700 font-medium text-xs sm:text-sm block mb-2">
+                    {t("token.display.estimatedWait", "Estimated time until your turn")}
+                  </span>
+                  <span className="text-blue-900 font-bold text-2xl">
+                    {status === "CALLED" ? t("token.display.yourTurnNow", "Your turn is now") : status === "SERVING" || status === "CHECKED_IN" ? t("token.display.inService", "You are being served") : token.estimatedWaitMinutes != null ? `${token.estimatedWaitMinutes} ${t("token.display.minutes", "min")}` : t("token.display.calculating", "Calculating...")}
+                  </span>
+                  {status === "WAITING" && token.waitingAhead != null && <p className="text-xs text-blue-700 mt-1">{t("token.display.peopleAhead", "{{count}} position(s) ahead", { count: token.waitingAhead })}</p>}
+                </div>
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                   <span className="text-gray-600 font-medium text-xs sm:text-sm block mb-2 break-words">
                     {t("token.display.status")}
@@ -254,6 +350,60 @@ const TokenDisplay = () => {
                     {generatedDate.toLocaleString(i18n.language === "ne" ? "ne-NP" : "en-US")}
                   </span>
                 </div>
+                {currentStageName && (
+                  <div className="bg-primary-50 rounded-xl border border-primary-200 sm:col-span-2 overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setShowRoadmap((v) => !v)}
+                      aria-expanded={showRoadmap}
+                      className="w-full text-left p-4 flex items-center justify-between gap-3 hover:bg-primary-100/60 transition"
+                    >
+                      <div className="min-w-0">
+                        <span className="text-primary-700 font-medium text-xs sm:text-sm block mb-2 break-words">
+                          {t("token.display.currentStage", "Current step")}
+                        </span>
+                        <span className="text-primary-900 font-semibold text-base sm:text-lg break-words">
+                          {currentStageName}
+                          {totalStages > 0 && currentStage?.stageOrder && (
+                            <span className="ml-2 text-xs font-medium text-primary-600 align-middle">
+                              {t("token.display.stageOfTotal", "Step {{current}} of {{total}}", {
+                                current: currentStage.stageOrder,
+                                total: totalStages,
+                              })}
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                      <span className="flex-shrink-0 inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-primary-700">
+                        {showRoadmap
+                          ? t("token.display.hideDetails", "Hide details")
+                          : t("token.display.viewMoreDetails", "View more details")}
+                        {showRoadmap ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </span>
+                    </button>
+
+                    {showRoadmap && (
+                      <div className="px-4 pb-4">
+                        {isServiceLoading ? (
+                          <Skeleton className="h-40 w-full rounded-2xl" />
+                        ) : (
+                          serviceDetail?.stages?.length > 0 && (
+                            <ServiceRoadmap
+                              stages={serviceDetail.stages}
+                              currentStageOrder={currentStageOrder}
+                              serviceNameEn={serviceDetail.nameEn}
+                              serviceNameNe={serviceDetail.nameNe}
+                            />
+                          )
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </Card>

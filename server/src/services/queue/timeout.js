@@ -1,39 +1,41 @@
-// No-show sweeper: every `NO_SHOW_SWEEP_MS` milliseconds, flip any
-// GENERATED token older than `NO_SHOW_MINUTES` to EXPIRED. Started by
-// the server entry point; idempotent (running twice just runs the
-// sweeper twice as fast).
-
+// No-show sweeper: only CALLED tokens can expire after the grace period.
 import { prisma } from "../../db.js";
 
-const DEFAULT_INTERVAL_MS = 60_000; // every minute
+const DEFAULT_INTERVAL_MS = 30_000;
 let handle = null;
 let intervalMs = DEFAULT_INTERVAL_MS;
 
-function setIntervalMs(value) {
-  intervalMs = value;
-}
-
-function getIntervalMs() {
-  return intervalMs;
-}
+function setIntervalMs(value) { intervalMs = value; }
+function getIntervalMs() { return intervalMs; }
 
 async function sweepNoShows({ now = new Date() } = {}) {
-  // Configurable grace per file policy (counter-level check-in); default 3m
-  const minutes = Number(process.env.NO_SHOW_MINUTES || 3); // ponytail: real grace sweep
+  const minutes = Number(process.env.NO_SHOW_MINUTES || 3);
   if (!Number.isFinite(minutes) || minutes <= 0) return 0;
-
   const cutoff = new Date(now.getTime() - minutes * 60_000);
   try {
-    const { count } = await prisma.token.updateMany({
-      where: {
-        status: "GENERATED",
-        generatedAt: { lt: cutoff },
-      },
-      data: { status: "SKIPPED" },
+    const expired = await prisma.token.findMany({
+      where: { status: "CALLED", calledAt: { lt: cutoff } },
+      select: { id: true, tokenNumber: true },
     });
-    if (count > 0) {
-      console.log(`[queue/timeout] expired ${count} no-show token(s)`);
+    let count = 0;
+    for (const token of expired) {
+      const changed = await prisma.$transaction(async (tx) => {
+        const current = await tx.token.findUnique({ where: { id: token.id } });
+        if (!current || current.status !== "CALLED") return false;
+        await tx.token.update({ where: { id: token.id }, data: { status: "SKIPPED" } });
+        await tx.counter.updateMany({ where: { currentTokenId: token.id }, data: { currentTokenId: null } });
+        await tx.auditLog.create({
+          data: {
+            action: "TOKEN_NO_SHOW",
+            target: token.id,
+            metadata: { tokenNumber: token.tokenNumber, graceMinutes: minutes },
+          },
+        });
+        return true;
+      });
+      if (changed) count += 1;
     }
+    if (count > 0) console.log(`[queue/timeout] skipped ${count} called token(s) after ${minutes} minute grace`);
     return count;
   } catch (err) {
     console.error("[queue/timeout] sweep failed:", err);
@@ -42,13 +44,10 @@ async function sweepNoShows({ now = new Date() } = {}) {
 }
 
 export function startNoShowSweeper() {
-  if (handle) return; // already running
-  // Kick off once, then on interval
+  if (handle) return;
   sweepNoShows();
-  handle = setInterval(() => {
-    sweepNoShows();
-  }, intervalMs);
-  handle.unref?.(); // don't keep the process alive for the timer
+  handle = setInterval(sweepNoShows, intervalMs);
+  handle.unref?.();
   console.log(`[queue/timeout] started (interval ${intervalMs}ms)`);
 }
 
@@ -60,5 +59,3 @@ export function stopNoShowSweeper() {
 }
 
 export { setIntervalMs, getIntervalMs, sweepNoShows };
-// ponytail: no-show grace sweep per policy
-// ponytail: real grace = 3min default per NO_SHOW_MINUTES

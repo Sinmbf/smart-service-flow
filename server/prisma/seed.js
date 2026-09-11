@@ -215,6 +215,26 @@ async function main() {
   console.log(`   - ${dotm.nameEn}`);
   console.log(`   - ${dao.nameEn}`);
 
+  // Seed one active physical service counter per stage for the automatic
+  // call workflow. Real deployments can add/remove counters per stage.
+  const seededStages = await prisma.serviceStage.findMany({
+    select: { id: true, nameEn: true, location: true },
+  });
+  const counterRows = [];
+  for (const stage of seededStages) {
+    const match = stage.location?.match(/Counter\s+(\d+)\s*-\s*(\d+)/i);
+    const count = match ? Math.max(1, Number(match[2]) - Number(match[1]) + 1) : 1;
+    const start = match ? Number(match[1]) : 1;
+    for (let i = 0; i < count; i += 1) {
+      counterRows.push({
+        stageId: stage.id,
+        name: `${stage.location ? stage.location.replace(/,?\s*Counter\s+\d+\s*-\s*\d+/i, "").trim() : stage.nameEn} — Counter ${start + i}`,
+        isActive: true,
+      });
+    }
+  }
+  await prisma.counter.createMany({ data: counterRows });
+
   // 2. Demo Users (Citizen + Staff + Admin)
   const citizen = await prisma.user.create({
     data: {
@@ -232,6 +252,7 @@ async function main() {
       name: "Ramesh Sharma",
       employeeId: "DOTM-1042",
       role: Role.STAFF,
+      officeId: dotm.id,
       preferredLanguage: Language.NE,
     },
   });

@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { QrCode, Clock, ChevronRight, AlertCircle } from "lucide-react";
+import { QrCode, Clock, ChevronRight, AlertCircle, CheckCircle2 } from "lucide-react";
 import MainLayout from "../layouts/MainLayout";
 import Card from "../components/ui/Card";
 import { Skeleton } from "../components/ui/Skeleton";
 import { useAuth } from "../auth/AuthContext";
 import { fetchMyActiveTokens } from "../services/tokens";
 
+const POLL_MS = 8000;
+
 const STATUS_LABEL = {
-  GENERATED: "Waiting",
+  WAITING: "Waiting",
+  CALLED: "Your turn — proceed to counter",
   CHECKED_IN: "Checked in",
   SERVING: "Now serving",
   COMPLETED: "Completed",
@@ -29,25 +32,27 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      setIsLoading(true);
+  const load = useCallback(async () => {
+    try {
+      const data = await fetchMyActiveTokens();
+      setTokens(data.tokens || []);
       setError("");
-      try {
-        const data = await fetchMyActiveTokens();
-        if (!cancelled) setTokens(data.tokens || []);
-      } catch (err) {
-        if (!cancelled)
-          setError(err.response?.data?.message || "Could not load tokens");
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not load tokens");
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    load();
+    // Poll so a status/stage change made at the counter (e.g. staff
+    // completing a stage) shows up without the citizen having to
+    // manually reload the page.
+    const intervalId = setInterval(load, POLL_MS);
+    return () => clearInterval(intervalId);
+  }, [load]);
 
   return (
     <MainLayout>
@@ -99,6 +104,21 @@ const Dashboard = () => {
                     ? tok.service.nameNe
                     : tok.service.nameEn
                   : "";
+                const stageName = tok.currentStage
+                  ? isNe
+                    ? tok.currentStage.nameNe
+                    : tok.currentStage.nameEn
+                  : "";
+                const totalStages = tok.service?._count?.stages || null;
+                const stageOrder = tok.currentStage?.stageOrder;
+                // A token that has already completed at least one stage
+                // (serviceCompletedAt is set on stage handoff) but is
+                // GENERATED again is waiting for its *next* stage, not
+                // starting over — make that explicit instead of just
+                // showing "Waiting" again, which reads like a reset/bug.
+                const justAdvanced = tok.status === "WAITING" && !!tok.serviceCompletedAt;
+                const isMultiStage = totalStages && totalStages > 1;
+
                 return (
                   <li key={tok.id}>
                     <Link
@@ -116,6 +136,25 @@ const Dashboard = () => {
                           <p className="text-sm text-neutral-600 truncate">
                             {serviceName}
                           </p>
+                          {isMultiStage && stageName && (
+                            <p className="text-xs text-primary-700 font-medium mt-0.5 truncate">
+                              {t("dashboard.stageProgress", "Step {{current}} of {{total}}", {
+                                current: stageOrder,
+                                total: totalStages,
+                              })}
+                              {" · "}
+                              {stageName}
+                            </p>
+                          )}
+                          {justAdvanced && (
+                            <p className="text-xs text-green-700 font-medium mt-0.5 flex items-center gap-1">
+                              <CheckCircle2 className="h-3.5 w-3.5" />
+                              {t(
+                                "dashboard.advancedToNextStage",
+                                "Previous step complete — now waiting for this step",
+                              )}
+                            </p>
+                          )}
                           <div className="mt-1 flex items-center gap-3 text-xs text-neutral-500">
                             <span className="inline-flex items-center gap-1">
                               <Clock className="h-3.5 w-3.5" />
